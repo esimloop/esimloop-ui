@@ -104,6 +104,22 @@ npm run example:build    # prove it compiles
 npm run verify           # all of the above
 ```
 
+## Updating a project you already scaffolded
+
+```bash
+node <path-to-kit>/bin/init.mjs <your-project> --update
+```
+
+`--update` replaces the **skeleton** — `src/design-system/css` and
+`src/design-system/astro` — and nothing else. Your themes survive, including the
+one you edited; themes added to the kit since you scaffolded are copied in
+alongside. Your pages, layouts and components are never touched — which includes
+`src/pages/design-system.astro`, so new components will not appear in your copy of
+the reference page until you overwrite it from `templates/` yourself.
+
+`--force` is the opposite and is not an update: it re-scaffolds from scratch and
+discards whatever was there. Use it to regenerate `example/`, not on real work.
+
 ## What the third theme proved
 
 `blank` and `openseo` are close cousins: grey ramp, blue accent, flat, 8px radius,

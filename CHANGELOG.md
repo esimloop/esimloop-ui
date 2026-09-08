@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+### `--update`: refreshing the kit without losing your theme
+- `node bin/init.mjs <project> --update` replaces the skeleton (`css/`, `astro/`)
+  and adds themes shipped since you scaffolded. It never overwrites an existing
+  theme file and never touches a page you wrote.
+- Previously the only way to pull in a newer kit was `--force`, which deleted the
+  whole vendored tree — including the theme the kit tells you to edit. `--force`
+  now means only what its name says: re-scaffold from scratch.
+
 ## 1.0.0
 
 Initial release.

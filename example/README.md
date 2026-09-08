@@ -39,3 +39,11 @@ They share a typeface and nothing else. Don't mix their classes on one page.
 Open the theme file and change four things: `--accent` (keep it at 4.5:1 or
 better against `--surface-card`), `--content`, the surface ramp, and
 `--font-sans`. Everything else derives.
+
+## Updating the kit later
+
+    node <path-to-kit>/bin/init.mjs . --update
+
+Replaces `src/design-system/css` and `src/design-system/astro` only. Your themes
+and your pages are left alone; themes added to the kit since you scaffolded are
+copied in alongside yours.

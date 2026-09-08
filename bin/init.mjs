@@ -12,7 +12,18 @@
  * The system is VENDORED (copied into src/design-system), not installed as a
  * dependency. For a starter kit that is the right trade: you own the files, the
  * theme is editable in place, and there is no package resolution to debug.
- * Re-run with --force to refresh the vendored copy after the kit changes.
+ *
+ * To pull in a newer kit afterwards:
+ *
+ *   node bin/init.mjs <existing-dir> --update
+ *
+ * --update replaces the SKELETON only (css/ and astro/). It never overwrites a
+ * theme, and never touches a page, layout or component you have written. New
+ * themes shipped since you scaffolded are added alongside yours.
+ *
+ * --force is the other thing: re-scaffold from scratch, discarding everything.
+ * This header used to offer --force as the way to refresh a vendored copy, which
+ * quietly destroyed the theme the same kit tells you to edit.
  */
 import { cp, mkdir, writeFile, readdir, rm } from "node:fs/promises";
 import { existsSync } from "node:fs";
@@ -33,6 +44,7 @@ const target = argv.find((a, i) => !a.startsWith("--") && !VALUE_FLAGS.has(argv[
 
 if (!target) {
   console.error("Usage: node bin/init.mjs <target-dir> [--name <pkg>] [--theme blank|openseo|editorial] [--force]");
+  console.error("       node bin/init.mjs <existing-dir> --update   (refresh the skeleton, keep your themes and pages)");
   process.exit(1);
 }
 
@@ -44,10 +56,53 @@ if (!["openseo", "blank", "editorial"].includes(theme)) {
   process.exit(1);
 }
 
+// ------------------------------------------------------------------- update
+if (has("update")) {
+  const vendorDir = join(dir, "src", "design-system");
+  if (!existsSync(vendorDir)) {
+    console.error(vendorDir + " does not exist. Scaffold first, without --update.");
+    process.exit(1);
+  }
+
+  // The skeleton is ours and is safe to replace; that is the whole point of
+  // keeping it free of values.
+  for (const part of ["css", "astro"]) {
+    await rm(join(vendorDir, part), { recursive: true, force: true });
+    await cp(join(KIT, part), join(vendorDir, part), { recursive: true });
+  }
+
+  // Themes are yours. Add what is new, touch nothing that already exists.
+  const added = [];
+  const kept = [];
+  await mkdir(join(vendorDir, "themes"), { recursive: true });
+  for (const file of await readdir(join(KIT, "themes"))) {
+    const destination = join(vendorDir, "themes", file);
+    if (existsSync(destination)) {
+      kept.push(file);
+    } else {
+      await cp(join(KIT, "themes", file), destination);
+      added.push(file);
+    }
+  }
+
+  console.log("\nUpdated " + vendorDir);
+  console.log("  replaced: css/ and astro/");
+  if (added.length) console.log("  added:    themes/" + added.join(", themes/"));
+  if (kept.length) console.log("  kept:     " + kept.length + " theme file(s), including any you edited");
+  console.log("  untouched: every page, layout and component in your project");
+  console.log("");
+  console.log("  src/pages/design-system.astro is a page, so it is left alone too.");
+  console.log("  For the reference page as it ships now, copy templates/design-system.astro");
+  console.log("  from the kit over it - after checking you have not edited yours.\n");
+  process.exit(0);
+}
+
 if (existsSync(dir) && !has("force")) {
   const entries = await readdir(dir);
   if (entries.length) {
-    console.error(dir + " is not empty. Re-run with --force to overwrite.");
+    console.error(dir + " is not empty.");
+    console.error("  --update  refresh the skeleton, keep your themes and pages");
+    console.error("  --force   re-scaffold from scratch, discarding everything");
     process.exit(1);
   }
 }
@@ -912,6 +967,14 @@ They share a typeface and nothing else. Don't mix their classes on one page.
 Open the theme file and change four things: \`--accent\` (keep it at 4.5:1 or
 better against \`--surface-card\`), \`--content\`, the surface ramp, and
 \`--font-sans\`. Everything else derives.
+
+## Updating the kit later
+
+    node <path-to-kit>/bin/init.mjs . --update
+
+Replaces \`src/design-system/css\` and \`src/design-system/astro\` only. Your themes
+and your pages are left alone; themes added to the kit since you scaffolded are
+copied in alongside yours.
 `,
   ),
 ];
@@ -931,7 +994,9 @@ await writeFile(
   join(vendor, "README.md"),
   "Vendored from esimloop-ui.\n\n" +
     "Edit `themes/` freely - that is the skin.\n" +
-    "Avoid editing `css/` - re-running init with --force overwrites it.\n",
+    "Avoid editing `css/` and `astro/` - they are the skeleton, and an update replaces them.\n\n" +
+    "To pull in a newer kit:  node <path-to-kit>/bin/init.mjs . --update\n" +
+    "That refreshes the skeleton and leaves your themes and pages alone.\n",
 );
 
 // The component reference is a real page, kept as a file rather than a string:
