@@ -24,8 +24,8 @@ node bin/init.mjs ../mon-projet --name mon-projet --theme blank
 | Contains | component rules, layout, states | token values only |
 | Per project | never edit | **this is what you edit** |
 
-`npm run check` fails the build if the skeleton hard-codes a value, or if any theme
-drifts from the others. That guard is what makes themes genuinely interchangeable —
+`npm run check` fails the build if the skeleton declares a token, hard-codes a
+colour, or if any theme drifts from the others. That guard is what makes themes genuinely interchangeable —
 which is what stops every project you build from looking identical.
 
 ## Two layers
@@ -44,11 +44,17 @@ They share a typeface and nothing else. Don't mix their classes on one page.
 
 ## What you get
 
-**32 components.** Application (14): shell, sidebar, button, badge, card, KPI card,
+**44 components.** Application (14): shell, sidebar, button, badge, card, KPI card,
 stat strip, score, tabs, field, alert, empty state, icon + a 33-icon inline sprite.
-Marketing (18): nav with mega-menu, hero (centered / split), section, heading, split,
-card, quote, logos, stats, CTA band, FAQ, pricing, comparison table, article card,
-breadcrumb, terminal, footer, button.
+Marketing (30): nav with mega-menu, announcement bar, hero (centered / split),
+section, heading, split, card, quote, logos, stats, steps, tabs, CTA band, FAQ,
+pricing, comparison table, team, media frame, footer, button, form field — plus a
+content set: prose, article header, author byline, callout, table of contents,
+article card, post navigation, breadcrumb, terminal.
+
+**A living reference** at `/design-system` in every scaffolded project. It renders
+the real components from source, so it cannot go stale: change a token and the
+reference changes with it.
 
 **4 themes**, all interchangeable: `app-blank`, `app-openseo`, `marketing-blank`,
 `marketing-openseo`.
@@ -69,6 +75,7 @@ an empty shell.
 | `css/marketing.css` | Marketing components. Same rule. |
 | `css/index.css` | Loads both skeletons. |
 | `astro/app/`, `astro/marketing/` | The components. |
+| `templates/design-system.astro` | The living component reference, copied into new projects. |
 | `bin/init.mjs` | Scaffolds a new Astro project. |
 | `scripts/check-tokens.mjs` | The contract guard. |
 | `docs/design-system.html` | The origin audit — see below. |
@@ -129,8 +136,10 @@ colour.
 
 ## Verified
 
-Node 24.20.0 · Astro 7.3.2. `example/` installs and builds clean (4 pages); checked at
-1280px, 800px and 375px, and in dark mode.
+Node 24.20.0 · Astro 7.3.2. `example/` installs and builds clean (8 pages); checked at
+1280px, 800px and 375px, and in dark mode. On `/design-system`, the application panel
+follows the theme while the marketing islands stay light — the documented behaviour,
+confirmed on one page.
 
 ## Licence
 

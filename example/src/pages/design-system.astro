@@ -1,0 +1,887 @@
+---
+/**
+ * Living component reference.
+ *
+ * It renders the real components from src/design-system, so it cannot go stale:
+ * change a token and this page changes with it.
+ *
+ * The two layers cannot share a body class - the marketing layer declares its
+ * tokens on `.mk` - so marketing components are shown inside `.mk` islands.
+ * That is also the honest way to demonstrate that the layers do not collide.
+ */
+import AppLayout from "../layouts/AppLayout.astro";
+
+import Button from "../design-system/astro/app/Button.astro";
+import Badge from "../design-system/astro/app/Badge.astro";
+import Score from "../design-system/astro/app/Score.astro";
+import Card from "../design-system/astro/app/Card.astro";
+import KpiCard from "../design-system/astro/app/KpiCard.astro";
+import StatStrip from "../design-system/astro/app/StatStrip.astro";
+import Alert from "../design-system/astro/app/Alert.astro";
+import Tabs from "../design-system/astro/app/Tabs.astro";
+import Field from "../design-system/astro/app/Field.astro";
+import EmptyState from "../design-system/astro/app/EmptyState.astro";
+import Icon from "../design-system/astro/app/Icon.astro";
+import { ICON_NAMES } from "../design-system/astro/app/icons";
+
+import MkButton from "../design-system/astro/marketing/MkButton.astro";
+import MkHeading from "../design-system/astro/marketing/MkHeading.astro";
+import MkCard from "../design-system/astro/marketing/MkCard.astro";
+import MkQuote from "../design-system/astro/marketing/MkQuote.astro";
+import MkStats from "../design-system/astro/marketing/MkStats.astro";
+import MkLogos from "../design-system/astro/marketing/MkLogos.astro";
+import MkSteps from "../design-system/astro/marketing/MkSteps.astro";
+import MkFaq from "../design-system/astro/marketing/MkFaq.astro";
+import MkPricing from "../design-system/astro/marketing/MkPricing.astro";
+import MkCompare from "../design-system/astro/marketing/MkCompare.astro";
+import MkCta from "../design-system/astro/marketing/MkCta.astro";
+import MkCallout from "../design-system/astro/marketing/MkCallout.astro";
+import MkAuthor from "../design-system/astro/marketing/MkAuthor.astro";
+import MkProse from "../design-system/astro/marketing/MkProse.astro";
+import MkToc from "../design-system/astro/marketing/MkToc.astro";
+import MkTeam from "../design-system/astro/marketing/MkTeam.astro";
+import MkTabs from "../design-system/astro/marketing/MkTabs.astro";
+import MkArticleCard from "../design-system/astro/marketing/MkArticleCard.astro";
+import MkBreadcrumb from "../design-system/astro/marketing/MkBreadcrumb.astro";
+import MkPostNav from "../design-system/astro/marketing/MkPostNav.astro";
+import MkAnnounce from "../design-system/astro/marketing/MkAnnounce.astro";
+import MkTerminal from "../design-system/astro/marketing/MkTerminal.astro";
+import MkMedia from "../design-system/astro/marketing/MkMedia.astro";
+import MkField from "../design-system/astro/marketing/MkField.astro";
+import MkNav from "../design-system/astro/marketing/MkNav.astro";
+
+const sections = [
+  { id: "colour", label: "Colour" },
+  { id: "type", label: "Type" },
+  { id: "space", label: "Space & radius" },
+  { id: "buttons", label: "Buttons" },
+  { id: "forms", label: "Forms" },
+  { id: "status", label: "Status" },
+  { id: "surfaces", label: "Surfaces" },
+  { id: "data", label: "Data" },
+  { id: "states", label: "States" },
+  { id: "icons", label: "Icons" },
+  { id: "mk-type", label: "Marketing type" },
+  { id: "mk-actions", label: "Marketing actions" },
+  { id: "mk-sections", label: "Marketing sections" },
+  { id: "mk-content", label: "Content" },
+  { id: "mk-chrome", label: "Site chrome" },
+];
+
+const appTokens = [
+  ["--surface-card", "Panel, cards, table body"],
+  ["--surface-app", "Ground, sidebar, sticky headers"],
+  ["--surface-sunken", "Borders, wells, neutral badges"],
+  ["--content", "Foreground; every text tier derives"],
+  ["--accent", "One accent: primary, links, focus"],
+  ["--success", "Positive delta, passing"],
+  ["--warning", "Degraded, declining"],
+  ["--error", "Broken, destructive"],
+  ["--info", "Informational"],
+];
+
+const textTiers = [
+  ["--text-primary", "Headings, metric values", "18.4:1"],
+  ["--text-secondary", "Body, descriptions", "6.8:1"],
+  ["--text-muted", "Table headers, labels", "4.8:1"],
+  ["--text-subtle", "Captions, timestamps", "3.5:1 large only"],
+  ["--text-faint", "Decorative, disabled", "2.6:1 never text"],
+];
+
+const mkTokens = [
+  ["--m-canvas", "Page ground"],
+  ["--m-band-quiet", "A half step off canvas"],
+  ["--m-band-warm", "Footer and feature bands"],
+  ["--m-q-bg", "Testimonial band"],
+  ["--m-surface", "Cards, nav, frames"],
+  ["--m-ink", "Headlines, body, primary action"],
+  ["--m-accent", "Once per page"],
+  ["--m-feat-bg", "Emphasis: terminal, featured plan"],
+];
+
+const typeScale = [
+  ["ds-h1", "24 / 32", "600"],
+  ["ds-h2", "18 / 28", "600"],
+  ["ds-h3", "16 / 24", "600"],
+  ["ds-h4", "14 / 20", "600"],
+  ["ds-body-lg", "16 / 24", "400"],
+  ["ds-body", "14 / 20", "400"],
+  ["ds-body-sm", "12 / 16", "400"],
+  ["ds-label", "12 / 16", "600 upper"],
+  ["ds-caption", "11 / 16", "400"],
+];
+
+const spaceScale = [1, 1.5, 2, 3, 4, 5, 6, 8, 10, 12];
+const radii = [
+  ["--radius-xs", "4"],
+  ["--radius-sm", "6"],
+  ["--radius-field", "8"],
+  ["--radius-box", "12"],
+  ["--radius-full", "pill"],
+];
+---
+
+<AppLayout title="Component reference">
+  <div class="ref">
+    <aside class="ref__nav">
+      <div class="ref__brand">
+        <span class="ref__mark">UI</span>
+        <span>
+          <span class="ref__title">Reference</span>
+          <span class="ref__sub">Live components</span>
+        </span>
+      </div>
+      <nav>
+        {sections.map((s) => (
+          <a class="ds-navitem" href={"#" + s.id}><span>{s.label}</span></a>
+        ))}
+      </nav>
+      <div class="ref__foot">
+        <div class="ds-segmented" role="group" aria-label="Theme">
+          <button type="button" data-theme-set="light" aria-pressed="false">
+            <Icon name="sun" size="sm" />Light
+          </button>
+          <button type="button" data-theme-set="dark" aria-pressed="false">
+            <Icon name="moon" size="sm" />Dark
+          </button>
+        </div>
+        <p class="ref__note">The marketing layer is light-only by design.</p>
+      </div>
+    </aside>
+
+    <main class="ref__main">
+      <header class="ref__head">
+        <h1 class="ds-h1">Component reference</h1>
+        <p class="ds-body ds-text-secondary" style="margin:6px 0 0;max-width:64ch">
+          Every component rendered from source. Change a value in
+          <code class="ref__code">themes/app-blank.css</code> and this page changes with it —
+          which is the point, and the reason it cannot go stale.
+        </p>
+      </header>
+
+      <!-- ============================ COLOUR ============================ -->
+      <section id="colour" class="ref__section">
+        <h2 class="ds-h2">Colour</h2>
+        <p class="ref__lede">Four surfaces, one foreground, one accent, four feedback hues. Every text tier is the foreground at an opacity, so the greys re-tune themselves when you change the ink.</p>
+
+        <div class="ref__block">
+          <p class="ds-label">Application</p>
+          <div class="ref__swatches">
+            {appTokens.map(([token, use]) => (
+              <div class="ref__swatch">
+                <span class="ref__chip" style={"background:var(" + token + ")"}></span>
+                <span>
+                  <code class="ref__code">{token}</code>
+                  <span class="ref__use">{use}</span>
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div class="ref__block">
+          <p class="ds-label">Text tiers &amp; measured contrast</p>
+          <div class="ref__rows">
+            {textTiers.map(([token, use, ratio]) => (
+              <div class="ref__row">
+                <span style={"color:var(" + token + ");font-size:15px"}>The quick brown fox</span>
+                <code class="ref__code">{token}</code>
+                <span class="ref__use">{use}</span>
+                <span class="ref__ratio ds-num">{ratio}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div class="ref__block">
+          <p class="ds-label">Marketing — light only</p>
+          <div class="mk ref__island">
+            <div class="ref__swatches">
+              {mkTokens.map(([token, use]) => (
+                <div class="ref__swatch">
+                  <span class="ref__chip" style={"background:var(" + token + ")"}></span>
+                  <span>
+                    <code class="ref__code">{token}</code>
+                    <span class="ref__use">{use}</span>
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================= TYPE ============================= -->
+      <section id="type" class="ref__section">
+        <h2 class="ds-h2">Type</h2>
+        <p class="ref__lede">The largest type in the application is 24px. Anything bigger belongs to the marketing layer.</p>
+        <div class="ref__rows">
+          {typeScale.map(([cls, size, weight]) => (
+            <div class="ref__row">
+              <span class={cls}>The quick brown fox</span>
+              <code class="ref__code">.{cls}</code>
+              <span class="ref__use ds-num">{size}</span>
+              <span class="ref__ratio">{weight}</span>
+            </div>
+          ))}
+          <div class="ref__row">
+            <span class="ds-mono ds-num">14,800 · $2.41 · #3 → #1</span>
+            <code class="ref__code">.ds-mono</code>
+            <span class="ref__use">Measured values only, never code</span>
+            <span class="ref__ratio">12 / 16</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================= SPACE & RADIUS ======================= -->
+      <section id="space" class="ref__section">
+        <h2 class="ds-h2">Space &amp; radius</h2>
+        <div class="ref__block">
+          <p class="ds-label">Spacing — 4px rhythm</p>
+          <div class="ref__scale">
+            {spaceScale.map((n) => (
+              <div class="ref__scale-item">
+                <span class="ref__bar" style={"width:" + n * 4 + "px"}></span>
+                <span class="ref__use ds-num">{n * 4}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div class="ref__block">
+          <p class="ds-label">Radius</p>
+          <div class="ref__radii">
+            {radii.map(([token, label]) => (
+              <div class="ref__radius" style={"border-radius:var(" + token + ")"}>{label}</div>
+            ))}
+          </div>
+        </div>
+        <div class="ref__block">
+          <p class="ds-label">Elevation</p>
+          <div class="ref__radii">
+            <div class="ref__elev">flat — cards, buttons, tables</div>
+            <div class="ref__elev" style="box-shadow:var(--shadow-popover)">popover</div>
+            <div class="ref__elev" style="box-shadow:var(--shadow-modal)">modal</div>
+          </div>
+          <p class="ref__lede" style="margin-top:12px">Anything in the page plane is flat. Shadow means the element floats above it.</p>
+        </div>
+      </section>
+
+      <!-- =========================== BUTTONS ============================ -->
+      <section id="buttons" class="ref__section">
+        <h2 class="ds-h2">Buttons</h2>
+        <p class="ref__lede">Heights are one 4px step times 6, 8, 10 and 12 — 24, 32, 40, 48px. Weight is 600 at every size.</p>
+
+        <div class="ref__demo">
+          <p class="ref__cap">Variants</p>
+          <div class="ref__wrap">
+            <Button variant="primary">Primary</Button>
+            <Button>Secondary</Button>
+            <Button variant="ghost">Ghost</Button>
+            <Button variant="destructive">Destructive</Button>
+          </div>
+        </div>
+
+        <div class="ref__demo">
+          <p class="ref__cap">Sizes</p>
+          <div class="ref__wrap">
+            <Button size="xs" variant="primary">Extra small</Button>
+            <Button size="sm" variant="primary">Small</Button>
+            <Button variant="primary">Medium</Button>
+            <Button size="lg" variant="primary">Large</Button>
+          </div>
+        </div>
+
+        <div class="ref__demo">
+          <p class="ref__cap">Icons &amp; states</p>
+          <div class="ref__wrap">
+            <Button iconStart="plus" variant="primary">Icon left</Button>
+            <Button iconEnd="external">Icon right</Button>
+            <Button square label="More" iconStart="dots" />
+            <Button loading>Loading</Button>
+            <Button disabled>Disabled</Button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================ FORMS ============================= -->
+      <section id="forms" class="ref__section">
+        <h2 class="ds-h2">Forms</h2>
+        <p class="ref__lede">Focus is the system's one departure from its framework: the border turns accent and the field takes a 10% tint. Add a focus ring for keyboard users — colour alone is not enough.</p>
+        <div class="ref__demo ref__grid2">
+          <Field label="Text" id="r-text" hint="A hint sits under the field.">
+            <input class="ds-input" id="r-text" type="text" placeholder="Placeholder" aria-describedby="r-text-hint" />
+          </Field>
+          <Field label="Invalid" id="r-bad" error="Enter a full domain, for example example.com">
+            <input class="ds-input" id="r-bad" type="text" value="not a url" aria-invalid="true" aria-describedby="r-bad-error" />
+          </Field>
+          <Field label="Select" id="r-sel">
+            <select class="ds-select" id="r-sel"><option>Option one</option><option>Option two</option></select>
+          </Field>
+          <Field label="Disabled" id="r-dis">
+            <input class="ds-input" id="r-dis" type="text" value="Not editable" disabled />
+          </Field>
+          <Field label="Textarea" id="r-ta" class="ref__span2">
+            <textarea class="ds-textarea" id="r-ta" rows="3">Multi-line input.</textarea>
+          </Field>
+        </div>
+        <div class="ref__demo">
+          <p class="ref__cap">Controls</p>
+          <div class="ref__wrap" style="gap:20px">
+            <label class="ds-check-row"><input class="ds-checkbox" type="checkbox" checked /> Checkbox</label>
+            <label class="ds-check-row"><input class="ds-checkbox" type="checkbox" id="r-ind" /> Indeterminate</label>
+            <label class="ds-check-row"><input class="ds-radio" type="radio" name="r-r" checked /> Radio</label>
+            <label class="ds-check-row"><input class="ds-switch" type="checkbox" checked /> Switch</label>
+            <div class="ds-segmented" role="group" aria-label="Density">
+              <button type="button" aria-pressed="true">Compact</button>
+              <button type="button" aria-pressed="false">Default</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================ STATUS ============================ -->
+      <section id="status" class="ref__section">
+        <h2 class="ds-h2">Status</h2>
+        <p class="ref__lede">Every status carries a second channel — a glyph, a word, a number — so none of it depends on colour alone.</p>
+        <div class="ref__demo">
+          <p class="ref__cap">Badges</p>
+          <div class="ref__wrap">
+            <Badge>Default</Badge>
+            <Badge tone="neutral">Neutral</Badge>
+            <Badge tone="success">Success</Badge>
+            <Badge tone="warning">Warning</Badge>
+            <Badge tone="error">Error</Badge>
+            <Badge tone="info">Info</Badge>
+            <Badge tone="accent" size="xs">3</Badge>
+          </div>
+        </div>
+        <div class="ref__demo">
+          <p class="ref__cap">Pill badges — a small closed set of categories</p>
+          <div class="ref__wrap">
+            <Badge shape="pill" tone="info">Info</Badge>
+            <Badge shape="pill" tone="warning">Comm</Badge>
+            <Badge shape="pill" tone="success">Trans</Badge>
+            <Badge shape="pill" tone="neutral">?</Badge>
+          </div>
+        </div>
+        <div class="ref__demo">
+          <p class="ref__cap">Score — low is good, the number is always shown</p>
+          <div class="ref__wrap">
+            <Score value={null} label="No score" /><Score value={8} /><Score value={24} />
+            <Score value={41} /><Score value={58} /><Score value={73} /><Score value={91} />
+          </div>
+        </div>
+        <div class="ref__demo">
+          <p class="ref__cap">Alerts</p>
+          <div style="display:flex;flex-direction:column;gap:12px;width:100%">
+            <Alert tone="info">An informational banner.</Alert>
+            <Alert tone="success">Something finished cleanly.</Alert>
+            <Alert tone="warning">Something needs attention.</Alert>
+            <Alert tone="error">Something failed, and this is how to fix it.</Alert>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================== SURFACES ============================ -->
+      <section id="surfaces" class="ref__section">
+        <h2 class="ds-h2">Surfaces</h2>
+        <div class="ref__demo ref__grid2">
+          <Card title="Card with header">
+            <p class="ds-body ds-text-secondary" style="margin:0">
+              A header row separated by a hairline, then the body.
+            </p>
+            <Button slot="actions" size="xs" variant="ghost" iconStart="dots" square label="Options" />
+          </Card>
+          <Card>
+            <p class="ds-body ds-text-secondary" style="margin:0">A plain card. Flat, 1px border, 12px radius.</p>
+          </Card>
+        </div>
+        <div class="ref__demo">
+          <p class="ref__cap">Tabs</p>
+          <Tabs
+            active="one"
+            tabs={[
+              { id: "one", label: "Issues (42)" },
+              { id: "two", label: "Pages (318)" },
+              { id: "three", label: "Disabled", disabled: true },
+            ]}
+          />
+        </div>
+      </section>
+
+      <!-- ============================= DATA ============================= -->
+      <section id="data" class="ref__section">
+        <h2 class="ds-h2">Data</h2>
+        <div class="ref__demo">
+          <p class="ref__cap">KPI cards</p>
+          <div class="ref__grid4">
+            <KpiCard label="Total views" value="128.4K" delta={12} deltaLabel="vs. prev." />
+            <KpiCard label="Active items" value="24,180" delta={-3} deltaLabel="vs. prev." />
+            <KpiCard label="Average score" value="38" hint="Lower is better" />
+            <KpiCard label="Open issues" value="42" loading />
+          </div>
+        </div>
+        <div class="ref__demo">
+          <p class="ref__cap">Stat strip — 1px grid gaps become the dividers</p>
+          <StatStrip
+            columns={4}
+            stats={[
+              { label: "Items", value: "318" },
+              { label: "Issues", value: "42", sub: "6 critical" },
+              { label: "Avg. response", value: "412ms" },
+              { label: "Health", value: "94", tone: "success" },
+            ]}
+          />
+        </div>
+        <div class="ref__demo">
+          <p class="ref__cap">Table — hover, selected, and the identifier column</p>
+          <div class="ds-table-wrap" style="width:100%">
+            <table class="ds-table ds-table--sm">
+              <thead>
+                <tr>
+                  <th style="width:32px"><input class="ds-checkbox ds-checkbox--xs" type="checkbox" aria-label="Select all" /></th>
+                  <th data-col="id"><button class="ds-sort" data-sorted>Name<Icon name="chev-down" size="xs" /></button></th>
+                  <th data-align="right"><button class="ds-sort">Views</button></th>
+                  <th data-align="right">Score</th>
+                  <th data-align="center">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr aria-selected="true" data-clickable>
+                  <td><input class="ds-checkbox ds-checkbox--xs" type="checkbox" checked aria-label="Select row" /></td>
+                  <td data-col="id" style="font-weight:500">Selected row</td>
+                  <td data-align="right">14,800</td>
+                  <td data-align="right"><Score value={24} /></td>
+                  <td data-align="center"><Badge tone="success">Published</Badge></td>
+                </tr>
+                <tr data-clickable>
+                  <td><input class="ds-checkbox ds-checkbox--xs" type="checkbox" aria-label="Select row" /></td>
+                  <td data-col="id" style="font-weight:500">Hover this row</td>
+                  <td data-align="right">9,900</td>
+                  <td data-align="right"><Score value={58} /></td>
+                  <td data-align="center"><Badge tone="neutral">Draft</Badge></td>
+                </tr>
+                <tr data-clickable>
+                  <td><input class="ds-checkbox ds-checkbox--xs" type="checkbox" aria-label="Select row" /></td>
+                  <td data-col="id" style="font-weight:500">Missing value</td>
+                  <td data-align="right"><span class="ds-text-faint">—</span></td>
+                  <td data-align="right"><Score value={null} /></td>
+                  <td data-align="center"><Badge tone="neutral">Draft</Badge></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="ref__demo">
+          <p class="ref__cap">Bulk actions &amp; pagination</p>
+          <div style="display:flex;flex-direction:column;gap:16px;width:100%;align-items:flex-start">
+            <div class="ds-bulkbar">
+              <div class="ds-bulkbar__count">
+                <Button size="xs" square variant="ghost" label="Clear selection" iconStart="x" />
+                <span class="ds-num" style="font-weight:500">12</span>
+                <span class="ds-text-muted">selected</span>
+              </div>
+              <div style="display:flex;align-items:center;padding-inline:6px">
+                <button class="ds-bulkbar__action" type="button"><Icon name="save" size="sm" />Save</button>
+                <button class="ds-bulkbar__action ds-bulkbar__action--danger" type="button"><Icon name="x" size="sm" />Remove</button>
+              </div>
+            </div>
+            <div class="ds-pagination" style="width:100%">
+              <div class="ds-num">1–50 of 1,284</div>
+              <div class="ds-pagination__group">
+                <label class="ref__wrap" style="gap:8px"><span>Rows per page</span>
+                  <select class="ds-select ds-select--sm" style="width:5rem"><option>50</option></select></label>
+                <div class="ds-pagination__nav">
+                  <span class="ds-num ds-text-secondary">Page 1 of 26</span>
+                  <Button size="sm" square variant="ghost" label="Previous page" iconStart="chev-left" disabled />
+                  <Button size="sm" square variant="ghost" label="Next page" iconStart="chev-right" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================ STATES ============================ -->
+      <section id="states" class="ref__section">
+        <h2 class="ds-h2">States</h2>
+        <p class="ref__lede">A first load uses skeletons. A refetch over existing data drops it to 60% opacity instead, so the previous answer stays readable.</p>
+        <div class="ref__demo ref__grid2">
+          <Card title="Loading">
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <div class="ds-skeleton" style="height:14px"></div>
+              <div class="ds-skeleton" style="height:14px;width:80%"></div>
+              <div class="ds-skeleton" style="height:14px;width:60%"></div>
+            </div>
+          </Card>
+          <Card title="Progress">
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+                <span class="ds-body-sm ds-text-secondary">Crawling</span>
+                <span class="ds-body-sm ds-num ds-text-muted">318 / 500</span>
+              </div>
+              <div class="ds-progress"><span style="width:64%"></span></div>
+            </div>
+          </Card>
+        </div>
+        <div class="ref__demo">
+          <EmptyState
+            icon="filters"
+            title="No rows match these filters"
+            body="Four filters are narrowing 1,284 results down to none. Empty states name the reason and offer the way out."
+          >
+            <Button size="sm">Clear filters</Button>
+          </EmptyState>
+        </div>
+      </section>
+
+      <!-- ============================ ICONS ============================= -->
+      <section id="icons" class="ref__section">
+        <h2 class="ds-h2">Icons</h2>
+        <p class="ref__lede">Lucide geometry at 24px viewBox, 2px stroke, round caps. Inline sprite — no icon font, nothing to block first paint.</p>
+        <div class="ref__icons">
+          {ICON_NAMES.map((n) => (
+            <div class="ref__icon"><Icon name={n} size="lg" /><span>{n}</span></div>
+          ))}
+        </div>
+      </section>
+
+      <!-- ======================= MARKETING: TYPE ======================== -->
+      <section id="mk-type" class="ref__section">
+        <h2 class="ds-h2">Marketing — type</h2>
+        <p class="ref__lede">Fluid display sizes at weight 500 with tracking that tightens as size grows. Everything below sits inside a <code class="ref__code">.mk</code> island, which is how the two layers coexist without colliding.</p>
+        <div class="mk ref__island">
+          <p class="mk-eyebrow">Eyebrow — sentence case, not tracked</p>
+          <h1 class="mk-display-xl">Display XL</h1>
+          <h2 class="mk-display-lg" style="margin-top:24px">Display LG</h2>
+          <h3 class="mk-display-md" style="margin-top:24px">Display MD</h3>
+          <p class="mk-card-title" style="margin-top:24px">Card title</p>
+          <p class="mk-subhead mk-muted" style="margin-top:16px">Subhead — 20px regular in muted ink, never bold.</p>
+          <p class="mk-body-lg" style="margin-top:16px">Body large, for long-form paragraphs.</p>
+          <p class="mk-body-sm mk-subtle" style="margin-top:12px">Body small — captions and metadata.</p>
+        </div>
+      </section>
+
+      <!-- ====================== MARKETING: ACTIONS ====================== -->
+      <section id="mk-actions" class="ref__section">
+        <h2 class="ds-h2">Marketing — actions</h2>
+        <p class="ref__lede">44px minimum, weight 500, 8px radius. Never a pill: the pill radius belongs to chrome, so a rounded rectangle always reads as an action.</p>
+        <div class="mk ref__island">
+          <div class="ref__wrap">
+            <MkButton size="lg" variant="primary">Large primary</MkButton>
+            <MkButton variant="primary">Primary</MkButton>
+            <MkButton variant="secondary">Secondary</MkButton>
+            <MkButton variant="accent">Accent — once per page</MkButton>
+            <a class="mk-textlink" href="#mk-actions">Text link <span class="mk-arrow">&#8594;</span></a>
+          </div>
+          <div style="margin-top:32px">
+            <MkField label="Email" id="r-mk-email" hint="Marketing form fields run larger: 48px.">
+              <input class="mk-input" id="r-mk-email" type="email" placeholder="you@example.com" aria-describedby="r-mk-email-hint" />
+            </MkField>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== MARKETING: SECTIONS ====================== -->
+      <section id="mk-sections" class="ref__section">
+        <h2 class="ds-h2">Marketing — sections</h2>
+        <div class="mk ref__island">
+          <MkHeading eyebrow="Section heading" title="A heading block" body="Eyebrow, title and supporting line as one object." />
+
+          <div style="margin-top:40px">
+            <p class="ref__cap">Feature cards</p>
+            <div class="mk-feature-grid">
+              <MkCard kind="feature" title="Feature one" body="A short line about it." href="#mk-sections">
+                <div slot="media" style="height:100px;display:grid;place-items:center;color:var(--m-ink-tertiary)">
+                  <Icon name="dashboard" size="xl" />
+                </div>
+              </MkCard>
+              <MkCard kind="list" title="List card" body="Text only, 128px minimum height." />
+              <MkCard title="Plain card" body="No media, no minimum." />
+            </div>
+          </div>
+
+          <div style="margin-top:40px">
+            <p class="ref__cap">Steps</p>
+            <MkSteps
+              steps={[
+                { title: "Scaffold", body: "One command, four working pages." },
+                { title: "Re-skin", body: "Change four values in the theme." },
+                { title: "Ship", body: "Static build, deploys anywhere." },
+              ]}
+            />
+          </div>
+
+          <div style="margin-top:40px">
+            <p class="ref__cap">Stats &amp; logos</p>
+            <MkStats
+              stats={[
+                { value: "44", label: "Components" },
+                { value: "4", label: "Themes" },
+                { value: "AA", label: "Contrast" },
+                { value: "0", label: "Runtime deps" },
+              ]}
+            />
+            <div style="margin-top:32px">
+              <MkLogos items={["Northwind", "Contoso", "Fabrikam", "Litware"]} />
+            </div>
+          </div>
+
+          <div style="margin-top:40px">
+            <p class="ref__cap">Tabs — CSS only</p>
+            <MkTabs name="ref-tabs" tabs={[{ id: "a", label: "First" }, { id: "b", label: "Second" }]}>
+              <div slot="panel-a"><MkMedia ratio="21/9"><Icon name="dashboard" size="xl" /></MkMedia></div>
+              <div slot="panel-b"><MkMedia ratio="21/9"><Icon name="globe" size="xl" /></MkMedia></div>
+            </MkTabs>
+          </div>
+
+          <div style="margin-top:40px">
+            <p class="ref__cap">Testimonials</p>
+            <div class="mk-quote-grid" style="grid-template-columns:1fr 1fr">
+              <MkQuote quote="A short, specific quote works better than a long vague one." name="A. Rivera" meta="Head of growth" initials="AR" />
+              <MkQuote quote="Attributions align on a baseline because the cards stretch." name="S. Moreau" meta="Founder" initials="SM" />
+            </div>
+          </div>
+
+          <div style="margin-top:40px">
+            <p class="ref__cap">Pricing — at most one featured plan</p>
+            <MkPricing
+              plans={[
+                { name: "Starter", amount: "Free", blurb: "For a first project.", features: ["1 workspace", "Core components"], ctaLabel: "Start free", ctaHref: "#mk-sections" },
+                { name: "Team", amount: "$29", period: "/ mo", blurb: "For small teams.", features: ["Unlimited workspaces", "All components", "Custom themes"], ctaLabel: "Start trial", ctaHref: "#mk-sections", featured: true, tag: "Popular" },
+                { name: "Business", amount: "$99", period: "/ mo", blurb: "For organisations.", features: ["Everything in Team", "SSO", "Audit log"], ctaLabel: "Contact us", ctaHref: "#mk-sections" },
+              ]}
+            />
+          </div>
+
+          <div style="margin-top:40px">
+            <p class="ref__cap">Comparison</p>
+            <MkCompare
+              columns={["Starter", "Team", "Business"]}
+              rows={[
+                { label: "Workspaces", values: ["1", "Unlimited", "Unlimited"] },
+                { label: "Custom themes", values: [false, true, true] },
+                { label: "SSO", values: [false, false, true] },
+              ]}
+            />
+          </div>
+
+          <div style="margin-top:40px">
+            <p class="ref__cap">FAQ — native details, no script</p>
+            <MkFaq
+              items={[
+                { q: "Does this need JavaScript?", a: "No. It is a native details element, so it works before any script loads." },
+                { q: "Can I open several at once?", a: "Yes — they are independent, not an exclusive accordion." },
+              ]}
+            />
+          </div>
+
+          <div style="margin-top:40px">
+            <p class="ref__cap">CTA band — the dark surface, once per page</p>
+            <MkCta title="Start building today" body="A closing action on the emphasis surface.">
+              <MkButton size="lg" variant="primary">Start free</MkButton>
+              <MkButton size="lg" variant="secondary">See pricing</MkButton>
+            </MkCta>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================== MARKETING: CONTENT ====================== -->
+      <section id="mk-content" class="ref__section">
+        <h2 class="ds-h2">Content</h2>
+        <p class="ref__lede">Prose styles raw HTML through element selectors, so markdown output drops in without a single class.</p>
+        <div class="mk ref__island">
+          <div style="display:grid;gap:40px;grid-template-columns:minmax(0,1fr) 200px;align-items:start">
+            <div>
+              <MkProse>
+                <h2 id="ref-prose-h2">A heading inside prose</h2>
+                <p>
+                  Body text runs at 18px with a 1.7 line height and a 68 character
+                  measure. Links are <a href="#mk-content">ink with a quiet underline</a>,
+                  not accent — the accent is spent once per page, on an action.
+                </p>
+                <ul>
+                  <li>Lists get proper markers in a faint tone</li>
+                  <li>Inline <code>code</code> sits on the quiet surface</li>
+                </ul>
+                <blockquote><p>A quotation carries a rule rather than italics.</p></blockquote>
+                <MkCallout label="Note">
+                  <p>A callout breaks the prose measure on purpose, so it reads as an aside.</p>
+                </MkCallout>
+                <pre><code>npx github:esimloop/esimloop-ui my-project</code></pre>
+                <table>
+                  <thead><tr><th>Check</th><th>Result</th></tr></thead>
+                  <tbody>
+                    <tr><td>Token drift</td><td>Fails the build</td></tr>
+                    <tr><td>Hard-coded colour</td><td>Fails the build</td></tr>
+                  </tbody>
+                </table>
+              </MkProse>
+            </div>
+            <MkToc items={[{ id: "ref-prose-h2", label: "A heading inside prose" }]} />
+          </div>
+
+          <div style="margin-top:40px">
+            <p class="ref__cap">Byline, callouts, article cards</p>
+            <div style="display:flex;flex-direction:column;gap:24px">
+              <MkAuthor name="A. Rivera" role="Design engineering" initials="AR" />
+              <MkCallout tone="accent" label="Tip" icon="sparkles">
+                <p>The accent callout spends the page's one accent. Use it at most once.</p>
+              </MkCallout>
+              <div class="mk-article-grid" style="grid-template-columns:1fr 1fr;margin-top:0">
+                <MkArticleCard title="An article card" excerpt="Category, date and reading time above the title." href="#mk-content" category="Design" date="12 Mar" readingTime="4 min" />
+                <MkArticleCard title="Another one" excerpt="Hover darkens the border to ink." href="#mk-content" category="Engineering" date="4 Mar" readingTime="6 min" />
+              </div>
+              <MkPostNav
+                previous={{ title: "The previous article", href: "#mk-content" }}
+                next={{ title: "The next article", href: "#mk-content" }}
+              />
+            </div>
+          </div>
+
+          <div style="margin-top:40px">
+            <p class="ref__cap">Team</p>
+            <MkTeam
+              people={[
+                { name: "A. Rivera", role: "Design engineering", initials: "AR" },
+                { name: "S. Moreau", role: "Founder", initials: "SM" },
+                { name: "T. Lambert", role: "Support", initials: "TL" },
+                { name: "J. Okafor", role: "Operations", initials: "JO" },
+              ]}
+            />
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================= MARKETING: CHROME ====================== -->
+      <section id="mk-chrome" class="ref__section">
+        <h2 class="ds-h2">Site chrome</h2>
+        <div class="mk ref__island" style="padding-inline:0">
+          <div style="padding-inline:24px">
+            <p class="ref__cap">Announcement bar</p>
+          </div>
+          <MkAnnounce tag="New" href="#mk-chrome" linkLabel="Read the post">
+            One message at a time — if you have two, you have none.
+          </MkAnnounce>
+          <div style="padding-inline:24px">
+            <p class="ref__cap" style="margin-top:32px">Floating nav — narrower than the content it floats over</p>
+          </div>
+          <MkNav brand="Product" links={[{ label: "Features", href: "#mk-chrome" }, { label: "Pricing", href: "#mk-chrome" }]} ctaLabel="Open app" ctaHref="#mk-chrome" />
+          <div style="padding-inline:24px;margin-top:32px">
+            <p class="ref__cap">Breadcrumb</p>
+            <MkBreadcrumb items={[{ label: "Home", href: "#mk-chrome" }, { label: "Blog", href: "#mk-chrome" }, { label: "Article" }]} />
+            <p class="ref__cap" style="margin-top:32px">Terminal — the one dark surface</p>
+            <MkTerminal label="agent · session">
+<span class="mk-t-dim">&#8250;</span> <span class="mk-t-bright">npx github:esimloop/esimloop-ui my-project</span>
+
+<span class="mk-t-accent">&#9679;</span> Scaffolded my-project
+  <span class="mk-t-dim">theme:  blank</span>
+  <span class="mk-t-dim">layers: app (ds-) + marketing (mk-)</span>
+</MkTerminal>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</AppLayout>
+
+<style>
+  .ref { display: flex; min-height: 100vh; background: var(--surface-app); }
+  .ref__nav { display: none; flex-shrink: 0; width: 15rem; }
+  @media (min-width: 1024px) { .ref__nav { display: block; } }
+  .ref__nav > * { position: sticky; top: 0; }
+  .ref__nav nav { display: flex; flex-direction: column; gap: 1px; }
+  .ref__nav > div { max-height: 100vh; overflow-y: auto; padding: 12px 8px 16px; display: flex; flex-direction: column; }
+  .ref__brand { display: flex; align-items: center; gap: 8px; padding: 0 8px 14px; }
+  .ref__mark { width: 26px; height: 26px; border-radius: var(--radius-sm); background: var(--accent);
+    color: var(--accent-content); display: grid; place-items: center; font-size: 11px; font-weight: 700; }
+  .ref__title { display: block; font-size: 14px; font-weight: 600; }
+  .ref__sub { display: block; font-size: 11px; color: var(--text-subtle); }
+  .ref__foot { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border-default); }
+  .ref__note { margin: 12px 0 0; font-size: 11px; line-height: 1.4; color: var(--text-subtle); }
+
+  .ref__main { flex: 1; min-width: 0; background: var(--surface-card); }
+  @media (min-width: 1024px) {
+    .ref__main { margin-top: 8px; border-top-left-radius: var(--radius-field);
+      border-left: 1px solid var(--border-default); border-top: 1px solid var(--border-default); }
+  }
+  .ref__head { padding: 24px 16px 0; max-width: 76rem; margin-inline: auto; }
+  @media (min-width: 768px) { .ref__head { padding: 40px 32px 0; } }
+
+  .ref__section { max-width: 76rem; margin-inline: auto; padding: 48px 16px 0; scroll-margin-top: 24px; }
+  @media (min-width: 768px) { .ref__section { padding-inline: 32px; } }
+  .ref__section:last-child { padding-bottom: 96px; }
+  .ref__section > .ds-h2 { padding-bottom: 10px; border-bottom: 1px solid var(--border-default); }
+  .ref__lede { margin: 14px 0 0; font-size: 14px; line-height: 1.6; color: var(--text-secondary); max-width: 72ch; }
+  .ref__block { margin-top: 28px; }
+  .ref__block > .ds-label { margin: 0 0 12px; }
+  .ref__demo { margin-top: 24px; display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start; }
+  .ref__cap { width: 100%; margin: 0; font-size: 11px; font-weight: 600; letter-spacing: .05em;
+    text-transform: uppercase; color: var(--text-subtle); }
+  .ref__wrap { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  .ref__grid2 { display: grid; grid-template-columns: 1fr; gap: 16px; width: 100%; }
+  @media (min-width: 700px) { .ref__grid2 { grid-template-columns: 1fr 1fr; } }
+  .ref__span2 { grid-column: 1 / -1; }
+  .ref__grid4 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; width: 100%; }
+  @media (min-width: 900px) { .ref__grid4 { grid-template-columns: repeat(4, 1fr); } }
+
+  .ref__code { font-family: var(--font-mono); font-size: 11px; background: var(--surface-app);
+    padding: 2px 6px; border-radius: var(--radius-xs); white-space: nowrap; }
+  .ref__use { display: block; margin-top: 4px; font-size: 12px; color: var(--text-muted); }
+  .ref__ratio { font-size: 12px; color: var(--text-subtle); text-align: right; }
+
+  .ref__swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; }
+  .ref__swatch { display: flex; gap: 12px; align-items: flex-start; }
+  .ref__chip { width: 40px; height: 40px; flex-shrink: 0; border-radius: var(--radius-sm);
+    border: 1px solid var(--border-strong); }
+  .ref__rows { display: flex; flex-direction: column; border: 1px solid var(--border-default);
+    border-radius: var(--radius-field); overflow: hidden; }
+  .ref__row { display: grid; grid-template-columns: 1fr auto; gap: 8px 16px; align-items: center;
+    padding: 12px 16px; }
+  .ref__row + .ref__row { border-top: 1px solid var(--border-subtle); }
+  @media (min-width: 800px) { .ref__row { grid-template-columns: 16rem 12rem 1fr auto; } }
+  .ref__row .ref__use { margin-top: 0; }
+
+  .ref__scale { display: flex; flex-direction: column; gap: 8px; }
+  .ref__scale-item { display: flex; align-items: center; gap: 12px; }
+  .ref__bar { height: 14px; background: var(--accent-soft); border-radius: 2px; flex-shrink: 0; }
+  .ref__scale-item .ref__use { margin-top: 0; }
+  .ref__radii { display: flex; flex-wrap: wrap; gap: 12px; }
+  .ref__radius, .ref__elev { display: grid; place-items: center; min-width: 92px; height: 60px;
+    padding-inline: 14px; background: var(--surface-card); border: 1px solid var(--border-default);
+    font-size: 11px; color: var(--text-muted); border-radius: var(--radius-field); }
+
+  .ref__icons { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 8px; margin-top: 24px; }
+  .ref__icon { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 14px 6px;
+    border: 1px solid var(--border-default); border-radius: var(--radius-field); color: var(--text-secondary); }
+  .ref__icon span { font-size: 10px; color: var(--text-subtle); text-align: center; word-break: break-all; }
+
+  /* A marketing island: the .mk class carries its own tokens, ground and font,
+     so the layer renders correctly inside an application page. */
+  .ref__island { margin-top: 16px; padding: 32px 24px; border-radius: var(--radius-box);
+    border: 1px solid var(--border-default); width: 100%; overflow: hidden; }
+  .ref__island .ref__cap { color: var(--m-ink-subtle); }
+</style>
+
+<script>
+  const root = document.documentElement;
+  const buttons = document.querySelectorAll<HTMLButtonElement>("[data-theme-set]");
+  const sync = () => {
+    const explicit = root.getAttribute("data-theme");
+    const dark = explicit === "dark" || (!explicit && matchMedia("(prefers-color-scheme: dark)").matches);
+    buttons.forEach((b) =>
+      b.setAttribute("aria-pressed", String(b.dataset.themeSet === (dark ? "dark" : "light"))),
+    );
+  };
+  buttons.forEach((b) =>
+    b.addEventListener("click", () => {
+      root.setAttribute("data-theme", b.dataset.themeSet!);
+      sync();
+    }),
+  );
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", sync);
+  sync();
+
+  const ind = document.getElementById("r-ind") as HTMLInputElement | null;
+  if (ind) ind.indeterminate = true;
+</script>

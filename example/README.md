@@ -16,6 +16,7 @@ Scaffolded from esimloop-ui, theme **blank**.
 | `/contact` | marketing | form fields, team grid |
 | `/404` | marketing | not-found pattern |
 | `/app` | application | shell, sidebar, KPIs, stat strip, data table |
+| `/design-system` | both | **Living reference — every component, rendered from source.** |
 
 ## Where things live
 

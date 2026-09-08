@@ -20,7 +20,8 @@ Initial release.
   AA as text; the reconstructed theme shares one set and fails on white.
 
 ### Components
-- 14 application, 18 marketing, plus a 33-icon inline lucide sprite.
+- 14 application, 30 marketing, plus a 33-icon inline lucide sprite.
+- A living component reference at `/design-system`, rendered from source.
 - Marketing covers hero (centered / split), section, heading, split, card, quote,
   logos, stats, CTA band, FAQ, pricing, comparison table, article card,
   breadcrumb, nav with mega-menu, terminal, footer.

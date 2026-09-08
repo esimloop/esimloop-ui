@@ -207,7 +207,7 @@ import MkFooter from "../design-system/astro/marketing/MkFooter.astro";
   blurb="Replace this line with what your product does, in one sentence."
   columns={[
     { label: "Product", links: [{ label: "Features", href: "/#features" }, { label: "Pricing", href: "/pricing" }] },
-    { label: "Resources", links: [{ label: "Blog", href: "/blog" }, { label: "Contact", href: "/contact" }] },
+    { label: "Resources", links: [{ label: "Blog", href: "/blog" }, { label: "Components", href: "/design-system" }] },
     { label: "Company", links: [{ label: "Contact", href: "/contact" }, { label: "Privacy", href: "#" }] },
   ]}
 >
@@ -885,6 +885,7 @@ Scaffolded from esimloop-ui, theme **${theme}**.
 | \`/contact\` | marketing | form fields, team grid |
 | \`/404\` | marketing | not-found pattern |
 | \`/app\` | application | shell, sidebar, KPIs, stat strip, data table |
+| \`/design-system\` | both | **Living reference — every component, rendered from source.** |
 
 ## Where things live
 
@@ -917,6 +918,7 @@ await mkdir(dir, { recursive: true });
 const vendor = join(dir, "src", "design-system");
 if (has("force") && existsSync(vendor)) await rm(vendor, { recursive: true, force: true });
 await mkdir(vendor, { recursive: true });
+await mkdir(join(dir, "src", "pages"), { recursive: true });
 
 for (const part of ["css", "themes", "astro"]) {
   await cp(join(KIT, part), join(vendor, part), { recursive: true });
@@ -928,6 +930,10 @@ await writeFile(
     "Avoid editing `css/` - re-running init with --force overwrites it.\n",
 );
 
+// The component reference is a real page, kept as a file rather than a string:
+// it is long, and you will want to edit it as your own components grow.
+await cp(join(KIT, "templates", "design-system.astro"), join(dir, "src", "pages", "design-system.astro"));
+
 for (const { path, body } of files) {
   const full = join(dir, path);
   await mkdir(dirname(full), { recursive: true });
@@ -937,7 +943,8 @@ for (const { path, body } of files) {
 console.log("\nScaffolded " + pkgName + " in " + dir);
 console.log("  theme:  " + theme);
 console.log("  layers: app (ds-) + marketing (mk-)");
-console.log("  pages:  / · /pricing · /blog · /blog/example-post · /contact · /404 · /app");
+console.log("  pages:  / · /pricing · /blog · /contact · /app");
+console.log("  ref:    /design-system  <- every component, rendered live");
 console.log("\n  cd " + target);
 console.log("  npm install");
 console.log("  npm run dev\n");
