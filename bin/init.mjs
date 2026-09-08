@@ -2,10 +2,12 @@
 /**
  * Scaffold a new Astro project wired to this design system.
  *
- *   node bin/init.mjs <target-dir> [--name <pkg-name>] [--theme blank|openseo] [--force]
+ *   node bin/init.mjs <target-dir> [--name <pkg-name>] [--theme blank|openseo|editorial] [--force]
  *
- * Themes: `blank` (neutral, AA-clean — the default) or `openseo` (the
- * reconstructed values; named for provenance, not for a domain).
+ * Themes: `blank` (neutral, AA-clean — the default), `openseo` (the
+ * reconstructed values; named for provenance, not for a domain), or
+ * `editorial` (paper, oxblood, sharp corners, elevated at rest, serif
+ * headings — the theme that proves the skin is genuinely swappable).
  *
  * The system is VENDORED (copied into src/design-system), not installed as a
  * dependency. For a starter kit that is the right trade: you own the files, the
@@ -30,15 +32,15 @@ const has = (name) => argv.includes("--" + name);
 const target = argv.find((a, i) => !a.startsWith("--") && !VALUE_FLAGS.has(argv[i - 1]));
 
 if (!target) {
-  console.error("Usage: node bin/init.mjs <target-dir> [--name <pkg>] [--theme blank|openseo] [--force]");
+  console.error("Usage: node bin/init.mjs <target-dir> [--name <pkg>] [--theme blank|openseo|editorial] [--force]");
   process.exit(1);
 }
 
 const dir = resolve(process.cwd(), target);
 const pkgName = flag("name", basename(dir));
 const theme = flag("theme", "blank");
-if (!["openseo", "blank"].includes(theme)) {
-  console.error('Unknown theme "' + theme + '". Use "blank" or "openseo".');
+if (!["openseo", "blank", "editorial"].includes(theme)) {
+  console.error('Unknown theme "' + theme + '". Use blank, openseo or editorial.');
   process.exit(1);
 }
 
@@ -108,6 +110,7 @@ export default defineConfig({
     `---
 import "../styles/app.css";
 import IconSprite from "../design-system/astro/app/IconSprite.astro";
+import ToastHost from "../design-system/astro/app/ToastHost.astro";
 
 interface Props {
   title: string;
@@ -130,6 +133,7 @@ const { title } = Astro.props;
   <body class="ds-root" style="margin:0">
     <IconSprite />
     <slot />
+    <ToastHost />
   </body>
 </html>
 `,

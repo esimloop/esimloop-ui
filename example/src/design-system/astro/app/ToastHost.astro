@@ -1,0 +1,10 @@
+---
+/**
+ * The live region toasts are appended to. Render it ONCE per page, usually in
+ * the layout. Raise toasts with `toast()` from ./toast.
+ *
+ * `polite`, not `assertive`: a toast reports something that already happened.
+ * Anything that must interrupt belongs in a dialog, not here.
+ */
+---
+<div class="ds-toast-region" role="region" aria-live="polite" aria-label="Notifications" data-ds-toasts></div>

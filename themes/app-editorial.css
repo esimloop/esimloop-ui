@@ -1,0 +1,261 @@
+/* ============================================================================
+   APP THEME — "editorial"
+   The stress test for the skeleton/skin split.
+
+   The other two app themes are close cousins: grey ramp, blue accent, flat,
+   8px radius, 40px controls. If the split only works between those, it does not
+   really work. This theme moves every structural axis at once and changes not a
+   single line of css/system.css:
+
+     ground        neutral grey        ->  warm paper
+     accent        blue                ->  oxblood
+     elevation     flat at rest        ->  a real shadow at rest
+     radius        6 / 8 / 12px        ->  2 / 3 / 4px, deliberately sharp
+     headings      the interface face  ->  a serif
+     controls      40px                ->  44px
+
+   The elevation swap is the one that mattered most: it forced --shadow-none to
+   be renamed --shadow-rest, because a token named after its value cannot hold a
+   different value. That rename is the real output of writing this file.
+
+   All measured against --surface-card. Light: ink 16.7:1, accent 8.9:1, and
+   every feedback hue above 5.7:1. Dark: ink 13.7:1, accent 8.1:1.
+   ========================================================================== */
+
+:root {
+  color-scheme: light;
+
+  /* --- Base ramp — warm, not grey ----------------------------------------- */
+  --surface-card:      #FDFBF7;   /* paper                                     */
+  --surface-app:       #F4EEE4;   /* the ground the panel sits on              */
+  --surface-sunken:    #E3DACB;   /* borders, wells, neutral badges            */
+  --content:           #1F1A17;   /* warm near-black                           */
+
+  /* --- Text scale ----------------------------------------------------------
+     muted sits at 63%, not 60%: on this warmer ink 60% measures 4.48:1, which
+     misses AA by a hair. 63% is 4.96:1. The step exists to be tuned.       */
+  --text-primary:      var(--content);                                       /* 16.7:1 */
+  --text-secondary:    color-mix(in oklab, var(--content) 70%, transparent); /*  6.2:1 */
+  --text-muted:        color-mix(in oklab, var(--content) 63%, transparent); /*  5.0:1 */
+  --text-subtle:       color-mix(in oklab, var(--content) 50%, transparent); /* large only */
+  --text-faint:        color-mix(in oklab, var(--content) 40%, transparent); /* never text */
+  --text-disabled:     color-mix(in oklab, var(--content) 40%, transparent);
+  --text-placeholder:  color-mix(in oklab, var(--content) 40%, transparent);
+
+  /* --- Borders ------------------------------------------------------------- */
+  --border-width:      1px;
+  --border-default:    var(--surface-sunken);
+  --border-subtle:     color-mix(in oklab, var(--content) 7%,  transparent);
+  --border-field:      color-mix(in oklab, var(--content) 22%, transparent);
+  --border-strong:     color-mix(in oklab, var(--content) 16%, transparent);
+
+  /* --- Interaction surfaces ------------------------------------------------ */
+  --surface-hover:      color-mix(in oklab, var(--surface-app) 55%, transparent);
+  --surface-nav-hover:  color-mix(in oklab, var(--surface-sunken) 32%, transparent);
+  --surface-nav-active: color-mix(in oklab, var(--surface-sunken) 55%, transparent);
+  --surface-selected:   color-mix(in oklab, var(--accent) 7%, transparent);
+  --scrim:              rgb(31 26 23 / .55);   /* warm, not neutral black      */
+
+  /* --- Accent — oxblood ---------------------------------------------------- */
+  --accent:            #7B2D3B;   /* 8.9:1 as text, 8.9:1 for paper-on-accent  */
+  --accent-content:    #FDFBF7;
+  --accent-hover:      color-mix(in oklab, var(--accent), #000 10%);
+  --accent-active:     color-mix(in oklab, var(--accent), #000 6%);
+  --accent-soft:       color-mix(in oklab, var(--accent) 14%, transparent);
+  --accent-tint:       color-mix(in oklab, var(--accent) 9%, transparent);
+
+  --secondary:         #2F6B3F;
+  --neutral:           #2A2320;
+  --neutral-content:   #FDFBF7;
+
+  /* --- Feedback — all AA as text on paper ---------------------------------- */
+  --success:           #2F6B3F;   /* 6.2:1 */
+  --warning:           #8A5A12;   /* 5.7:1 */
+  --error:             #9B2C2C;   /* 7.3:1 */
+  --info:              #1F5D7A;   /* 7.0:1 */
+  --success-content:   #FDFBF7;
+  --warning-content:   #FDFBF7;
+  --error-content:     #FDFBF7;
+  --info-content:      #FDFBF7;
+
+  /* --- Radii — sharp on purpose -------------------------------------------- */
+  --radius-selector:   3px;
+  --radius-field:      3px;
+  --radius-box:        4px;
+  --radius-sm:         2px;
+  --radius-xs:         2px;
+  --radius-full:       9999px;   /* stays a pill: it is semantic, not stylistic */
+
+  /* --- Control sizing — roomier than the other themes ---------------------- */
+  --size-field:        0.25rem;
+  --size-selector:     0.25rem;
+  --control-xs:        1.75rem;   /* 28px */
+  --control-sm:        2.25rem;   /* 36px */
+  --control-md:        2.75rem;   /* 44px */
+  --control-lg:        3.25rem;   /* 52px */
+
+  /* --- Elevation — the axis that proves the split --------------------------
+     Not flat. Everything in the page plane carries a hairline lift, which is
+     what makes the paper read as paper. css/system.css is unchanged.       */
+  --shadow-rest:     0 1px 2px rgb(31 26 23 / .08);
+  --shadow-popover:  0 6px 16px -4px rgb(31 26 23 / .18), 0 2px 6px -2px rgb(31 26 23 / .12);
+  --shadow-modal:    0 24px 48px -12px rgb(31 26 23 / .28), 0 8px 16px -8px rgb(31 26 23 / .2);
+  --shadow-tooltip:  0 6px 16px -4px rgb(31 26 23 / .18);
+  --shadow-bulkbar:  0 28px 56px -16px rgb(31 26 23 / .38);
+
+  /* --- Typography ----------------------------------------------------------
+     A serif carries the headings while the interface stays on a UI face. Both
+     are system stacks, so the theme costs no webfont.                      */
+  --font-display: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia,
+                  "Times New Roman", serif;
+  --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+               "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco, Consolas,
+               "Liberation Mono", "Courier New", monospace;
+
+  /* --- Motion --------------------------------------------------------------- */
+  --ease:       cubic-bezier(0, 0, .2, 1);
+  --ease-inout: cubic-bezier(.4, 0, .2, 1);
+  --dur-fast:   .15s;
+  --dur-base:   .2s;
+  --dur-slow:   .3s;
+
+  /* --- Chart ---------------------------------------------------------------- */
+  --chart-grid:           color-mix(in oklab, var(--content) 12%, transparent);
+  --chart-axis:           color-mix(in oklab, var(--content) 55%, transparent);
+  --chart-fill-start:     .28;
+  --chart-fill-end:       .04;
+  --chart-tooltip-bg:     var(--surface-card);
+  --chart-tooltip-border: var(--border-default);
+  --chart-tooltip-shadow: rgb(31 26 23 / .18);
+  --chart-series-1: var(--accent);
+  --chart-series-2: var(--success);
+  --chart-series-3: var(--warning);
+  --chart-series-4: var(--error);
+  --chart-series-5: var(--info);
+
+  /* --- Layout ---------------------------------------------------------------- */
+  --sidebar-w:          16rem;    /* 256px — the serif needs a little more room */
+  --topbar-h-mobile:    3rem;
+  --content-max:        80rem;
+  --content-max-narrow: 64rem;
+  --content-max-prose:  46rem;
+  --page-pad-x:         1rem;
+  --page-pad-x-md:      1.75rem;
+
+  /* --- Severity -------------------------------------------------------------- */
+  --sev-critical: var(--error);
+  --sev-warning:  var(--warning);
+  --sev-info:     color-mix(in oklab, var(--content) 32%, transparent);
+  --sev-passed:   var(--success);
+
+  /* --- Score ramp — warmed to sit on paper ----------------------------------- */
+  --score-na-bg: color-mix(in oklab, #8C8378 12%, transparent); --score-na-fg: #4A443D; --score-na-ring: color-mix(in oklab, #8C8378 28%, transparent);
+  --score-1-bg:  color-mix(in oklab, #2F6B3F 14%, transparent); --score-1-fg:  #23502F; --score-1-ring:  color-mix(in oklab, #2F6B3F 30%, transparent);
+  --score-2-bg:  color-mix(in oklab, #5F7A2A 15%, transparent); --score-2-fg:  #445720; --score-2-ring:  color-mix(in oklab, #5F7A2A 30%, transparent);
+  --score-3-bg:  color-mix(in oklab, #A07A16 17%, transparent); --score-3-fg:  #6E5410; --score-3-ring:  color-mix(in oklab, #A07A16 32%, transparent);
+  --score-4-bg:  color-mix(in oklab, #B25E1E 17%, transparent); --score-4-fg:  #7C4114; --score-4-ring:  color-mix(in oklab, #B25E1E 32%, transparent);
+  --score-5-bg:  color-mix(in oklab, #9B2C2C 15%, transparent); --score-5-fg:  #742121; --score-5-ring:  color-mix(in oklab, #9B2C2C 30%, transparent);
+  --score-6-bg:  color-mix(in oklab, #7B2D3B 18%, transparent); --score-6-fg:  #5C222C; --score-6-ring:  color-mix(in oklab, #7B2D3B 32%, transparent);
+
+  /* --- Tag chips -------------------------------------------------------------- */
+  --tag-slate-bg:   color-mix(in oklab, #6B6560 14%, transparent); --tag-slate-fg:   #3E3A36;
+  --tag-rose-bg:    color-mix(in oklab, #9B3B4C 14%, transparent); --tag-rose-fg:    #6E2A36;
+  --tag-amber-bg:   color-mix(in oklab, #A07A16 16%, transparent); --tag-amber-fg:   #6E5410;
+  --tag-lime-bg:    color-mix(in oklab, #5F7A2A 16%, transparent); --tag-lime-fg:    #445720;
+  --tag-emerald-bg: color-mix(in oklab, #2F6B3F 14%, transparent); --tag-emerald-fg: #23502F;
+  --tag-sky-bg:     color-mix(in oklab, #1F5D7A 14%, transparent); --tag-sky-fg:     #17455A;
+  --tag-violet-bg:  color-mix(in oklab, #5C4A7A 16%, transparent); --tag-violet-fg:  #43365A;
+  --tag-fuchsia-bg: color-mix(in oklab, #85356B 14%, transparent); --tag-fuchsia-fg: #61274E;
+
+  /* --- Type scale — headings run larger, the serif carries them --------------- */
+  --t-display-size: 4.5rem;   --t-display-lh: 1.05;   --t-display-ls: -0.02em;  --t-display-w: 500;
+  --t-h1-size: 1.75rem;       --t-h1-lh: 2.25rem;     --t-h1-ls: -0.012em;      --t-h1-w: 600;
+  --t-h2-size: 1.25rem;       --t-h2-lh: 1.875rem;    --t-h2-ls: -0.008em;      --t-h2-w: 600;
+  --t-h3-size: 1.0625rem;     --t-h3-lh: 1.5rem;      --t-h3-ls: 0;             --t-h3-w: 600;
+  --t-h4-size: .9375rem;      --t-h4-lh: 1.375rem;    --t-h4-ls: 0;             --t-h4-w: 600;
+  --t-body-lg-size: 1.0625rem;--t-body-lg-lh: 1.625rem;
+  --t-body-size: .9375rem;    --t-body-lh: 1.375rem;
+  --t-body-sm-size: .8125rem; --t-body-sm-lh: 1.125rem;
+  --t-label-size: .75rem;     --t-label-lh: 1rem;     --t-label-ls: 0.07em;     --t-label-w: 600;
+  --t-table-size: .8125rem;   --t-table-lh: 1.125rem;
+  --t-table-xs-size: .75rem;  --t-table-xs-lh: 1.0625rem;
+  --t-caption-size: .75rem;   --t-caption-lh: 1.0625rem;
+  --t-metric-size: 1.75rem;   --t-metric-lh: 2.125rem; --t-metric-w: 600;
+  --t-metric-sm-size: 1.375rem;--t-metric-sm-lh: 1.75rem;
+  --t-mono-size: .8125rem;    --t-mono-lh: 1.125rem;
+
+  /* --- Spacing ---------------------------------------------------------------- */
+  --space-0-5: .125rem; --space-1: .25rem;  --space-1-5: .375rem; --space-2: .5rem;
+  --space-2-5: .625rem; --space-3: .75rem;  --space-4: 1rem;      --space-5: 1.25rem;
+  --space-6: 1.5rem;    --space-8: 2rem;    --space-10: 2.5rem;   --space-12: 3rem;
+  --space-16: 4rem;
+}
+
+/* ---- Dark: OS preference, unless the viewer explicitly chose light -------- */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --surface-card:    #221E1B;
+    --surface-app:     #16120F;
+    --surface-sunken:  #3A322C;
+    --content:         #F0E9E0;
+    --accent:          #E7A3AE;   /* 8.1:1 */
+    --accent-content:  #16120F;
+    --accent-hover:    color-mix(in oklab, var(--accent), #fff 10%);
+    --secondary:       #7BC98D;
+    --neutral:         #D8CFC4;
+    --neutral-content: #221E1B;
+    --scrim:           rgb(10 8 7 / .68);
+    --success:         #7BC98D;   /* 8.3:1 */
+    --warning:         #E0B255;   /* 8.4:1 */
+    --error:           #E98C8C;   /* 6.8:1 */
+    --info:            #7CC0DE;   /* 8.2:1 */
+    --success-content: #16120F; --warning-content: #16120F;
+    --error-content:   #16120F; --info-content:    #16120F;
+    --shadow-rest:     0 1px 2px rgb(0 0 0 / .34);
+    --shadow-popover:  0 6px 16px -4px rgb(0 0 0 / .5), 0 2px 6px -2px rgb(0 0 0 / .4);
+    --shadow-modal:    0 24px 48px -12px rgb(0 0 0 / .6), 0 8px 16px -8px rgb(0 0 0 / .45);
+    --shadow-tooltip:  0 6px 16px -4px rgb(0 0 0 / .5);
+    --shadow-bulkbar:  0 28px 56px -16px rgb(0 0 0 / .7);
+    --chart-tooltip-shadow: rgb(0 0 0 / .5);
+    --score-na-fg: #CFC7BC; --score-1-fg: #93D6A4; --score-2-fg: #C2D68C; --score-3-fg: #E6C77A;
+    --score-4-fg:  #E9A878; --score-5-fg: #EC9B9B; --score-6-fg: #E7A3AE;
+    --tag-slate-fg:  #CFC7BC; --tag-rose-fg:   #E7A3AE; --tag-amber-fg:  #E6C77A;
+    --tag-lime-fg:   #C2D68C; --tag-emerald-fg:#93D6A4; --tag-sky-fg:    #7CC0DE;
+    --tag-violet-fg: #BBA9D8; --tag-fuchsia-fg:#DDA0C8;
+  }
+}
+
+/* ---- Dark: explicit choice ------------------------------------------------ */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --surface-card:    #221E1B;
+  --surface-app:     #16120F;
+  --surface-sunken:  #3A322C;
+  --content:         #F0E9E0;
+  --accent:          #E7A3AE;
+  --accent-content:  #16120F;
+  --accent-hover:    color-mix(in oklab, var(--accent), #fff 10%);
+  --secondary:       #7BC98D;
+  --neutral:         #D8CFC4;
+  --neutral-content: #221E1B;
+  --scrim:           rgb(10 8 7 / .68);
+  --success:         #7BC98D;
+  --warning:         #E0B255;
+  --error:           #E98C8C;
+  --info:            #7CC0DE;
+  --success-content: #16120F; --warning-content: #16120F;
+  --error-content:   #16120F; --info-content:    #16120F;
+  --shadow-rest:     0 1px 2px rgb(0 0 0 / .34);
+  --shadow-popover:  0 6px 16px -4px rgb(0 0 0 / .5), 0 2px 6px -2px rgb(0 0 0 / .4);
+  --shadow-modal:    0 24px 48px -12px rgb(0 0 0 / .6), 0 8px 16px -8px rgb(0 0 0 / .45);
+  --shadow-tooltip:  0 6px 16px -4px rgb(0 0 0 / .5);
+  --shadow-bulkbar:  0 28px 56px -16px rgb(0 0 0 / .7);
+  --chart-tooltip-shadow: rgb(0 0 0 / .5);
+  --score-na-fg: #CFC7BC; --score-1-fg: #93D6A4; --score-2-fg: #C2D68C; --score-3-fg: #E6C77A;
+  --score-4-fg:  #E9A878; --score-5-fg: #EC9B9B; --score-6-fg: #E7A3AE;
+  --tag-slate-fg:  #CFC7BC; --tag-rose-fg:   #E7A3AE; --tag-amber-fg:  #E6C77A;
+  --tag-lime-fg:   #C2D68C; --tag-emerald-fg:#93D6A4; --tag-sky-fg:    #7CC0DE;
+  --tag-violet-fg: #BBA9D8; --tag-fuchsia-fg:#DDA0C8;
+}

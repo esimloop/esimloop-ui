@@ -1,0 +1,74 @@
+---
+import Button from "./Button.astro";
+
+/**
+ * A native <dialog>. Focus trapping, Escape and the top layer come from the
+ * platform, so this ships almost no script.
+ *
+ * Open it from anywhere with `data-ds-modal-open="<id>"` on a button, or from
+ * code with `document.getElementById(id).showModal()`.
+ *
+ * Slots: default (body), `actions`.
+ */
+interface Props {
+  id: string;
+  title: string;
+  /** One or two sentences. For a destructive action, say what is lost. */
+  description?: string;
+  /** Hides the corner close button when the choice must be explicit. */
+  dismissible?: boolean;
+  class?: string;
+}
+const { id, title, description, dismissible = true, class: cls = "" } = Astro.props;
+const titleId = id + "-title";
+const descId = id + "-desc";
+---
+<dialog
+  id={id}
+  class={["ds-dialog", cls].filter(Boolean).join(" ")}
+  aria-labelledby={titleId}
+  aria-describedby={description ? descId : undefined}
+>
+  <div class="ds-dialog__body">
+    <div class="ds-dialog__head">
+      <div>
+        <h2 class="ds-h3" id={titleId}>{title}</h2>
+        {description && (
+          <p class="ds-body ds-text-secondary" id={descId} style="margin:6px 0 0">{description}</p>
+        )}
+      </div>
+      {dismissible && (
+        <Button size="xs" variant="ghost" square label="Close" iconStart="x" data-ds-modal-close />
+      )}
+    </div>
+
+    <slot />
+
+    <div class="ds-dialog__actions"><slot name="actions" /></div>
+  </div>
+</dialog>
+
+<script>
+  // One delegated listener for every dialog on the page.
+  document.addEventListener("click", (event) => {
+    const target = event.target as HTMLElement;
+
+    const opener = target.closest<HTMLElement>("[data-ds-modal-open]");
+    if (opener) {
+      const dialog = document.getElementById(opener.dataset.dsModalOpen!) as HTMLDialogElement | null;
+      dialog?.showModal();
+      return;
+    }
+
+    const closer = target.closest<HTMLElement>("[data-ds-modal-close]");
+    if (closer) {
+      closer.closest("dialog")?.close();
+      return;
+    }
+
+    // Clicking the backdrop lands on the dialog itself, never on its contents.
+    if (target instanceof HTMLDialogElement && target.classList.contains("ds-dialog")) {
+      target.close();
+    }
+  });
+</script>

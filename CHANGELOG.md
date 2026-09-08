@@ -15,12 +15,20 @@ Initial release.
   theme drifts from another. This is what keeps themes interchangeable.
 
 ### Themes
-- `app-blank`, `app-openseo`, `marketing-blank`, `marketing-openseo`.
+- `blank`, `openseo` and `editorial`, each in an app and a marketing variant.
+- `editorial` exists to stress the split: paper ground, oxblood accent, sharp
+  corners, elevation at rest, serif headings, taller controls — with no change to
+  the skeleton. Writing it surfaced four contract faults, all fixed:
+  `--shadow-none` renamed `--shadow-rest`, a hard-coded scrim promoted to
+  `--scrim`, a guard that counted tokens quoted in comments, and headings that had
+  no way to change face (`--font-display`).
 - The blank app theme gives light and dark their own feedback hues so all pass
   AA as text; the reconstructed theme shares one set and fails on white.
 
 ### Components
-- 14 application, 30 marketing, plus a 33-icon inline lucide sprite.
+- 17 application, 30 marketing, plus a 33-icon inline lucide sprite.
+- Overlays: a native `<dialog>`, a keyboard-navigable dropdown, and a toast queue
+  with a polite live region.
 - A living component reference at `/design-system`, rendered from source.
 - Marketing covers hero (centered / split), section, heading, split, card, quote,
   logos, stats, CTA band, FAQ, pricing, comparison table, article card,

@@ -1,0 +1,84 @@
+/* ============================================================================
+   MARKETING THEME — "editorial"
+   The marketing counterpart to app-editorial: paper ground, oxblood accent,
+   sharp corners, a serif for display type.
+
+   Same 39-token contract as the other marketing themes, so every component in
+   css/marketing.css works unchanged. LIGHT-ONLY, like all marketing themes.
+
+   Note what does NOT move: four grounds separated by hairlines, one accent per
+   page, white lifting off the canvas as the elevation mechanism. Those are the
+   layer's structure, not its skin — a theme that abandons them stops being this
+   system and becomes a different one.
+   ========================================================================== */
+
+.mk {
+  /* --- Grounds — four, close together -------------------------------------- */
+  --m-canvas:        #FBF7F0;
+  --m-surface:       #FFFFFF;
+  --m-surface-2:     #F1E9DC;
+  --m-band-quiet:    #F7F1E7;
+  --m-band-warm:     #EFE6D7;
+
+  /* --- Ink ------------------------------------------------------------------ */
+  --m-ink:           #1F1A17;   /* 16.3:1 on canvas */
+  --m-ink-muted:     #5F5A55;   /*  6.4:1 */
+  --m-ink-subtle:    #726C66;   /*  5.0:1 */
+  --m-ink-tertiary:  #A39B92;   /*  decorative only  */
+
+  /* --- Lines ---------------------------------------------------------------- */
+  --m-hairline:      #DCD2C2;
+  --m-hairline-soft: #EDE5D8;
+  --m-border-subtle: #E0D6C6;
+
+  /* --- Accent — one saturated moment per page ------------------------------- */
+  --m-accent:        #7B2D3B;   /* 8.7:1 as text on canvas */
+  --m-accent-hover:  #63232F;
+
+  /* --- Dark surfaces -------------------------------------------------------- */
+  --m-inverse:         #000000;
+  --m-inverse-surface: #3A322C;
+  --m-inverse-muted:   #A39B92;
+  --m-feat-bg:         #241E1A;
+  --m-term-bg:         #241E1A;
+  --m-term-fg:         #E2D9CE;
+  --m-term-rule:       #3A322C;
+
+  /* --- Testimonial band ------------------------------------------------------ */
+  --m-q-bg:          #E9DFCC;
+  --m-q-card:        #FFFFFF;
+  --m-q-card-border: #D9CEBA;
+  --m-q-text:        #1F1A17;
+  --m-q-muted:       #726C66;
+  --m-q-mark:        #BFB09A;
+
+  /* --- Validation ------------------------------------------------------------ */
+  --m-error:         #9B2C2C;   /* 7.1:1 on canvas */
+
+  /* --- Radii — sharp, and buttons are still never pills ---------------------- */
+  --m-radius-btn:     3px;
+  --m-radius-btn-lg:  3px;
+  --m-radius-card:    4px;
+  --m-radius-mockup:  4px;
+  --m-radius-panel:   4px;
+  --m-radius-pill:    9999px;   /* chrome only: nav, avatars, floating button   */
+
+  /* --- Type ------------------------------------------------------------------ */
+  --m-font: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia,
+            "Times New Roman", serif;
+  --m-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* --- Layout ----------------------------------------------------------------- */
+  --m-container: 1180px;
+  --m-narrow:     720px;
+  --m-nav:        980px;
+
+  font-family: var(--m-font);
+  background: var(--m-canvas);
+  color: var(--m-ink);
+  font-size: 17px;
+  line-height: 1.55;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}

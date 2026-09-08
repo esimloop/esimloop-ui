@@ -21,6 +21,9 @@ import Alert from "../design-system/astro/app/Alert.astro";
 import Tabs from "../design-system/astro/app/Tabs.astro";
 import Field from "../design-system/astro/app/Field.astro";
 import EmptyState from "../design-system/astro/app/EmptyState.astro";
+import Modal from "../design-system/astro/app/Modal.astro";
+import Dropdown from "../design-system/astro/app/Dropdown.astro";
+import ToastHost from "../design-system/astro/app/ToastHost.astro";
 import Icon from "../design-system/astro/app/Icon.astro";
 import { ICON_NAMES } from "../design-system/astro/app/icons";
 
@@ -59,6 +62,7 @@ const sections = [
   { id: "status", label: "Status" },
   { id: "surfaces", label: "Surfaces" },
   { id: "data", label: "Data" },
+  { id: "overlays", label: "Overlays" },
   { id: "states", label: "States" },
   { id: "icons", label: "Icons" },
   { id: "mk-type", label: "Marketing type" },
@@ -504,6 +508,71 @@ const radii = [
         </div>
       </section>
 
+      <!-- =========================== OVERLAYS =========================== -->
+      <section id="overlays" class="ref__section">
+        <h2 class="ds-h2">Overlays</h2>
+        <p class="ref__lede">All three are interactive here. The dialog is a native <code class="ref__code">&lt;dialog&gt;</code>, so focus trapping, Escape and the top layer come from the platform rather than from script.</p>
+
+        <div class="ref__demo">
+          <p class="ref__cap">Dialog — open it, then press Escape or click the backdrop</p>
+          <div class="ref__wrap">
+            <Button variant="primary" data-ds-modal-open="ref-modal">Open dialog</Button>
+            <Button variant="destructive" data-ds-modal-open="ref-confirm">Destructive confirm</Button>
+          </div>
+        </div>
+
+        <div class="ref__demo">
+          <p class="ref__cap">Dropdown — arrows move, Home and End jump, Escape returns focus</p>
+          <div class="ref__wrap">
+            <Dropdown label="Export">
+              <li role="none"><button type="button" role="menuitem"><Icon name="download" />Export CSV</button></li>
+              <li role="none"><button type="button" role="menuitem"><Icon name="inbox" />Export to Sheets</button></li>
+              <li class="ds-menu__sep" role="separator"></li>
+              <li role="none"><button type="button" role="menuitem" disabled><Icon name="save" />Save selection</button></li>
+              <li role="none"><button type="button" role="menuitem" class="ds-menu__danger"><Icon name="x" />Remove</button></li>
+            </Dropdown>
+            <Dropdown label="Aligned to the end" align="end" variant="ghost">
+              <li role="none"><button type="button" role="menuitem">First</button></li>
+              <li role="none"><button type="button" role="menuitem">Second</button></li>
+            </Dropdown>
+          </div>
+        </div>
+
+        <div class="ref__demo">
+          <p class="ref__cap">Toast — bottom right, polite live region, dismisses itself</p>
+          <div class="ref__wrap">
+            <Button data-demo-toast="success">Success toast</Button>
+            <Button data-demo-toast="error">Error toast</Button>
+            <Button data-demo-toast="info">Info toast</Button>
+          </div>
+        </div>
+
+        <Modal
+          id="ref-modal"
+          title="A dialog"
+          description="Centred, 512px, with the actions on the right. Below 480px they stack in reverse so the primary sits on top."
+        >
+          <p class="ds-body ds-text-secondary" style="margin:0">
+            The body is a slot, so anything can go here — a form, a table, a summary.
+          </p>
+          <Fragment slot="actions">
+            <Button variant="ghost" data-ds-modal-close>Cancel</Button>
+            <Button variant="primary" data-ds-modal-close>Confirm</Button>
+          </Fragment>
+        </Modal>
+
+        <Modal
+          id="ref-confirm"
+          title="Delete this project?"
+          description="Its saved items, tracked history and audit records are removed. This cannot be undone."
+        >
+          <Fragment slot="actions">
+            <Button variant="ghost" data-ds-modal-close>Cancel</Button>
+            <Button variant="destructive" data-ds-modal-close>Delete project</Button>
+          </Fragment>
+        </Modal>
+      </section>
+
       <!-- ============================ STATES ============================ -->
       <section id="states" class="ref__section">
         <h2 class="ds-h2">States</h2>
@@ -785,6 +854,7 @@ const radii = [
       </section>
     </main>
   </div>
+  <ToastHost />
 </AppLayout>
 
 <style>
@@ -878,6 +948,17 @@ const radii = [
 </style>
 
 <script>
+  import { toast } from "../design-system/astro/app/toast";
+
+  const TOASTS = {
+    success: { title: "Saved", text: "Your changes are live.", tone: "success" as const },
+    error: { title: "Could not save", text: "The connection dropped. Nothing was lost.", tone: "error" as const },
+    info: { title: "Export ready", text: "1,284 rows copied to your clipboard.", tone: "info" as const },
+  };
+  document.querySelectorAll<HTMLElement>("[data-demo-toast]").forEach((b) =>
+    b.addEventListener("click", () => toast(TOASTS[b.dataset.demoToast as keyof typeof TOASTS])),
+  );
+
   const root = document.documentElement;
   const buttons = document.querySelectorAll<HTMLButtonElement>("[data-theme-set]");
   const sync = () => {

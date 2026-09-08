@@ -1,0 +1,126 @@
+---
+import Button from "./Button.astro";
+import type { IconName } from "./icons";
+
+/**
+ * A menu button and its panel. Put .ds-menu items in the default slot.
+ *
+ * Keyboard follows the menu-button pattern: Enter, Space or Down opens and
+ * focuses the first item; Up opens on the last; arrows move; Home and End jump;
+ * Escape closes and returns focus to the trigger.
+ */
+interface Props {
+  label: string;
+  /** Which edge of the trigger the panel lines up with. */
+  align?: "start" | "end";
+  side?: "bottom" | "top";
+  iconStart?: IconName;
+  iconEnd?: IconName;
+  size?: "xs" | "sm" | "md";
+  variant?: "primary" | "secondary" | "ghost" | "destructive";
+  class?: string;
+}
+const {
+  label,
+  align = "start",
+  side = "bottom",
+  iconStart,
+  iconEnd = "chev-down",
+  size = "sm",
+  variant = "secondary",
+  class: cls = "",
+} = Astro.props;
+---
+<div class={["ds-dropdown", cls].filter(Boolean).join(" ")} data-ds-dropdown>
+  <Button
+    size={size}
+    variant={variant}
+    iconStart={iconStart}
+    iconEnd={iconEnd}
+    aria-haspopup="menu"
+    aria-expanded="false"
+    data-ds-dropdown-trigger
+  >
+    {label}
+  </Button>
+  <div class="ds-dropdown__panel" data-align={align} data-side={side} hidden>
+    <ul class="ds-menu" role="menu"><slot /></ul>
+  </div>
+</div>
+
+<script>
+  const ITEMS = 'a, button:not([disabled]), [role="menuitem"]:not([aria-disabled="true"])';
+
+  function setup(root: HTMLElement) {
+    const trigger = root.querySelector<HTMLElement>("[data-ds-dropdown-trigger]");
+    const panel = root.querySelector<HTMLElement>(".ds-dropdown__panel");
+    if (!trigger || !panel) return;
+
+    const items = () => [...panel.querySelectorAll<HTMLElement>(ITEMS)];
+    const isOpen = () => !panel.hidden;
+
+    const open = (focus: "first" | "last" | "none" = "first") => {
+      panel.hidden = false;
+      trigger.setAttribute("aria-expanded", "true");
+      const list = items();
+      if (focus === "first") list[0]?.focus();
+      if (focus === "last") list[list.length - 1]?.focus();
+    };
+
+    const close = (returnFocus = false) => {
+      if (!isOpen()) return;
+      panel.hidden = true;
+      trigger.setAttribute("aria-expanded", "false");
+      if (returnFocus) trigger.focus();
+    };
+
+    trigger.addEventListener("click", () => (isOpen() ? close() : open("none")));
+
+    trigger.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowDown" || event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        open("first");
+      } else if (event.key === "ArrowUp") {
+        event.preventDefault();
+        open("last");
+      }
+    });
+
+    panel.addEventListener("keydown", (event) => {
+      const list = items();
+      const index = list.indexOf(document.activeElement as HTMLElement);
+      if (event.key === "Escape") {
+        event.preventDefault();
+        close(true);
+      } else if (event.key === "ArrowDown") {
+        event.preventDefault();
+        list[(index + 1) % list.length]?.focus();
+      } else if (event.key === "ArrowUp") {
+        event.preventDefault();
+        list[(index - 1 + list.length) % list.length]?.focus();
+      } else if (event.key === "Home") {
+        event.preventDefault();
+        list[0]?.focus();
+      } else if (event.key === "End") {
+        event.preventDefault();
+        list[list.length - 1]?.focus();
+      } else if (event.key === "Tab") {
+        close();
+      }
+    });
+
+    // Activating an item closes the menu; the item's own handler still runs.
+    panel.addEventListener("click", (event) => {
+      if ((event.target as HTMLElement).closest(ITEMS)) close(true);
+    });
+
+    document.addEventListener("click", (event) => {
+      if (!root.contains(event.target as Node)) close();
+    });
+    document.addEventListener("focusin", (event) => {
+      if (!root.contains(event.target as Node)) close();
+    });
+  }
+
+  document.querySelectorAll<HTMLElement>("[data-ds-dropdown]").forEach(setup);
+</script>

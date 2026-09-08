@@ -20,8 +20,11 @@ const COMPONENT_LOCAL = new Set(["--btn-bg", "--btn-border", "--btn-fg", "--ring
 
 // A declaration, not a BEM modifier: `.ds-btn--primary:hover` must not match,
 // so the `--` may not follow a word character, a dot or a hyphen.
+const stripComments = (src) => src.replace(/\/\*[\s\S]*?\*\//g, "");
 const declared = (src) =>
-  new Set([...src.matchAll(/(?<![\w.-])(--[\w-]+)\s*:/g)].map((m) => m[1]));
+  // Comments must go first: prose like "the theme sets --depth: 0" is not a
+  // declaration, and counting it made two themes look like they had drifted.
+  new Set([...stripComments(src).matchAll(/(?<![\w.-])(--[\w-]+)\s*:/g)].map((m) => m[1]));
 const referenced = (src) =>
   new Set(
     [...src.matchAll(/var\(\s*(--[\w-]+)/g)]
@@ -33,12 +36,16 @@ const LAYERS = [
   {
     name: "app",
     skeleton: "css/system.css",
-    themes: ["themes/app-openseo.css", "themes/app-blank.css"],
+    themes: ["themes/app-openseo.css", "themes/app-blank.css", "themes/app-editorial.css"],
   },
   {
     name: "marketing",
     skeleton: "css/marketing.css",
-    themes: ["themes/marketing-openseo.css", "themes/marketing-blank.css"],
+    themes: [
+      "themes/marketing-openseo.css",
+      "themes/marketing-blank.css",
+      "themes/marketing-editorial.css",
+    ],
   },
 ];
 
@@ -65,10 +72,17 @@ for (const layer of LAYERS) {
   //     are allowed: they are structural (a darkening mix, or text on an
   //     inverse surface), not a palette choice.
   const ALLOWED_LITERALS = new Set(["#fff", "#ffffff", "#000", "#000000"]);
-  const withoutComments = skeletonSrc.replace(/\/\*[\s\S]*?\*\//g, "");
-  const literals = [...new Set(withoutComments.match(/#[0-9a-fA-F]{3,8}/g) || [])].filter(
+  const withoutComments = stripComments(skeletonSrc);
+  const hex = (withoutComments.match(/#[0-9a-fA-F]{3,8}/g) || []).filter(
     (h) => !ALLOWED_LITERALS.has(h.toLowerCase()),
   );
+  // Functional notations slip past a hex-only scan: `rgb(0 0 0 / .5)` was a real
+  // scrim colour hiding in the skeleton. Pure black and white stay allowed - they
+  // are structural (a darkening mix, text on an inverse surface), not a palette.
+  const functional = (
+    withoutComments.match(/(?:rgba?|hsla?|oklch|oklab|lab|lch)\([^)]*\)/g) || []
+  ).filter((c) => !/\(\s*(?:0\s+0\s+0|255\s+255\s+255)\s*(?:\/[^)]*)?\)$/.test(c));
+  const literals = [...new Set([...hex, ...functional])];
   if (literals.length) {
     fail(`${layer.skeleton} hard-codes colours (use a token): ${literals.join(", ")}`);
   } else {

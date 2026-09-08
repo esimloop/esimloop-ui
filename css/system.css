@@ -29,8 +29,8 @@
 /* ---------------------------------------------------------------------------
    TYPOGRAPHY
    ------------------------------------------------------------------------- */
-.ds-h1 { font-size: var(--t-h1-size); line-height: var(--t-h1-lh); font-weight: var(--t-h1-w); letter-spacing: var(--t-h1-ls); margin: 0; text-wrap: balance; }
-.ds-h2 { font-size: var(--t-h2-size); line-height: var(--t-h2-lh); font-weight: var(--t-h2-w); letter-spacing: var(--t-h2-ls); margin: 0; text-wrap: balance; }
+.ds-h1 { font-family: var(--font-display); font-size: var(--t-h1-size); line-height: var(--t-h1-lh); font-weight: var(--t-h1-w); letter-spacing: var(--t-h1-ls); margin: 0; text-wrap: balance; }
+.ds-h2 { font-family: var(--font-display); font-size: var(--t-h2-size); line-height: var(--t-h2-lh); font-weight: var(--t-h2-w); letter-spacing: var(--t-h2-ls); margin: 0; text-wrap: balance; }
 .ds-h3 { font-size: var(--t-h3-size); line-height: var(--t-h3-lh); font-weight: var(--t-h3-w); margin: 0; }
 .ds-h4 { font-size: var(--t-h4-size); line-height: var(--t-h4-lh); font-weight: var(--t-h4-w); margin: 0; }
 .ds-body-lg { font-size: var(--t-body-lg-size); line-height: var(--t-body-lg-lh); }
@@ -78,7 +78,7 @@
   background-color: var(--btn-bg);
   border: var(--border-width) solid var(--btn-border);
   border-radius: var(--radius-field);
-  box-shadow: var(--shadow-none);
+  box-shadow: var(--shadow-rest);
   transition: color var(--dur-base) var(--ease),
               background-color var(--dur-base) var(--ease),
               border-color var(--dur-base) var(--ease);
@@ -174,7 +174,7 @@
   background-color: var(--surface-card);
   border: var(--border-width) solid var(--border-field);
   border-radius: var(--radius-field);
-  box-shadow: var(--shadow-none);
+  box-shadow: var(--shadow-rest);
   transition: border-color var(--dur-base) var(--ease), background-color var(--dur-base) var(--ease);
 }
 .ds-input, .ds-select {
@@ -359,7 +359,7 @@
   background: var(--surface-card);
   border: var(--border-width) solid var(--border-default);
   border-radius: var(--radius-box);
-  box-shadow: var(--shadow-none);
+  box-shadow: var(--shadow-rest);
 }
 .ds-card__body { padding: var(--space-4); display: flex; flex-direction: column; gap: var(--space-4); }
 .ds-card__header {
@@ -588,7 +588,7 @@
 .ds-menu .ds-icon { width: 1rem; height: 1rem; }
 .ds-menu__danger { color: var(--error); }
 
-.ds-scrim { position: fixed; inset: 0; z-index: 50; background: rgb(0 0 0 / .5); display: flex; align-items: center; justify-content: center; padding: var(--space-4); }
+.ds-scrim { position: fixed; inset: 0; z-index: 50; background: var(--scrim); display: flex; align-items: center; justify-content: center; padding: var(--space-4); }
 .ds-modal {
   width: 100%; max-width: 32rem; max-height: 100%; overflow-y: auto;
   background: var(--surface-card);
@@ -609,6 +609,82 @@
   border-radius: var(--radius-box);
   box-shadow: var(--shadow-popover);
   font-size: var(--t-body-size);
+}
+
+/* ---------------------------------------------------------------------------
+   DIALOG — native <dialog>, so focus trapping, Escape and the top layer come
+   from the platform instead of from script. .ds-modal above stays: it is the
+   panel used inside the app shell's own overlays.
+   ------------------------------------------------------------------------- */
+.ds-dialog {
+  width: 100%;
+  max-width: 32rem;
+  margin: auto;
+  padding: 0;
+  color: var(--text-primary);
+  background: var(--surface-card);
+  border: var(--border-width) solid var(--border-default);
+  border-radius: var(--radius-box);
+  box-shadow: var(--shadow-modal);
+}
+/* Two declarations on purpose: engines that do not yet let ::backdrop inherit
+   from the originating element keep the plain black fall-back. */
+.ds-dialog::backdrop { background: rgb(0 0 0 / .5); background: var(--scrim); }
+.ds-dialog__body { padding: var(--space-5); display: flex; flex-direction: column; gap: var(--space-4); }
+.ds-dialog__head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-3); }
+.ds-dialog__actions { display: flex; justify-content: flex-end; gap: var(--space-2); flex-wrap: wrap; }
+@media (max-width: 479px) {
+  .ds-dialog { max-width: calc(100vw - var(--space-8)); }
+  /* Stack in reverse so the primary action sits on top under the thumb. */
+  .ds-dialog__actions { flex-direction: column-reverse; }
+  .ds-dialog__actions > * { width: 100%; }
+}
+
+/* ---------------------------------------------------------------------------
+   DROPDOWN — a trigger and a panel holding a .ds-menu.
+   ------------------------------------------------------------------------- */
+.ds-dropdown { position: relative; display: inline-block; }
+.ds-dropdown__panel {
+  position: absolute;
+  z-index: 40;
+  top: calc(100% + var(--space-1));
+  left: 0;
+  min-width: max-content;
+}
+.ds-dropdown__panel[data-align="end"]  { left: auto; right: 0; }
+.ds-dropdown__panel[data-side="top"]   { top: auto; bottom: calc(100% + var(--space-1)); }
+
+/* ---------------------------------------------------------------------------
+   TOAST REGION — bottom-right, stacking upward. The region ignores pointer
+   events so it never blocks the page; each toast takes them back.
+   ------------------------------------------------------------------------- */
+.ds-toast-region {
+  position: fixed;
+  z-index: 60;
+  right: var(--space-4);
+  bottom: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  max-width: calc(100vw - var(--space-8));
+  pointer-events: none;
+}
+.ds-toast { pointer-events: auto; animation: ds-toast-in var(--dur-base) var(--ease); }
+.ds-toast[data-leaving] { animation: ds-toast-out var(--dur-base) var(--ease) forwards; }
+.ds-toast__body { flex: 1; min-width: 0; }
+.ds-toast__title { font-weight: 600; }
+.ds-toast__text { margin-top: 2px; font-size: var(--t-body-sm-size); color: var(--text-secondary); }
+.ds-toast__mark {
+  flex-shrink: 0; display: grid; place-items: center;
+  width: 1.5rem; height: 1.5rem; border-radius: var(--radius-full);
+}
+.ds-toast--success .ds-toast__mark { background: color-mix(in oklab, var(--success) 15%, transparent); color: var(--success); }
+.ds-toast--error   .ds-toast__mark { background: color-mix(in oklab, var(--error) 15%, transparent);   color: var(--error); }
+.ds-toast--info    .ds-toast__mark { background: color-mix(in oklab, var(--info) 15%, transparent);    color: var(--info); }
+@keyframes ds-toast-in  { from { opacity: 0; translate: 0 var(--space-2); } }
+@keyframes ds-toast-out { to   { opacity: 0; translate: 0 var(--space-2); } }
+@media (prefers-reduced-motion: reduce) {
+  .ds-toast, .ds-toast[data-leaving] { animation: none; }
 }
 
 /* ---------------------------------------------------------------------------

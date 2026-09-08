@@ -25,7 +25,8 @@ node bin/init.mjs ../mon-projet --name mon-projet --theme blank
 | Per project | never edit | **this is what you edit** |
 
 `npm run check` fails the build if the skeleton declares a token, hard-codes a
-colour, or if any theme drifts from the others. That guard is what makes themes genuinely interchangeable —
+colour — hex **or** functional, `rgb(0 0 0 / .5)` counts — or if any theme drifts
+from the others. That guard is what makes themes genuinely interchangeable —
 which is what stops every project you build from looking identical.
 
 ## Two layers
@@ -44,8 +45,9 @@ They share a typeface and nothing else. Don't mix their classes on one page.
 
 ## What you get
 
-**44 components.** Application (14): shell, sidebar, button, badge, card, KPI card,
-stat strip, score, tabs, field, alert, empty state, icon + a 33-icon inline sprite.
+**47 components.** Application (17): shell, sidebar, button, badge, card, KPI card,
+stat strip, score, tabs, field, alert, empty state, dialog, dropdown, toast, icon +
+a 33-icon inline sprite.
 Marketing (30): nav with mega-menu, announcement bar, hero (centered / split),
 section, heading, split, card, quote, logos, stats, steps, tabs, CTA band, FAQ,
 pricing, comparison table, team, media frame, footer, button, form field — plus a
@@ -56,8 +58,9 @@ article card, post navigation, breadcrumb, terminal.
 the real components from source, so it cannot go stale: change a token and the
 reference changes with it.
 
-**4 themes**, all interchangeable: `app-blank`, `app-openseo`, `marketing-blank`,
-`marketing-openseo`.
+**6 themes**, all interchangeable: `blank` (neutral, AA-clean), `openseo` (the
+reconstructed values) and `editorial` (paper, oxblood, sharp corners, elevated at
+rest, serif headings) — each in an app and a marketing variant.
 
 **A scaffold** with four working pages — landing, pricing, blog, dashboard — that
 exercise every component, so a new project starts from something real rather than
@@ -71,6 +74,8 @@ an empty shell.
 | `themes/app-openseo.css` | The reconstructed values. Named for provenance, not domain. |
 | `themes/marketing-blank.css` | Neutral marketing theme. |
 | `themes/marketing-openseo.css` | The reconstructed values: warm grounds, orange accent. |
+| `themes/app-editorial.css` | The stress test — see below. |
+| `themes/marketing-editorial.css` | Its marketing counterpart. |
 | `css/system.css` | App components. References tokens, never declares them. |
 | `css/marketing.css` | Marketing components. Same rule. |
 | `css/index.css` | Loads both skeletons. |
@@ -89,6 +94,35 @@ npm run example          # regenerate example/ from the templates
 npm run example:build    # prove it compiles
 npm run verify           # all of the above
 ```
+
+## What the third theme proved
+
+`blank` and `openseo` are close cousins: grey ramp, blue accent, flat, 8px radius,
+40px controls. If the split only worked between those, it would not really work.
+`editorial` moves every structural axis at once — and `css/system.css` did not
+change by one line:
+
+| | blank | editorial |
+| --- | --- | --- |
+| Accent | `#1D4ED8` | `#7B2D3B` oxblood |
+| Panel | `#FFFFFF` | `#FDFBF7` paper |
+| Card radius | 12px | 4px |
+| Card shadow | none | `0 1px 2px rgb(31 26 23 / .08)` |
+| Button / input height | 40px | 44px |
+| Heading face | Inter | a serif |
+| Dialog backdrop | neutral black | warm `rgb(31 26 23 / .55)` |
+
+Writing it also found four faults, which is the point of writing it:
+
+1. **`--shadow-none` was named after its value.** A theme that wants elevation at
+   rest cannot express it through a token called "none". Renamed `--shadow-rest`.
+2. **`.ds-scrim` hard-coded `rgb(0 0 0 / .5)`.** The guard only scanned hex, so it
+   sailed through. Now a `--scrim` token, and the guard reads functional notations.
+3. **The guard counted tokens mentioned in comments.** Prose like "the theme sets
+   `--depth: 0`" registered as a declaration and made two themes look like they had
+   drifted. `declared()` strips comments first.
+4. **Headings had no way to change face.** Added `--font-display`, which the other
+   themes point at `--font-sans`, so nothing moved for them.
 
 ## Re-skinning a project
 
@@ -137,9 +171,12 @@ colour.
 ## Verified
 
 Node 24.20.0 · Astro 7.3.2. `example/` installs and builds clean (8 pages); checked at
-1280px, 800px and 375px, and in dark mode. On `/design-system`, the application panel
-follows the theme while the marketing islands stay light — the documented behaviour,
-confirmed on one page.
+1280px, 800px and 375px, in dark mode, and under both the `blank` and `editorial`
+themes — no overlaps, no overflow, no clipping in any combination. On
+`/design-system`, the application panel follows the theme while the marketing islands
+stay light. The dialog, dropdown and toast were driven through their real behaviour:
+top-layer entry and focus movement, arrow/Home/End/Escape menu navigation and focus
+return, and live-region insertion and dismissal.
 
 ## Licence
 
