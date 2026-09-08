@@ -1,0 +1,124 @@
+---
+import SortHeader from "./SortHeader.astro";
+import EmptyState from "./EmptyState.astro";
+
+/**
+ * The table chrome: wrapper, toolbar, header row, and the loading and empty
+ * states. Rows go in the default slot as plain <tr>, because Astro has no
+ * render-prop equivalent and a cell API would only get in your way.
+ *
+ *   <DataTable columns={cols} sortBy="views" sortDir="desc">
+ *     <Fragment slot="toolbar"> ... </Fragment>
+ *     {rows.map((r) => <tr>...</tr>)}
+ *     <Pagination slot="pagination" ... />
+ *   </DataTable>
+ *
+ * Mark the identifier column `isId` so it keeps a readable width while the
+ * numeric columns scroll past it on a narrow screen.
+ */
+export interface DataColumn {
+  id: string;
+  label: string;
+  align?: "left" | "right" | "center";
+  sortable?: boolean;
+  /** The column that names the row. One per table. */
+  isId?: boolean;
+  width?: string;
+}
+interface Props {
+  columns: DataColumn[];
+  density?: "compact" | "default" | "comfortable";
+  selectable?: boolean;
+  sortBy?: string;
+  sortDir?: "asc" | "desc";
+  /** Makes headers links, so sorting works with JavaScript off. */
+  sortHref?: (id: string, dir: "asc" | "desc") => string;
+  loading?: boolean;
+  /** Show the empty state instead of the rows. */
+  empty?: boolean;
+  emptyTitle?: string;
+  emptyBody?: string;
+  /** Forces horizontal scroll below this width rather than squeezing columns. */
+  minWidth?: string;
+  class?: string;
+}
+const {
+  columns,
+  density = "default",
+  selectable = false,
+  sortBy,
+  sortDir = "desc",
+  sortHref,
+  loading = false,
+  empty = false,
+  emptyTitle = "Nothing to show",
+  emptyBody,
+  minWidth,
+  class: cls = "",
+} = Astro.props;
+
+const densityClass = density === "compact" ? "ds-table--xs" : density === "default" ? "ds-table--sm" : "";
+const hasToolbar = Astro.slots.has("toolbar");
+const hasPagination = Astro.slots.has("pagination");
+const columnCount = columns.length + (selectable ? 1 : 0);
+
+// Sorting a column that is already sorted flips it; a new column starts descending.
+const nextDir = (id: string): "asc" | "desc" => (sortBy === id && sortDir === "desc" ? "asc" : "desc");
+---
+<div class={["ds-card", "ds-card--flush", cls].filter(Boolean).join(" ")}>
+  {hasToolbar && <div class="ds-table-toolbar"><slot name="toolbar" /></div>}
+
+  {loading ? (
+    <div class="ds-table-skeleton" aria-busy="true" aria-live="polite">
+      {Array.from({ length: 6 }).map(() => (
+        <div style={`grid-template-columns:repeat(${columnCount},1fr)`}>
+          {Array.from({ length: columnCount }).map(() => <div class="ds-skeleton" />)}
+        </div>
+      ))}
+    </div>
+  ) : empty ? (
+    <div style="padding:var(--space-8) var(--space-4)">
+      <slot name="empty">
+        <EmptyState title={emptyTitle} body={emptyBody} icon="inbox" />
+      </slot>
+    </div>
+  ) : (
+    <div class="ds-table-wrap">
+      <table class={["ds-table", densityClass].filter(Boolean).join(" ")} style={minWidth ? `min-width:${minWidth}` : undefined}>
+        <thead>
+          <tr>
+            {selectable && (
+              <th style="width:32px">
+                <input class="ds-checkbox ds-checkbox--xs" type="checkbox" aria-label="Select all rows" data-select-all />
+              </th>
+            )}
+            {columns.map((c) => (
+              <th
+                data-align={c.align}
+                data-col={c.isId ? "id" : undefined}
+                style={c.width ? `width:${c.width}` : undefined}
+                aria-sort={
+                  sortBy === c.id ? (sortDir === "asc" ? "ascending" : "descending") : c.sortable ? "none" : undefined
+                }
+              >
+                {c.sortable ? (
+                  <SortHeader
+                    id={c.id}
+                    label={c.label}
+                    sorted={sortBy === c.id ? sortDir : false}
+                    href={sortHref ? sortHref(c.id, nextDir(c.id)) : undefined}
+                  />
+                ) : (
+                  c.label
+                )}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody><slot /></tbody>
+      </table>
+    </div>
+  )}
+
+  {hasPagination && !loading && !empty && <slot name="pagination" />}
+</div>

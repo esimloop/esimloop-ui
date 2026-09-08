@@ -504,6 +504,27 @@
 .ds-bulkbar__action--danger:hover { background: color-mix(in oklab, var(--error) 10%, transparent); }
 
 /* ---------------------------------------------------------------------------
+   CHARTS — the tokens already existed; these are the marks that read them.
+   ------------------------------------------------------------------------- */
+.ds-chart { display: block; width: 100%; height: auto; }
+.ds-chart__grid { stroke: var(--chart-grid); stroke-width: 1; stroke-dasharray: 2 4; fill: none; }
+.ds-chart__axis { fill: var(--chart-axis); font-size: 11px; font-family: var(--font-sans); }
+.ds-chart__line { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.ds-chart__dot  { r: 3; }
+.ds-chart__dot--last { r: 5; }
+.ds-sparkline { display: block; overflow: visible; }
+.ds-sparkline__line { fill: none; stroke-width: 1.5; stroke-linejoin: round; stroke-linecap: round; }
+.ds-sparkline__end { r: 2; }
+
+/* ---------------------------------------------------------------------------
+   TABLE STATES — the skeleton rows mirror the real column grid, so the layout
+   does not jump when the data lands.
+   ------------------------------------------------------------------------- */
+.ds-table-skeleton { display: flex; flex-direction: column; gap: var(--space-3); padding: var(--space-4); }
+.ds-table-skeleton > div { display: grid; gap: var(--space-3); }
+.ds-table-skeleton .ds-skeleton { height: 14px; }
+
+/* ---------------------------------------------------------------------------
    METRIC / KPI
    ------------------------------------------------------------------------- */
 .ds-kpi { background: var(--surface-card); border: var(--border-width) solid var(--border-default); border-radius: var(--radius-box); padding: var(--space-4); }
@@ -555,7 +576,9 @@
    OVERLAYS: tooltip, dropdown, modal, drawer, toast
    ------------------------------------------------------------------------- */
 .ds-tooltip {
-  position: absolute; z-index: 1000; width: max-content; max-width: 16rem;
+  /* fixed, not absolute: the tooltip is portalled to <body>, so a card with
+     overflow:hidden can never clip it. Coordinates are viewport-relative. */
+  position: fixed; z-index: 1000; width: max-content; max-width: 16rem;
   padding: var(--space-2) var(--space-2-5);
   font-size: var(--t-caption-size); font-weight: 400; line-height: 1.35; text-transform: none;
   color: var(--text-primary);

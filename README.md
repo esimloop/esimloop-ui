@@ -45,9 +45,10 @@ They share a typeface and nothing else. Don't mix their classes on one page.
 
 ## What you get
 
-**47 components.** Application (17): shell, sidebar, button, badge, card, KPI card,
-stat strip, score, tabs, field, alert, empty state, dialog, dropdown, toast, icon +
-a 33-icon inline sprite.
+**53 components.** Application (23): shell, sidebar, button, badge, card, KPI card,
+stat strip, score, tabs, field, alert, empty state, dialog, dropdown, toast, tooltip,
+data table, sort header, pagination, area chart, sparkline, icon + a 33-icon inline
+sprite.
 Marketing (30): nav with mega-menu, announcement bar, hero (centered / split),
 section, heading, split, card, quote, logos, stats, steps, tabs, CTA band, FAQ,
 pricing, comparison table, team, media frame, footer, button, form field — plus a

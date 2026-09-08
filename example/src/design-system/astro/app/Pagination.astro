@@ -1,0 +1,78 @@
+---
+import Button from "./Button.astro";
+
+/**
+ * Range, page size and previous/next. There are deliberately no numbered page
+ * buttons: with thousands of pages they are noise, and the range already says
+ * where you are.
+ *
+ * Pass `hrefFor` to make it work without JavaScript; otherwise the arrows carry
+ * `data-page` for you to handle.
+ */
+interface Props {
+  page: number;
+  pageSize: number;
+  /** null when the backend cannot count cheaply - the range then omits the total. */
+  total?: number | null;
+  pageSizes?: number[];
+  loading?: boolean;
+  hrefFor?: (page: number) => string;
+  class?: string;
+}
+const {
+  page,
+  pageSize,
+  total = null,
+  pageSizes = [25, 50, 100],
+  loading = false,
+  hrefFor,
+  class: cls = "",
+} = Astro.props;
+
+const start = (page - 1) * pageSize + 1;
+const end = total === null ? start + pageSize - 1 : Math.min(total, start + pageSize - 1);
+const totalPages = total === null ? null : Math.max(1, Math.ceil(total / pageSize));
+
+const range =
+  total === 0
+    ? "0"
+    : total === null
+      ? `${start.toLocaleString()}–${end.toLocaleString()}`
+      : `${start.toLocaleString()}–${end.toLocaleString()} of ${total.toLocaleString()}`;
+
+const canPrev = page > 1;
+const canNext = totalPages === null ? true : page < totalPages;
+---
+<div class={["ds-pagination", cls].filter(Boolean).join(" ")}>
+  <div class="row-tight ds-num" style="display:flex;align-items:center;gap:var(--space-2)">
+    <span>{range}</span>
+    {loading && <span class="ds-spinner ds-spinner--xs" aria-label="Loading" />}
+  </div>
+
+  <div class="ds-pagination__group">
+    <label style="display:flex;align-items:center;gap:var(--space-2)">
+      <span style="white-space:nowrap">Rows per page</span>
+      <select class="ds-select ds-select--sm" style="width:5rem" data-page-size>
+        {pageSizes.map((n) => <option value={n} selected={n === pageSize}>{n}</option>)}
+      </select>
+    </label>
+
+    <div class="ds-pagination__nav">
+      <span class="ds-num ds-text-secondary" style="white-space:nowrap">
+        Page {page.toLocaleString()}{totalPages !== null && ` of ${totalPages.toLocaleString()}`}
+      </span>
+      <Button
+        size="sm" square variant="ghost" label="Previous page" iconStart="chev-left"
+        disabled={!canPrev || loading}
+        href={hrefFor && canPrev ? hrefFor(page - 1) : undefined}
+        data-page={page - 1}
+      />
+      <Button
+        size="sm" square variant="ghost" label="Next page" iconStart="chev-right"
+        disabled={!canNext || loading}
+        href={hrefFor && canNext ? hrefFor(page + 1) : undefined}
+        data-page={page + 1}
+      />
+    </div>
+  </div>
+</div>

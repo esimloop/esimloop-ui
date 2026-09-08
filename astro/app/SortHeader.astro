@@ -1,0 +1,31 @@
+---
+import Icon from "./Icon.astro";
+
+/**
+ * A sortable column header. Renders a link when `href` is given, so sorting
+ * survives without JavaScript; otherwise a button carrying `data-sort`.
+ *
+ * aria-sort belongs on the <th>, not here - DataTable sets it.
+ */
+interface Props {
+  label: string;
+  id: string;
+  sorted?: "asc" | "desc" | false;
+  href?: string;
+  class?: string;
+}
+const { label, id, sorted = false, href, class: cls = "" } = Astro.props;
+const classes = ["ds-sort", cls].filter(Boolean).join(" ");
+const arrow = sorted === "asc" ? "chev-up" : "chev-down";
+---
+{href ? (
+  <a class={classes} href={href} data-sorted={sorted || undefined}>
+    {label}
+    {sorted && <Icon name={arrow} size="xs" />}
+  </a>
+) : (
+  <button class={classes} type="button" data-sort={id} data-sorted={sorted || undefined}>
+    {label}
+    {sorted && <Icon name={arrow} size="xs" />}
+  </button>
+)}

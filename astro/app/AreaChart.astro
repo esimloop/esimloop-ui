@@ -1,0 +1,94 @@
+---
+/**
+ * A single-series area chart in plain SVG, reading the chart tokens. Every tick
+ * label names a value the chart actually reaches, and the viewBox leaves room
+ * for the outermost labels so nothing is clipped.
+ *
+ * Animation is deliberately absent: a result that animates in reads as slower
+ * than one that is simply there.
+ */
+export interface ChartPoint {
+  label: string;
+  value: number;
+}
+interface Props {
+  data: ChartPoint[];
+  height?: number;
+  /** Formats tick labels and the accessible summary. */
+  format?: (value: number) => string;
+  /** Required: describe the trend, not the chart type. */
+  label: string;
+  class?: string;
+}
+const {
+  data,
+  height = 210,
+  format = (v: number) => (v >= 1000 ? (v / 1000).toFixed(v >= 10000 ? 0 : 1) + "K" : String(v)),
+  label,
+  class: cls = "",
+} = Astro.props;
+
+const W = 720;
+const LEFT = 44;
+const RIGHT = 8;
+const TOP = 8;
+const BOTTOM = 24;
+const plotW = W - LEFT - RIGHT;
+const plotH = height - TOP - BOTTOM;
+
+// A "nice" ceiling so the top gridline is a round number rather than the max.
+function niceMax(v: number): number {
+  if (v <= 0) return 1;
+  const mag = 10 ** Math.floor(Math.log10(v));
+  return Math.ceil(v / (mag / 2)) * (mag / 2);
+}
+const max = niceMax(Math.max(...data.map((d) => d.value)));
+
+const x = (i: number) => LEFT + (i * plotW) / Math.max(data.length - 1, 1);
+const y = (v: number) => TOP + plotH - (v / max) * plotH;
+
+const points = data.map((d, i) => [x(i), y(d.value)] as const);
+const line = points.map((p) => p.join(",")).join(" ");
+const area =
+  `M${points.map((p) => p.join(",")).join(" L")} L${x(data.length - 1)},${TOP + plotH} L${LEFT},${TOP + plotH} Z`;
+
+const ticks = [0, 0.25, 0.5, 0.75, 1].map((f) => ({ v: max * f, y: y(max * f) }));
+const id = "ds-area-" + Math.random().toString(36).slice(2, 8);
+const last = points[points.length - 1];
+---
+<svg
+  class={["ds-chart", cls].filter(Boolean).join(" ")}
+  viewBox={`0 0 ${W} ${height}`}
+  role="img"
+  aria-label={label}
+>
+  <defs>
+    <linearGradient id={id} x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="var(--chart-series-1)" stop-opacity="var(--chart-fill-start)" />
+      <stop offset="100%" stop-color="var(--chart-series-1)" stop-opacity="var(--chart-fill-end)" />
+    </linearGradient>
+  </defs>
+
+  <g class="ds-chart__grid">
+    {ticks.map((t) => <line x1={LEFT} y1={t.y} x2={W - RIGHT} y2={t.y} />)}
+  </g>
+
+  <g class="ds-chart__axis" text-anchor="end">
+    {ticks.map((t) => <text x={LEFT - 6} y={t.y + 4}>{format(t.v)}</text>)}
+  </g>
+
+  <path d={area} fill={`url(#${id})`} />
+  <polyline class="ds-chart__line" stroke="var(--chart-series-1)" points={line} />
+
+  <g fill="var(--chart-series-1)">
+    {points.map((p, i) => (
+      <circle class={i === points.length - 1 ? "ds-chart__dot ds-chart__dot--last" : "ds-chart__dot"} cx={p[0]} cy={p[1]} />
+    ))}
+  </g>
+
+  <g class="ds-chart__axis" text-anchor="middle">
+    {data.map((d, i) => (
+      <text x={i === data.length - 1 ? x(i) - 6 : x(i)} y={height - 6}>{d.label}</text>
+    ))}
+  </g>
+</svg>

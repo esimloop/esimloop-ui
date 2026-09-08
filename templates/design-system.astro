@@ -23,6 +23,11 @@ import Field from "../design-system/astro/app/Field.astro";
 import EmptyState from "../design-system/astro/app/EmptyState.astro";
 import Modal from "../design-system/astro/app/Modal.astro";
 import Dropdown from "../design-system/astro/app/Dropdown.astro";
+import Tooltip from "../design-system/astro/app/Tooltip.astro";
+import DataTable from "../design-system/astro/app/DataTable.astro";
+import Pagination from "../design-system/astro/app/Pagination.astro";
+import Sparkline from "../design-system/astro/app/Sparkline.astro";
+import AreaChart from "../design-system/astro/app/AreaChart.astro";
 import ToastHost from "../design-system/astro/app/ToastHost.astro";
 import Icon from "../design-system/astro/app/Icon.astro";
 import { ICON_NAMES } from "../design-system/astro/app/icons";
@@ -62,6 +67,7 @@ const sections = [
   { id: "status", label: "Status" },
   { id: "surfaces", label: "Surfaces" },
   { id: "data", label: "Data" },
+  { id: "charts", label: "Charts" },
   { id: "overlays", label: "Overlays" },
   { id: "states", label: "States" },
   { id: "icons", label: "Icons" },
@@ -113,6 +119,28 @@ const typeScale = [
   ["ds-body-sm", "12 / 16", "400"],
   ["ds-label", "12 / 16", "600 upper"],
   ["ds-caption", "11 / 16", "400"],
+];
+
+const tableRows = [
+  { name: "Getting started guide", views: "14,800", score: 24, status: "Published", trend: [58, 61, 60, 66, 71, 74, 80] },
+  { name: "Pricing page", views: "9,900", score: 41, status: "Published", trend: [72, 70, 71, 66, 63, 61, 58] },
+  { name: "Integrations overview", views: "22,200", score: 88, status: "Draft", trend: [40, 42, 41, 44, 46, 45, 49] },
+  { name: "Changelog", views: "3,600", score: null, status: "Draft", trend: [30, 30, 31, 30, 30, 31, 30] },
+];
+
+const tableColumns = [
+  { id: "name", label: "Name", isId: true, sortable: true },
+  { id: "views", label: "Views", align: "right" as const, sortable: true },
+  { id: "score", label: "Score", align: "right" as const, sortable: true },
+  { id: "trend", label: "Trend", align: "center" as const },
+  { id: "status", label: "Status", align: "center" as const },
+];
+
+const chartData = [
+  { label: "Apr", value: 68000 }, { label: "May", value: 72000 }, { label: "Jun", value: 79000 },
+  { label: "Jul", value: 85000 }, { label: "Aug", value: 82000 }, { label: "Sep", value: 91000 },
+  { label: "Oct", value: 98000 }, { label: "Nov", value: 104000 }, { label: "Dec", value: 99000 },
+  { label: "Jan", value: 112000 }, { label: "Feb", value: 121000 }, { label: "Mar", value: 128400 },
 ];
 
 const spaceScale = [1, 1.5, 2, 3, 4, 5, 6, 8, 10, 12];
@@ -440,44 +468,58 @@ const radii = [
           />
         </div>
         <div class="ref__demo">
-          <p class="ref__cap">Table — hover, selected, and the identifier column</p>
-          <div class="ds-table-wrap" style="width:100%">
-            <table class="ds-table ds-table--sm">
-              <thead>
-                <tr>
-                  <th style="width:32px"><input class="ds-checkbox ds-checkbox--xs" type="checkbox" aria-label="Select all" /></th>
-                  <th data-col="id"><button class="ds-sort" data-sorted>Name<Icon name="chev-down" size="xs" /></button></th>
-                  <th data-align="right"><button class="ds-sort">Views</button></th>
-                  <th data-align="right">Score</th>
-                  <th data-align="center">Status</th>
+          <p class="ref__cap">DataTable — chrome, sortable headers, states; the rows stay yours</p>
+          <div style="width:100%">
+            <DataTable columns={tableColumns} sortBy="views" sortDir="desc" selectable minWidth="34rem">
+              <Fragment slot="toolbar">
+                <Button size="xs" variant="ghost" iconStart="filters">Filters</Button>
+                <span class="ds-body-sm ds-text-muted ds-num">1,284 items</span>
+                <span class="ds-spacer"></span>
+                <Tooltip text="Export to CSV">
+                  <Button size="xs" variant="ghost" square label="Export to CSV" iconStart="download" />
+                </Tooltip>
+              </Fragment>
+
+              {tableRows.map((r, i) => (
+                <tr aria-selected={i === 0 ? "true" : undefined} data-clickable>
+                  <td><input class="ds-checkbox ds-checkbox--xs" type="checkbox" checked={i === 0} aria-label="Select row" /></td>
+                  <td data-col="id" style="font-weight:500">{r.name}</td>
+                  <td data-align="right">{r.views}</td>
+                  <td data-align="right"><Score value={r.score} label={"Score " + (r.score ?? "not available")} /></td>
+                  <td data-align="center">
+                    <Sparkline values={r.trend} label={"Trend for " + r.name} />
+                  </td>
+                  <td data-align="center">
+                    <Badge tone={r.status === "Published" ? "success" : "neutral"}>{r.status}</Badge>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                <tr aria-selected="true" data-clickable>
-                  <td><input class="ds-checkbox ds-checkbox--xs" type="checkbox" checked aria-label="Select row" /></td>
-                  <td data-col="id" style="font-weight:500">Selected row</td>
-                  <td data-align="right">14,800</td>
-                  <td data-align="right"><Score value={24} /></td>
-                  <td data-align="center"><Badge tone="success">Published</Badge></td>
-                </tr>
-                <tr data-clickable>
-                  <td><input class="ds-checkbox ds-checkbox--xs" type="checkbox" aria-label="Select row" /></td>
-                  <td data-col="id" style="font-weight:500">Hover this row</td>
-                  <td data-align="right">9,900</td>
-                  <td data-align="right"><Score value={58} /></td>
-                  <td data-align="center"><Badge tone="neutral">Draft</Badge></td>
-                </tr>
-                <tr data-clickable>
-                  <td><input class="ds-checkbox ds-checkbox--xs" type="checkbox" aria-label="Select row" /></td>
-                  <td data-col="id" style="font-weight:500">Missing value</td>
-                  <td data-align="right"><span class="ds-text-faint">—</span></td>
-                  <td data-align="right"><Score value={null} /></td>
-                  <td data-align="center"><Badge tone="neutral">Draft</Badge></td>
-                </tr>
-              </tbody>
-            </table>
+              ))}
+
+              <Pagination slot="pagination" page={1} pageSize={50} total={1284} />
+            </DataTable>
           </div>
         </div>
+
+        <div class="ref__demo ref__grid2">
+          <div>
+            <p class="ref__cap">Loading — skeleton rows mirror the column grid</p>
+            <div style="margin-top:12px">
+              <DataTable columns={tableColumns.slice(0, 3)} loading />
+            </div>
+          </div>
+          <div>
+            <p class="ref__cap">Empty — says why, and offers the way out</p>
+            <div style="margin-top:12px">
+              <DataTable
+                columns={tableColumns.slice(0, 3)}
+                empty
+                emptyTitle="No items match these filters"
+                emptyBody="Four filters are narrowing 1,284 results down to none."
+              />
+            </div>
+          </div>
+        </div>
+
         <div class="ref__demo">
           <p class="ref__cap">Bulk actions &amp; pagination</p>
           <div style="display:flex;flex-direction:column;gap:16px;width:100%;align-items:flex-start">
@@ -504,6 +546,37 @@ const radii = [
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================ CHARTS ============================ -->
+      <section id="charts" class="ref__section">
+        <h2 class="ds-h2">Charts</h2>
+        <p class="ref__lede">The chart tokens existed from the start — <code class="ref__code">--chart-grid</code>, <code class="ref__code">--chart-axis</code>, the fill opacities, five series colours — but nothing read them until now. Both marks below take their colour from the theme, so they follow it into dark mode.</p>
+
+        <div class="ref__demo">
+          <p class="ref__cap">Area chart — every tick names a value the chart reaches</p>
+          <div class="ds-card" style="width:100%"><div class="ds-card__body">
+            <AreaChart data={chartData} label="Monthly views, rising from 68,000 in April to 128,400 in March" />
+          </div></div>
+        </div>
+
+        <div class="ref__demo">
+          <p class="ref__cap">Sparkline — table-cell size, direction carried by colour and shape</p>
+          <div class="ref__wrap" style="gap:24px">
+            <span class="ref__wrap" style="gap:8px">
+              <Sparkline values={[58, 61, 60, 66, 71, 74, 80]} label="Rising trend" />
+              <span class="ds-kpi__delta ds-delta--up ds-num">▲ 12%</span>
+            </span>
+            <span class="ref__wrap" style="gap:8px">
+              <Sparkline values={[72, 70, 71, 66, 63, 61, 58]} label="Falling trend" />
+              <span class="ds-kpi__delta ds-delta--down ds-num">▼ 4%</span>
+            </span>
+            <span class="ref__wrap" style="gap:8px">
+              <Sparkline values={[30, 30, 31, 30, 30, 31, 30]} label="Flat trend" />
+              <span class="ds-kpi__delta ds-delta--flat ds-num">— 0%</span>
+            </span>
           </div>
         </div>
       </section>
@@ -535,6 +608,21 @@ const radii = [
               <li role="none"><button type="button" role="menuitem">First</button></li>
               <li role="none"><button type="button" role="menuitem">Second</button></li>
             </Dropdown>
+          </div>
+        </div>
+
+        <div class="ref__demo">
+          <p class="ref__cap">Tooltip — portalled to body, so no card can clip it</p>
+          <div class="ref__wrap">
+            <Tooltip text="Export to CSV">
+              <Button square label="Export to CSV" iconStart="download" />
+            </Tooltip>
+            <Tooltip text="This one opens below the trigger" side="bottom">
+              <Button>Below</Button>
+            </Tooltip>
+            <Tooltip text="Keyboard focus shows it immediately; a delay would look like nothing happened">
+              <Button variant="ghost">Focus me with Tab</Button>
+            </Tooltip>
           </div>
         </div>
 

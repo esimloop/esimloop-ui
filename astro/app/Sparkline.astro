@@ -1,0 +1,55 @@
+---
+/**
+ * A trend line small enough to live in a table cell. No axes, no labels: it
+ * shows shape, and the number beside it carries the value.
+ *
+ * `tone="auto"` colours it by direction, which pairs with the delta glyph so
+ * the reading never depends on colour alone.
+ */
+interface Props {
+  values: number[];
+  width?: number;
+  height?: number;
+  tone?: "auto" | "accent" | "success" | "error" | "muted";
+  /** Required: a bare line is invisible to a screen reader. */
+  label: string;
+  class?: string;
+}
+const { values, width = 64, height = 20, tone = "auto", label, class: cls = "" } = Astro.props;
+
+const PAD = 2;
+const clean = values.filter((v) => Number.isFinite(v));
+const min = Math.min(...clean);
+const max = Math.max(...clean);
+const span = max - min || 1;
+
+const points = clean.map((v, i) => {
+  const x = PAD + (i * (width - PAD * 2)) / Math.max(clean.length - 1, 1);
+  const y = height - PAD - ((v - min) / span) * (height - PAD * 2);
+  return [x, y] as const;
+});
+
+const direction = clean.length < 2 ? 0 : clean[clean.length - 1] - clean[0];
+const resolved =
+  tone !== "auto" ? tone : direction > 0 ? "success" : direction < 0 ? "error" : "muted";
+const stroke = {
+  accent: "var(--accent)",
+  success: "var(--success)",
+  error: "var(--error)",
+  muted: "var(--text-faint)",
+}[resolved];
+const last = points[points.length - 1];
+---
+{points.length > 1 && (
+  <svg
+    class={["ds-sparkline", cls].filter(Boolean).join(" ")}
+    width={width}
+    height={height}
+    viewBox={`0 0 ${width} ${height}`}
+    role="img"
+    aria-label={label}
+  >
+    <polyline class="ds-sparkline__line" stroke={stroke} points={points.map((p) => p.join(",")).join(" ")} />
+    <circle class="ds-sparkline__end" cx={last[0]} cy={last[1]} fill={stroke} />
+  </svg>
+)}

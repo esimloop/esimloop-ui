@@ -1,0 +1,112 @@
+---
+/**
+ * Wraps a trigger and gives it a tooltip. One shared element is portalled to
+ * <body>, so no card can clip it and only one exists no matter how many
+ * triggers the page has.
+ *
+ * The accessibility rule this system states — "an icon button always carries an
+ * aria-label and a tooltip with matching text" — had no component behind it
+ * until now. Keep `text` and the trigger's accessible name identical.
+ *
+ *   <Tooltip text="Export to CSV">
+ *     <Button square label="Export to CSV" iconStart="download" />
+ *   </Tooltip>
+ *
+ * Or skip the wrapper entirely and put data-tooltip on any element.
+ */
+interface Props {
+  text: string;
+  /** Preferred side. Flips automatically when there is no room. */
+  side?: "top" | "bottom";
+  class?: string;
+}
+const { text, side = "top", class: cls = "" } = Astro.props;
+---
+<span class={["ds-tooltip-trigger", cls].filter(Boolean).join(" ")} data-tooltip={text} data-tooltip-side={side}>
+  <slot />
+</span>
+
+<style is:global>
+  .ds-tooltip-trigger { display: inline-flex; }
+</style>
+
+<script>
+  const OFFSET = 8;
+  const EDGE = 8;
+  let tip: HTMLElement | null = null;
+  let current: HTMLElement | null = null;
+
+  function element(): HTMLElement {
+    if (!tip) {
+      tip = document.createElement("div");
+      tip.className = "ds-tooltip";
+      tip.id = "ds-tooltip";
+      tip.setAttribute("role", "tooltip");
+      tip.hidden = true;
+      document.body.append(tip);
+    }
+    return tip;
+  }
+
+  function place(trigger: HTMLElement, el: HTMLElement) {
+    const t = trigger.getBoundingClientRect();
+    const r = el.getBoundingClientRect();
+    const wantsBottom = trigger.dataset.tooltipSide === "bottom";
+
+    let top = wantsBottom ? t.bottom + OFFSET : t.top - r.height - OFFSET;
+    // Flip when the preferred side has no room.
+    if (!wantsBottom && top < EDGE) top = t.bottom + OFFSET;
+    if (wantsBottom && top + r.height > innerHeight - EDGE) top = t.top - r.height - OFFSET;
+
+    const left = Math.min(
+      Math.max(t.left + t.width / 2 - r.width / 2, EDGE),
+      innerWidth - r.width - EDGE,
+    );
+    el.style.top = top + "px";
+    el.style.left = left + "px";
+  }
+
+  function show(trigger: HTMLElement) {
+    const text = trigger.dataset.tooltip;
+    if (!text) return;
+    current = trigger;
+    const el = element();
+    el.textContent = text;
+    el.hidden = false;
+    // Describe, never label: the trigger must already have its own name.
+    trigger.setAttribute("aria-describedby", "ds-tooltip");
+    place(trigger, el);
+  }
+
+  function hide() {
+    if (!current) return;
+    current.removeAttribute("aria-describedby");
+    current = null;
+    if (tip) tip.hidden = true;
+  }
+
+  const triggerFrom = (target: EventTarget | null) =>
+    target instanceof Element ? target.closest<HTMLElement>("[data-tooltip]") : null;
+
+  document.addEventListener("pointerover", (e) => {
+    const trigger = triggerFrom(e.target);
+    if (trigger && trigger !== current) show(trigger);
+  });
+  document.addEventListener("pointerout", (e) => {
+    const trigger = triggerFrom(e.target);
+    if (trigger && trigger === current) hide();
+  });
+  // Keyboard shows it immediately - a delay would look like nothing happened.
+  document.addEventListener("focusin", (e) => {
+    const trigger = triggerFrom(e.target);
+    if (trigger) show(trigger);
+    else hide();
+  });
+  document.addEventListener("focusout", hide);
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") hide();
+  });
+  // A tooltip that stays behind while the page moves is worse than none.
+  addEventListener("scroll", hide, true);
+  addEventListener("resize", hide);
+</script>
