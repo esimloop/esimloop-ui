@@ -237,3 +237,181 @@
 .mk-heading{max-width:640px}
 .mk-heading--center{margin-inline:auto;text-align:center}
 .mk-heading__body{margin:16px 0 0;font-size:18px;line-height:1.5;color:var(--m-ink-muted)}
+
+/* ── Prose: raw HTML from markdown ───────────────────────────────────────────
+   The one piece a content site cannot ship without. Everything a CMS or an .md
+   file emits lands here unclassed, so the selectors are element-based and the
+   container caps the measure. Links are ink with a quiet underline, not accent -
+   the accent is spent once per page, on an action. */
+.mk-prose{max-width:68ch;font-size:18px;line-height:1.7;color:var(--m-ink)}
+.mk-prose > * + *{margin-top:1.2em}
+.mk-prose h2{margin:1.9em 0 0;font-size:28px;font-weight:500;line-height:1.25;letter-spacing:-.018em;scroll-margin-top:96px}
+.mk-prose h3{margin:1.6em 0 0;font-size:22px;font-weight:500;line-height:1.3;letter-spacing:-.013em;scroll-margin-top:96px}
+.mk-prose h4{margin:1.4em 0 0;font-size:18px;font-weight:600;line-height:1.4;scroll-margin-top:96px}
+.mk-prose h2 + *,.mk-prose h3 + *,.mk-prose h4 + *{margin-top:.6em}
+.mk-prose p{margin:0}
+.mk-prose a{color:var(--m-ink);text-decoration:underline;text-decoration-color:var(--m-hairline);
+  text-underline-offset:3px;transition:text-decoration-color .15s ease}
+.mk-prose a:hover{text-decoration-color:var(--m-ink)}
+.mk-prose a:focus-visible{outline:2px solid var(--m-ink);outline-offset:2px;border-radius:2px}
+.mk-prose strong{font-weight:600}
+.mk-prose ul,.mk-prose ol{margin:0;padding-left:1.4em;display:flex;flex-direction:column;gap:.5em}
+.mk-prose li::marker{color:var(--m-ink-tertiary)}
+.mk-prose li > ul,.mk-prose li > ol{margin-top:.5em}
+.mk-prose blockquote{margin:0;padding-left:24px;border-left:2px solid var(--m-hairline);color:var(--m-ink-muted)}
+.mk-prose blockquote p + p{margin-top:.8em}
+.mk-prose hr{margin:2.4em 0;border:0;border-top:1px solid var(--m-hairline)}
+.mk-prose img,.mk-prose video{display:block;width:100%;height:auto;border-radius:var(--m-radius-card);
+  border:1px solid var(--m-hairline)}
+.mk-prose code{font-family:var(--m-mono);font-size:.86em;background:var(--m-surface-2);
+  padding:.15em .4em;border-radius:4px}
+.mk-prose pre{margin:0;padding:20px;overflow-x:auto;background:var(--m-term-bg);color:var(--m-term-fg);
+  border-radius:var(--m-radius-card);font-family:var(--m-mono);font-size:14px;line-height:1.7}
+.mk-prose pre code{background:none;padding:0;font-size:inherit;color:inherit}
+.mk-prose table{width:100%;border-collapse:separate;border-spacing:0;font-size:16px;text-align:left}
+.mk-prose th,.mk-prose td{padding:12px 14px;border-bottom:1px solid var(--m-hairline)}
+.mk-prose thead th{font-size:14px;font-weight:600;color:var(--m-ink-muted)}
+.mk-prose figure{margin:0}
+.mk-prose figcaption{margin-top:10px;font-size:14px;line-height:1.5;color:var(--m-ink-subtle)}
+@media(max-width:479px){.mk-prose{font-size:17px}.mk-prose h2{font-size:24px}.mk-prose h3{font-size:20px}}
+
+/* ── Article header ──────────────────────────────────────────────────────── */
+.mk-article-head{max-width:68ch}
+.mk-article-head__meta{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:14px;color:var(--m-ink-subtle)}
+.mk-article-head__title{margin:16px 0 0;font-size:clamp(32px,4.4vw,48px);font-weight:500;line-height:1.1;
+  letter-spacing:-.024em;text-wrap:balance}
+.mk-article-head__standfirst{margin:20px 0 0;font-size:20px;line-height:1.5;letter-spacing:-.01em;color:var(--m-ink-muted)}
+
+/* ── Author byline ───────────────────────────────────────────────────────── */
+.mk-author{display:flex;align-items:center;gap:12px}
+.mk-author__avatar{display:inline-flex;align-items:center;justify-content:center;flex:none;
+  width:40px;height:40px;border-radius:var(--m-radius-pill);overflow:hidden;
+  background:var(--m-ink);color:#fff;font-size:14px;font-weight:500}
+.mk-author__avatar img{width:100%;height:100%;object-fit:cover;display:block}
+.mk-author__name{display:block;font-size:15px;font-weight:500;line-height:1.3}
+.mk-author__role{display:block;font-size:13px;line-height:1.3;color:var(--m-ink-subtle)}
+.mk-author--lg .mk-author__avatar{width:56px;height:56px;font-size:18px}
+
+/* ── Callout: a note inside prose ────────────────────────────────────────── */
+.mk-callout{display:flex;gap:14px;padding:18px 20px;border-radius:var(--m-radius-card);
+  border:1px solid var(--m-hairline);background:var(--m-surface);font-size:16px;line-height:1.6}
+.mk-callout__body{min-width:0}
+.mk-callout__body > * + *{margin-top:.6em}
+.mk-callout__label{display:block;font-size:13px;font-weight:600;letter-spacing:.02em;
+  text-transform:uppercase;color:var(--m-ink-subtle);margin-bottom:6px}
+.mk-callout .ds-icon{flex:none;margin-top:3px;color:var(--m-ink-subtle)}
+.mk-callout--accent{border-color:color-mix(in oklab,var(--m-accent) 30%,transparent);
+  background:color-mix(in oklab,var(--m-accent) 6%,transparent)}
+.mk-callout--accent .ds-icon,.mk-callout--accent .mk-callout__label{color:var(--m-accent)}
+/* A callout inside prose keeps the prose rhythm rather than the prose measure. */
+.mk-prose .mk-callout{max-width:none}
+
+/* ── Table of contents ───────────────────────────────────────────────────── */
+.mk-toc{position:sticky;top:24px;font-size:14px;line-height:1.5}
+.mk-toc__label{margin:0 0 12px;font-size:13px;font-weight:600;letter-spacing:.02em;
+  text-transform:uppercase;color:var(--m-ink-subtle)}
+.mk-toc__list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px;
+  border-left:1px solid var(--m-hairline)}
+.mk-toc__list a{display:block;padding:6px 0 6px 16px;margin-left:-1px;
+  border-left:1px solid transparent;color:var(--m-ink-muted);transition:color .15s ease,border-color .15s ease}
+.mk-toc__list a:hover{color:var(--m-ink);border-left-color:var(--m-ink)}
+.mk-toc__list a:focus-visible{outline:2px solid var(--m-ink);outline-offset:-2px}
+.mk-toc__list li[data-depth="3"] a{padding-left:28px}
+
+/* Article layout: prose beside a sticky contents column. */
+.mk-article-layout{display:grid;gap:40px}
+@media(min-width:1000px){
+  .mk-article-layout{grid-template-columns:minmax(0,1fr) 220px;gap:64px;align-items:start}
+  .mk-article-layout__aside{position:relative}
+}
+@media(max-width:999px){.mk-article-layout__aside{display:none}}
+
+/* ── Post navigation ─────────────────────────────────────────────────────── */
+.mk-postnav{display:grid;gap:16px;border-top:1px solid var(--m-hairline);padding-top:32px}
+@media(min-width:640px){.mk-postnav{grid-template-columns:1fr 1fr}}
+.mk-postnav__link{display:flex;flex-direction:column;gap:6px;padding:20px;
+  border:1px solid var(--m-hairline);border-radius:var(--m-radius-card);background:var(--m-surface);
+  transition:border-color .15s ease}
+.mk-postnav__link:hover{border-color:var(--m-ink)}
+.mk-postnav__link:focus-visible{outline:2px solid var(--m-ink);outline-offset:2px}
+.mk-postnav__dir{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--m-ink-subtle)}
+.mk-postnav__title{font-size:16px;font-weight:500;line-height:1.35}
+.mk-postnav__link--next{text-align:right}
+.mk-postnav__link--next .mk-postnav__dir{justify-content:flex-end}
+
+/* ── Announcement bar ────────────────────────────────────────────────────── */
+.mk-announce{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;
+  padding:10px 20px;background:var(--m-ink);color:#fff;font-size:14px;line-height:1.4;text-align:center}
+.mk-announce a{text-decoration:underline;text-underline-offset:3px}
+.mk-announce a:hover{opacity:.85}
+.mk-announce__tag{display:inline-flex;align-items:center;height:20px;padding-inline:8px;
+  border-radius:var(--m-radius-pill);background:var(--m-accent);font-size:11px;font-weight:600;letter-spacing:.02em}
+
+/* ── Steps ───────────────────────────────────────────────────────────────── */
+.mk-steps{list-style:none;margin:0;padding:0;display:grid;gap:28px}
+@media(min-width:768px){.mk-steps{grid-template-columns:repeat(3,1fr);gap:32px}}
+.mk-step__n{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;
+  border-radius:var(--m-radius-pill);border:1px solid var(--m-hairline);background:var(--m-surface);
+  font-size:14px;font-weight:600;font-variant-numeric:tabular-nums}
+.mk-step__title{margin:14px 0 0;font-size:20px;font-weight:500;line-height:1.3;letter-spacing:-.01em}
+.mk-step__body{margin:8px 0 0;font-size:16px;line-height:1.55;color:var(--m-ink-muted)}
+
+/* ── Form fields ─────────────────────────────────────────────────────────── */
+.mk-form{display:flex;flex-direction:column;gap:20px;max-width:34rem}
+.mk-field{display:flex;flex-direction:column;gap:8px}
+.mk-field__label{font-size:15px;font-weight:500}
+.mk-field__hint{font-size:13px;color:var(--m-ink-subtle)}
+.mk-field__error{font-size:13px;color:var(--m-error)}
+.mk-input,.mk-textarea,.mk-select{width:100%;font-family:inherit;font-size:16px;color:var(--m-ink);
+  background:var(--m-surface);border:1px solid var(--m-hairline);border-radius:var(--m-radius-btn);
+  transition:border-color .15s ease}
+.mk-input,.mk-select{height:48px;padding-inline:14px}
+.mk-textarea{min-height:140px;padding:12px 14px;line-height:1.6;resize:vertical}
+.mk-input::placeholder,.mk-textarea::placeholder{color:var(--m-ink-tertiary)}
+.mk-input:focus,.mk-textarea:focus,.mk-select:focus{outline:none;border-color:var(--m-ink)}
+.mk-input[aria-invalid="true"],.mk-textarea[aria-invalid="true"]{border-color:var(--m-error)}
+.mk-input:disabled,.mk-textarea:disabled{background:var(--m-surface-2);color:var(--m-ink-tertiary);cursor:not-allowed}
+.mk-select{appearance:none;cursor:pointer;padding-inline-end:40px;
+  background-image:linear-gradient(45deg,transparent 50%,currentColor 50%),linear-gradient(135deg,currentColor 50%,transparent 50%);
+  background-position:calc(100% - 22px) 22px,calc(100% - 17px) 22px;background-size:5px 5px,5px 5px;background-repeat:no-repeat}
+
+/* ── Team grid ───────────────────────────────────────────────────────────── */
+.mk-team{display:grid;gap:24px;grid-template-columns:repeat(2,1fr)}
+@media(min-width:768px){.mk-team{grid-template-columns:repeat(4,1fr)}}
+.mk-team__photo{aspect-ratio:1;border-radius:var(--m-radius-card);overflow:hidden;background:var(--m-surface-2);
+  display:grid;place-items:center;color:var(--m-ink-tertiary);font-size:24px;font-weight:500}
+.mk-team__photo img{width:100%;height:100%;object-fit:cover;display:block}
+.mk-team__name{margin:14px 0 0;font-size:16px;font-weight:500;line-height:1.3}
+.mk-team__role{margin:2px 0 0;font-size:14px;line-height:1.4;color:var(--m-ink-muted)}
+
+/* ── Content tabs: CSS only, no script ───────────────────────────────────────
+   One hard constraint: the radios must be SIBLINGS of the panels, because `~`
+   only reaches forward. Given that, keeping each radio ADJACENT to its own
+   label lets the highlight use `:checked + label` - one selector, no index
+   bookkeeping - instead of `:checked ~ .list .label` with a matching pair of
+   :nth-of-type on both sides.
+   With the wrapper gone, the row rule is drawn by the labels themselves plus a
+   flexible filler. Five tabs is the ceiling: the panel rules match by index. */
+.mk-tabs{display:flex;flex-wrap:wrap;align-items:stretch}
+.mk-tabs__radio{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.mk-tabs__label{display:inline-flex;align-items:center;height:44px;padding-inline:16px;cursor:pointer;
+  position:relative;font-size:15px;font-weight:500;color:var(--m-ink-muted);
+  border-bottom:1px solid var(--m-hairline);transition:color .15s ease}
+.mk-tabs__label:hover{color:var(--m-ink)}
+.mk-tabs__label::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;
+  background:transparent;transition:background-color .15s ease}
+.mk-tabs__fill{flex:1;min-width:0;border-bottom:1px solid var(--m-hairline)}
+.mk-tabs__panel{display:none;width:100%;padding-top:28px}
+.mk-tabs__radio:checked + .mk-tabs__label{color:var(--m-ink)}
+.mk-tabs__radio:checked + .mk-tabs__label::after{background:var(--m-ink)}
+.mk-tabs__radio:nth-of-type(1):checked ~ .mk-tabs__panel:nth-of-type(1),
+.mk-tabs__radio:nth-of-type(2):checked ~ .mk-tabs__panel:nth-of-type(2),
+.mk-tabs__radio:nth-of-type(3):checked ~ .mk-tabs__panel:nth-of-type(3),
+.mk-tabs__radio:nth-of-type(4):checked ~ .mk-tabs__panel:nth-of-type(4),
+.mk-tabs__radio:nth-of-type(5):checked ~ .mk-tabs__panel:nth-of-type(5){display:block}
+.mk-tabs__radio:focus-visible + .mk-tabs__label{outline:2px solid var(--m-ink);outline-offset:-2px;border-radius:4px}
+
+/* ── Media frame ─────────────────────────────────────────────────────────── */
+.mk-media{border-radius:var(--m-radius-mockup);overflow:hidden;border:1px solid var(--m-hairline);
+  background:var(--m-surface-2);display:grid;place-items:center;color:var(--m-ink-tertiary)}
+.mk-media > img,.mk-media > video,.mk-media > iframe{display:block;width:100%;height:100%;border:0;object-fit:cover}

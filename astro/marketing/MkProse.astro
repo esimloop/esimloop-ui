@@ -1,0 +1,14 @@
+---
+/**
+ * Wrap raw HTML from a CMS or a markdown file. Selectors are element-based, so
+ * nothing inside needs a class.
+ *
+ *   <MkProse set:html={post.html} />
+ *   <MkProse><h2>…</h2><p>…</p></MkProse>
+ */
+interface Props {
+  class?: string;
+}
+const { class: cls = "" } = Astro.props;
+---
+<div class={["mk-prose", cls].filter(Boolean).join(" ")}><slot /></div>

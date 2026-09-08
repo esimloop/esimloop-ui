@@ -1,6 +1,7 @@
 ---
 import "../styles/app.css";
 import IconSprite from "../design-system/astro/app/IconSprite.astro";
+import MkAnnounce from "../design-system/astro/marketing/MkAnnounce.astro";
 import SiteHeader from "../components/SiteHeader.astro";
 import SiteFooter from "../components/SiteFooter.astro";
 
@@ -27,6 +28,9 @@ const { title, description } = Astro.props;
   <!-- The marketing layer is light-only by design; it declares no dark palette. -->
   <body class="mk" style="margin:0">
     <IconSprite />
+    <MkAnnounce tag="New" href="/blog/example-post" linkLabel="Read the post">
+      One message at a time - if you have two, you have none.
+    </MkAnnounce>
     <SiteHeader />
     <main><slot /></main>
     <SiteFooter />

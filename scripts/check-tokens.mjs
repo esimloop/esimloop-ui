@@ -61,6 +61,20 @@ for (const layer of LAYERS) {
     console.log(`  ok   ${layer.skeleton} declares no tokens (references ${needs.size})`);
   }
 
+  // 1b. The skeleton must not hard-code a colour either. Pure black and white
+  //     are allowed: they are structural (a darkening mix, or text on an
+  //     inverse surface), not a palette choice.
+  const ALLOWED_LITERALS = new Set(["#fff", "#ffffff", "#000", "#000000"]);
+  const withoutComments = skeletonSrc.replace(/\/\*[\s\S]*?\*\//g, "");
+  const literals = [...new Set(withoutComments.match(/#[0-9a-fA-F]{3,8}/g) || [])].filter(
+    (h) => !ALLOWED_LITERALS.has(h.toLowerCase()),
+  );
+  if (literals.length) {
+    fail(`${layer.skeleton} hard-codes colours (use a token): ${literals.join(", ")}`);
+  } else {
+    console.log(`  ok   ${layer.skeleton} hard-codes no colours`);
+  }
+
   // 2. Every theme must satisfy the skeleton.
   const sets = layer.themes.map((t) => [t, declared(read(t))]);
   for (const [name, set] of sets) {

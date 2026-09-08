@@ -9,9 +9,12 @@ Scaffolded from esimloop-ui, theme **blank**.
 
 | Route | Layer | Exercises |
 | --- | --- | --- |
-| `/` | marketing | hero (split), logos, features, split, stats, quotes, CTA |
+| `/` | marketing | announce bar, hero (split), logos, features, split, steps, tabs, stats, quotes, CTA |
 | `/pricing` | marketing | pricing, comparison table, FAQ, breadcrumb |
 | `/blog` | marketing | article grid, breadcrumb |
+| `/blog/example-post` | marketing | prose, article header, author, table of contents, callout, post nav |
+| `/contact` | marketing | form fields, team grid |
+| `/404` | marketing | not-found pattern |
 | `/app` | application | shell, sidebar, KPIs, stat strip, data table |
 
 ## Where things live

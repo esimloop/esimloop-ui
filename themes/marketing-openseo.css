@@ -12,6 +12,7 @@
   --m-ink:#111111; --m-ink-muted:#626260; --m-ink-subtle:#7b7b78; --m-ink-tertiary:#9c9fa5;
   --m-hairline:#d3cec6; --m-hairline-soft:#ebe7e1; --m-border-subtle:#d8d1c8;
   --m-accent:#ff5600; --m-accent-hover:#e64d00;
+  --m-error:#b91c1c;
   --m-inverse:#000000; --m-inverse-surface:#313130; --m-inverse-muted:#9c9fa5;
   --m-q-bg:#e3dccd; --m-q-card:#ffffff; --m-q-card-border:#d0c9bb;
   --m-q-text:#111111; --m-q-muted:#7b7b78; --m-q-mark:#b8ac96;

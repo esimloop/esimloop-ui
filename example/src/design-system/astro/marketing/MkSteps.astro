@@ -1,0 +1,20 @@
+---
+export interface Step {
+  title: string;
+  body: string;
+}
+interface Props {
+  steps: Step[];
+  class?: string;
+}
+const { steps, class: cls = "" } = Astro.props;
+---
+<ol class={["mk-steps", cls].filter(Boolean).join(" ")}>
+  {steps.map((s, i) => (
+    <li>
+      <span class="mk-step__n" aria-hidden="true">{i + 1}</span>
+      <h3 class="mk-step__title">{s.title}</h3>
+      <p class="mk-step__body">{s.body}</p>
+    </li>
+  ))}
+</ol>

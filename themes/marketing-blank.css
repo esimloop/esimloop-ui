@@ -42,6 +42,9 @@
   --m-accent:        #1D4ED8;   /* 6.7:1 as text, 6.7:1 for white-on-accent */
   --m-accent-hover:  #1A45BE;
 
+  /* --- Form validation ------------------------------------------------- */
+  --m-error:         #B91C1C;   /* 6.1:1 on the canvas                      */
+
   /* --- Dark surfaces ------------------------------------------------------ */
   --m-inverse:         #000000;
   --m-inverse-surface: #2E2E2E;

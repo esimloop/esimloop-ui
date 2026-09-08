@@ -1,0 +1,28 @@
+---
+import Icon from "../app/Icon.astro";
+
+export interface PostLink {
+  title: string;
+  href: string;
+}
+interface Props {
+  previous?: PostLink;
+  next?: PostLink;
+  class?: string;
+}
+const { previous, next, class: cls = "" } = Astro.props;
+---
+<nav class={["mk-postnav", cls].filter(Boolean).join(" ")} aria-label="More articles">
+  {previous ? (
+    <a class="mk-postnav__link" href={previous.href}>
+      <span class="mk-postnav__dir"><Icon name="chev-left" size="xs" />Previous</span>
+      <span class="mk-postnav__title">{previous.title}</span>
+    </a>
+  ) : <span />}
+  {next && (
+    <a class="mk-postnav__link mk-postnav__link--next" href={next.href}>
+      <span class="mk-postnav__dir">Next<Icon name="chev-right" size="xs" /></span>
+      <span class="mk-postnav__title">{next.title}</span>
+    </a>
+  )}
+</nav>

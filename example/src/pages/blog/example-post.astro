@@ -1,0 +1,123 @@
+---
+import MarketingLayout from "../../layouts/MarketingLayout.astro";
+import MkSection from "../../design-system/astro/marketing/MkSection.astro";
+import MkBreadcrumb from "../../design-system/astro/marketing/MkBreadcrumb.astro";
+import MkArticleHeader from "../../design-system/astro/marketing/MkArticleHeader.astro";
+import MkAuthor from "../../design-system/astro/marketing/MkAuthor.astro";
+import MkProse from "../../design-system/astro/marketing/MkProse.astro";
+import MkToc from "../../design-system/astro/marketing/MkToc.astro";
+import MkCallout from "../../design-system/astro/marketing/MkCallout.astro";
+import MkPostNav from "../../design-system/astro/marketing/MkPostNav.astro";
+import MkMedia from "../../design-system/astro/marketing/MkMedia.astro";
+import Icon from "../../design-system/astro/app/Icon.astro";
+
+// The ids here must match the heading ids in the prose below.
+const toc = [
+  { id: "the-problem", label: "The problem" },
+  { id: "the-contract", label: "The contract" },
+  { id: "what-it-catches", label: "What it catches", depth: 3 },
+  { id: "results", label: "Results" },
+];
+---
+<MarketingLayout title="How we keep two design systems from drifting">
+  <MkSection>
+    <MkBreadcrumb
+      items={[{ label: "Home", href: "/" }, { label: "Blog", href: "/blog" }, { label: "Article" }]}
+    />
+
+    <div style="margin-top:32px">
+      <MkArticleHeader
+        category="Engineering"
+        date="12 March 2026"
+        readingTime="6 min read"
+        title="How we keep two design systems from drifting"
+        standfirst="Running an app system and a marketing system side by side only works if something fails the build when they diverge."
+      >
+        <div style="margin-top:28px">
+          <MkAuthor name="A. Rivera" role="Design engineering" initials="AR" />
+        </div>
+      </MkArticleHeader>
+    </div>
+
+    <div style="margin-top:40px">
+      <MkMedia ratio="16/9"><Icon name="dashboard" size="xl" /></MkMedia>
+    </div>
+
+    <div class="mk-article-layout" style="margin-top:48px">
+      <div>
+        <MkProse>
+          <p>
+            Replace this article with your own. Everything inside this block is plain
+            HTML, so markdown output drops straight in without a single class.
+          </p>
+
+          <h2 id="the-problem">The problem</h2>
+          <p>
+            Two systems in one repository will converge by accident. Someone needs a
+            colour in a hurry, hard-codes it in a component, and the theme file stops
+            being the single source of truth. Nothing breaks that day; it breaks three
+            projects later.
+          </p>
+          <blockquote>
+            <p>A rule that nothing enforces is a preference, and preferences drift.</p>
+          </blockquote>
+
+          <h2 id="the-contract">The contract</h2>
+          <p>
+            The skeleton may only <em>reference</em> tokens. The themes may only
+            <em>declare</em> them. Two rules, both machine-checkable:
+          </p>
+          <ul>
+            <li>no <code>--token:</code> declaration in <code>css/</code></li>
+            <li>no colour literal in <code>css/</code>, except pure black and white</li>
+            <li>every theme declares exactly the same token set</li>
+          </ul>
+
+          <MkCallout label="Note" icon="info">
+            <p>
+              The third rule is the one that matters most. Without it a theme can
+              satisfy the skeleton while quietly missing a token another theme has,
+              and the two stop being interchangeable.
+            </p>
+          </MkCallout>
+
+          <h3 id="what-it-catches">What it catches</h3>
+          <p>Running it for the first time found two real faults:</p>
+          <pre><code>FAIL themes/app-blank.css is missing: --t-h1-ls, --t-h1-w, ...
+FAIL css/marketing.css hard-codes colours: #b91c1c</code></pre>
+          <p>
+            Both were mine, both were minutes old, and neither would have been visible
+            in a screenshot.
+          </p>
+
+          <h2 id="results">Results</h2>
+          <table>
+            <thead>
+              <tr><th>Check</th><th>Before</th><th>After</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Token drift</td><td>Manual review</td><td>Fails the build</td></tr>
+              <tr><td>Hard-coded colours</td><td>Unnoticed</td><td>Fails the build</td></tr>
+              <tr><td>Theme swap</td><td>Hopeful</td><td>Guaranteed</td></tr>
+            </tbody>
+          </table>
+          <p>
+            The guard runs in under a second, which is the only reason anyone keeps
+            running it.
+          </p>
+        </MkProse>
+
+        <div style="margin-top:56px">
+          <MkPostNav
+            previous={{ title: "Density is a feature, not a setting", href: "/blog/example-post" }}
+            next={{ title: "One accent, used once", href: "/blog/example-post" }}
+          />
+        </div>
+      </div>
+
+      <aside class="mk-article-layout__aside">
+        <MkToc items={toc} />
+      </aside>
+    </div>
+  </MkSection>
+</MarketingLayout>

@@ -10,6 +10,9 @@ import MkQuote from "../design-system/astro/marketing/MkQuote.astro";
 import MkLogos from "../design-system/astro/marketing/MkLogos.astro";
 import MkStats from "../design-system/astro/marketing/MkStats.astro";
 import MkCta from "../design-system/astro/marketing/MkCta.astro";
+import MkSteps from "../design-system/astro/marketing/MkSteps.astro";
+import MkTabs from "../design-system/astro/marketing/MkTabs.astro";
+import MkMedia from "../design-system/astro/marketing/MkMedia.astro";
 import Icon from "../design-system/astro/app/Icon.astro";
 
 const features = [
@@ -73,6 +76,39 @@ const features = [
         </div>
       </div>
     </MkSplit>
+  </MkSection>
+
+  <MkSection ground="quiet">
+    <MkHeading eyebrow="How it works" title="Three steps" />
+    <div style="margin-top:32px">
+      <MkSteps
+        steps={[
+          { title: "Scaffold", body: "One command gives you a project with four working pages." },
+          { title: "Re-skin", body: "Change four values in the theme file. Every screen follows." },
+          { title: "Ship", body: "Build is static, so it deploys anywhere." },
+        ]}
+      />
+    </div>
+  </MkSection>
+
+  <MkSection>
+    <MkHeading title="Two layers, one repository" body="Switch between them without leaving the page." />
+    <div style="margin-top:24px">
+      <MkTabs name="layers" tabs={[{ id: "app", label: "Application" }, { id: "site", label: "Marketing" }]}>
+        <div slot="panel-app">
+          <p class="mk-body-lg mk-muted" style="max-width:60ch;margin:0 0 20px">
+            Dense, flat and border-driven. Light and dark themes.
+          </p>
+          <MkMedia ratio="16/9"><Icon name="dashboard" size="xl" /></MkMedia>
+        </div>
+        <div slot="panel-site">
+          <p class="mk-body-lg mk-muted" style="max-width:60ch;margin:0 0 20px">
+            Warm grounds, editorial type, one accent per page. Light only.
+          </p>
+          <MkMedia ratio="16/9"><Icon name="globe" size="xl" /></MkMedia>
+        </div>
+      </MkTabs>
+    </div>
   </MkSection>
 
   <MkSection>

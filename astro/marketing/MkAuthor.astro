@@ -1,0 +1,21 @@
+---
+interface Props {
+  name: string;
+  role?: string;
+  /** Two letters, shown when no image is given. */
+  initials?: string;
+  avatar?: string;
+  size?: "md" | "lg";
+  class?: string;
+}
+const { name, role, initials, avatar, size = "md", class: cls = "" } = Astro.props;
+---
+<div class={["mk-author", size === "lg" && "mk-author--lg", cls].filter(Boolean).join(" ")}>
+  <span class="mk-author__avatar">
+    {avatar ? <img src={avatar} alt="" width="40" height="40" /> : initials}
+  </span>
+  <span>
+    <span class="mk-author__name">{name}</span>
+    {role && <span class="mk-author__role">{role}</span>}
+  </span>
+</div>

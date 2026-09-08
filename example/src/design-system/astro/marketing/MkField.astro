@@ -1,0 +1,28 @@
+---
+/**
+ * Label + control + hint or error, for marketing forms (contact, waitlist).
+ * Wrap a .mk-input / .mk-textarea / .mk-select and wire aria-describedby to
+ * the ids this renders: `${id}-hint` and `${id}-error`.
+ */
+interface Props {
+  label: string;
+  id: string;
+  hint?: string;
+  error?: string;
+  required?: boolean;
+  class?: string;
+}
+const { label, id, hint, error, required = false, class: cls = "" } = Astro.props;
+---
+<div class={["mk-field", cls].filter(Boolean).join(" ")}>
+  <label class="mk-field__label" for={id}>
+    {label}
+    {required && <span aria-hidden="true"> *</span>}
+  </label>
+  <slot />
+  {error ? (
+    <p class="mk-field__error" id={id + "-error"}>{error}</p>
+  ) : hint ? (
+    <p class="mk-field__hint" id={id + "-hint"}>{hint}</p>
+  ) : null}
+</div>

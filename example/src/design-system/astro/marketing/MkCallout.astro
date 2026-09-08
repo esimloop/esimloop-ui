@@ -1,0 +1,21 @@
+---
+import Icon from "../app/Icon.astro";
+import type { IconName } from "../app/icons";
+
+interface Props {
+  /** `accent` spends the page's one accent - use it at most once. */
+  tone?: "neutral" | "accent";
+  /** Uppercase label above the text, e.g. "Note". */
+  label?: string;
+  icon?: IconName;
+  class?: string;
+}
+const { tone = "neutral", label, icon = "info", class: cls = "" } = Astro.props;
+---
+<aside class={["mk-callout", tone === "accent" && "mk-callout--accent", cls].filter(Boolean).join(" ")}>
+  <Icon name={icon} size="lg" />
+  <div class="mk-callout__body">
+    {label && <span class="mk-callout__label">{label}</span>}
+    <slot />
+  </div>
+</aside>

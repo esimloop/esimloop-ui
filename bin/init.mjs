@@ -140,6 +140,7 @@ const { title } = Astro.props;
     `---
 import "../styles/app.css";
 import IconSprite from "../design-system/astro/app/IconSprite.astro";
+import MkAnnounce from "../design-system/astro/marketing/MkAnnounce.astro";
 import SiteHeader from "../components/SiteHeader.astro";
 import SiteFooter from "../components/SiteFooter.astro";
 
@@ -166,6 +167,9 @@ const { title, description } = Astro.props;
   <!-- The marketing layer is light-only by design; it declares no dark palette. -->
   <body class="mk" style="margin:0">
     <IconSprite />
+    <MkAnnounce tag="New" href="/blog/example-post" linkLabel="Read the post">
+      One message at a time - if you have two, you have none.
+    </MkAnnounce>
     <SiteHeader />
     <main><slot /></main>
     <SiteFooter />
@@ -203,8 +207,8 @@ import MkFooter from "../design-system/astro/marketing/MkFooter.astro";
   blurb="Replace this line with what your product does, in one sentence."
   columns={[
     { label: "Product", links: [{ label: "Features", href: "/#features" }, { label: "Pricing", href: "/pricing" }] },
-    { label: "Resources", links: [{ label: "Blog", href: "/blog" }, { label: "Docs", href: "#" }] },
-    { label: "Company", links: [{ label: "Privacy", href: "#" }, { label: "Terms", href: "#" }] },
+    { label: "Resources", links: [{ label: "Blog", href: "/blog" }, { label: "Contact", href: "/contact" }] },
+    { label: "Company", links: [{ label: "Contact", href: "/contact" }, { label: "Privacy", href: "#" }] },
   ]}
 >
   <form slot="newsletter" class="mk-newsletter">
@@ -371,6 +375,9 @@ import MkQuote from "../design-system/astro/marketing/MkQuote.astro";
 import MkLogos from "../design-system/astro/marketing/MkLogos.astro";
 import MkStats from "../design-system/astro/marketing/MkStats.astro";
 import MkCta from "../design-system/astro/marketing/MkCta.astro";
+import MkSteps from "../design-system/astro/marketing/MkSteps.astro";
+import MkTabs from "../design-system/astro/marketing/MkTabs.astro";
+import MkMedia from "../design-system/astro/marketing/MkMedia.astro";
 import Icon from "../design-system/astro/app/Icon.astro";
 
 const features = [
@@ -434,6 +441,39 @@ const features = [
         </div>
       </div>
     </MkSplit>
+  </MkSection>
+
+  <MkSection ground="quiet">
+    <MkHeading eyebrow="How it works" title="Three steps" />
+    <div style="margin-top:32px">
+      <MkSteps
+        steps={[
+          { title: "Scaffold", body: "One command gives you a project with four working pages." },
+          { title: "Re-skin", body: "Change four values in the theme file. Every screen follows." },
+          { title: "Ship", body: "Build is static, so it deploys anywhere." },
+        ]}
+      />
+    </div>
+  </MkSection>
+
+  <MkSection>
+    <MkHeading title="Two layers, one repository" body="Switch between them without leaving the page." />
+    <div style="margin-top:24px">
+      <MkTabs name="layers" tabs={[{ id: "app", label: "Application" }, { id: "site", label: "Marketing" }]}>
+        <div slot="panel-app">
+          <p class="mk-body-lg mk-muted" style="max-width:60ch;margin:0 0 20px">
+            Dense, flat and border-driven. Light and dark themes.
+          </p>
+          <MkMedia ratio="16/9"><Icon name="dashboard" size="xl" /></MkMedia>
+        </div>
+        <div slot="panel-site">
+          <p class="mk-body-lg mk-muted" style="max-width:60ch;margin:0 0 20px">
+            Warm grounds, editorial type, one accent per page. Light only.
+          </p>
+          <MkMedia ratio="16/9"><Icon name="globe" size="xl" /></MkMedia>
+        </div>
+      </MkTabs>
+    </div>
   </MkSection>
 
   <MkSection>
@@ -570,21 +610,21 @@ import MkButton from "../design-system/astro/marketing/MkButton.astro";
   ),
 
   file(
-    "src/pages/blog.astro",
+    "src/pages/blog/index.astro",
     `---
-import MarketingLayout from "../layouts/MarketingLayout.astro";
-import MkSection from "../design-system/astro/marketing/MkSection.astro";
-import MkHeading from "../design-system/astro/marketing/MkHeading.astro";
-import MkBreadcrumb from "../design-system/astro/marketing/MkBreadcrumb.astro";
-import MkArticleCard from "../design-system/astro/marketing/MkArticleCard.astro";
+import MarketingLayout from "../../layouts/MarketingLayout.astro";
+import MkSection from "../../design-system/astro/marketing/MkSection.astro";
+import MkHeading from "../../design-system/astro/marketing/MkHeading.astro";
+import MkBreadcrumb from "../../design-system/astro/marketing/MkBreadcrumb.astro";
+import MkArticleCard from "../../design-system/astro/marketing/MkArticleCard.astro";
 
 const posts = [
-  { title: "How we keep two design systems from drifting", excerpt: "A token contract, checked in CI.", category: "Engineering", date: "12 Mar", readingTime: "6 min" },
-  { title: "Density is a feature, not a setting", excerpt: "Why the tables are 12px and stay that way.", category: "Design", date: "4 Mar", readingTime: "4 min" },
-  { title: "Measuring contrast instead of assuming it", excerpt: "Every pair in the palette, with its ratio.", category: "Accessibility", date: "26 Feb", readingTime: "8 min" },
-  { title: "One accent, used once", excerpt: "What happens when a page has two calls to action.", category: "Design", date: "18 Feb", readingTime: "3 min" },
-  { title: "Shipping a marketing site from the same repo", excerpt: "Two layers, namespaced, no collisions.", category: "Engineering", date: "9 Feb", readingTime: "7 min" },
-  { title: "Why the sidebar does not collapse", excerpt: "A rail you cannot read is not a feature.", category: "Design", date: "1 Feb", readingTime: "5 min" },
+  { title: "How we keep two design systems from drifting", excerpt: "A token contract, checked in CI.", category: "Engineering", date: "12 Mar", readingTime: "6 min", href: "/blog/example-post" },
+  { title: "Density is a feature, not a setting", excerpt: "Why the tables are 12px and stay that way.", category: "Design", date: "4 Mar", readingTime: "4 min", href: "/blog/example-post" },
+  { title: "Measuring contrast instead of assuming it", excerpt: "Every pair in the palette, with its ratio.", category: "Accessibility", date: "26 Feb", readingTime: "8 min", href: "/blog/example-post" },
+  { title: "One accent, used once", excerpt: "What happens when a page has two calls to action.", category: "Design", date: "18 Feb", readingTime: "3 min", href: "/blog/example-post" },
+  { title: "Shipping a marketing site from the same repo", excerpt: "Two layers, namespaced, no collisions.", category: "Engineering", date: "9 Feb", readingTime: "7 min", href: "/blog/example-post" },
+  { title: "Why the sidebar does not collapse", excerpt: "A rail you cannot read is not a feature.", category: "Design", date: "1 Feb", readingTime: "5 min", href: "/blog/example-post" },
 ];
 ---
 <MarketingLayout title="Blog" description="Replace this description.">
@@ -594,16 +634,231 @@ const posts = [
       <MkHeading size="lg" title="Writing" body="Replace these posts with your own." />
     </div>
     <div class="mk-article-grid">
-      {posts.map((p) => (
+      {posts.map((post) => (
         <MkArticleCard
-          title={p.title}
-          excerpt={p.excerpt}
-          href="#"
-          category={p.category}
-          date={p.date}
-          readingTime={p.readingTime}
+          title={post.title}
+          excerpt={post.excerpt}
+          href={post.href}
+          category={post.category}
+          date={post.date}
+          readingTime={post.readingTime}
         />
       ))}
+    </div>
+  </MkSection>
+</MarketingLayout>
+`,
+  ),
+
+  file(
+    "src/pages/blog/example-post.astro",
+    `---
+import MarketingLayout from "../../layouts/MarketingLayout.astro";
+import MkSection from "../../design-system/astro/marketing/MkSection.astro";
+import MkBreadcrumb from "../../design-system/astro/marketing/MkBreadcrumb.astro";
+import MkArticleHeader from "../../design-system/astro/marketing/MkArticleHeader.astro";
+import MkAuthor from "../../design-system/astro/marketing/MkAuthor.astro";
+import MkProse from "../../design-system/astro/marketing/MkProse.astro";
+import MkToc from "../../design-system/astro/marketing/MkToc.astro";
+import MkCallout from "../../design-system/astro/marketing/MkCallout.astro";
+import MkPostNav from "../../design-system/astro/marketing/MkPostNav.astro";
+import MkMedia from "../../design-system/astro/marketing/MkMedia.astro";
+import Icon from "../../design-system/astro/app/Icon.astro";
+
+// The ids here must match the heading ids in the prose below.
+const toc = [
+  { id: "the-problem", label: "The problem" },
+  { id: "the-contract", label: "The contract" },
+  { id: "what-it-catches", label: "What it catches", depth: 3 },
+  { id: "results", label: "Results" },
+];
+---
+<MarketingLayout title="How we keep two design systems from drifting">
+  <MkSection>
+    <MkBreadcrumb
+      items={[{ label: "Home", href: "/" }, { label: "Blog", href: "/blog" }, { label: "Article" }]}
+    />
+
+    <div style="margin-top:32px">
+      <MkArticleHeader
+        category="Engineering"
+        date="12 March 2026"
+        readingTime="6 min read"
+        title="How we keep two design systems from drifting"
+        standfirst="Running an app system and a marketing system side by side only works if something fails the build when they diverge."
+      >
+        <div style="margin-top:28px">
+          <MkAuthor name="A. Rivera" role="Design engineering" initials="AR" />
+        </div>
+      </MkArticleHeader>
+    </div>
+
+    <div style="margin-top:40px">
+      <MkMedia ratio="16/9"><Icon name="dashboard" size="xl" /></MkMedia>
+    </div>
+
+    <div class="mk-article-layout" style="margin-top:48px">
+      <div>
+        <MkProse>
+          <p>
+            Replace this article with your own. Everything inside this block is plain
+            HTML, so markdown output drops straight in without a single class.
+          </p>
+
+          <h2 id="the-problem">The problem</h2>
+          <p>
+            Two systems in one repository will converge by accident. Someone needs a
+            colour in a hurry, hard-codes it in a component, and the theme file stops
+            being the single source of truth. Nothing breaks that day; it breaks three
+            projects later.
+          </p>
+          <blockquote>
+            <p>A rule that nothing enforces is a preference, and preferences drift.</p>
+          </blockquote>
+
+          <h2 id="the-contract">The contract</h2>
+          <p>
+            The skeleton may only <em>reference</em> tokens. The themes may only
+            <em>declare</em> them. Two rules, both machine-checkable:
+          </p>
+          <ul>
+            <li>no <code>--token:</code> declaration in <code>css/</code></li>
+            <li>no colour literal in <code>css/</code>, except pure black and white</li>
+            <li>every theme declares exactly the same token set</li>
+          </ul>
+
+          <MkCallout label="Note" icon="info">
+            <p>
+              The third rule is the one that matters most. Without it a theme can
+              satisfy the skeleton while quietly missing a token another theme has,
+              and the two stop being interchangeable.
+            </p>
+          </MkCallout>
+
+          <h3 id="what-it-catches">What it catches</h3>
+          <p>Running it for the first time found two real faults:</p>
+          <pre><code>FAIL themes/app-blank.css is missing: --t-h1-ls, --t-h1-w, ...
+FAIL css/marketing.css hard-codes colours: #b91c1c</code></pre>
+          <p>
+            Both were mine, both were minutes old, and neither would have been visible
+            in a screenshot.
+          </p>
+
+          <h2 id="results">Results</h2>
+          <table>
+            <thead>
+              <tr><th>Check</th><th>Before</th><th>After</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Token drift</td><td>Manual review</td><td>Fails the build</td></tr>
+              <tr><td>Hard-coded colours</td><td>Unnoticed</td><td>Fails the build</td></tr>
+              <tr><td>Theme swap</td><td>Hopeful</td><td>Guaranteed</td></tr>
+            </tbody>
+          </table>
+          <p>
+            The guard runs in under a second, which is the only reason anyone keeps
+            running it.
+          </p>
+        </MkProse>
+
+        <div style="margin-top:56px">
+          <MkPostNav
+            previous={{ title: "Density is a feature, not a setting", href: "/blog/example-post" }}
+            next={{ title: "One accent, used once", href: "/blog/example-post" }}
+          />
+        </div>
+      </div>
+
+      <aside class="mk-article-layout__aside">
+        <MkToc items={toc} />
+      </aside>
+    </div>
+  </MkSection>
+</MarketingLayout>
+`,
+  ),
+
+  file(
+    "src/pages/contact.astro",
+    `---
+import MarketingLayout from "../layouts/MarketingLayout.astro";
+import MkSection from "../design-system/astro/marketing/MkSection.astro";
+import MkHeading from "../design-system/astro/marketing/MkHeading.astro";
+import MkBreadcrumb from "../design-system/astro/marketing/MkBreadcrumb.astro";
+import MkField from "../design-system/astro/marketing/MkField.astro";
+import MkButton from "../design-system/astro/marketing/MkButton.astro";
+import MkTeam from "../design-system/astro/marketing/MkTeam.astro";
+---
+<MarketingLayout title="Contact" description="Replace this description.">
+  <MkSection>
+    <MkBreadcrumb items={[{ label: "Home", href: "/" }, { label: "Contact" }]} />
+    <div style="margin-top:24px">
+      <MkHeading size="lg" title="Get in touch" body="We read everything and reply within two working days." />
+    </div>
+
+    <form class="mk-form" style="margin-top:40px" method="post" action="#">
+      <MkField label="Name" id="name" required>
+        <input class="mk-input" id="name" name="name" type="text" required autocomplete="name" />
+      </MkField>
+
+      <MkField label="Email" id="email" required hint="We only use this to reply.">
+        <input class="mk-input" id="email" name="email" type="email" required
+               autocomplete="email" aria-describedby="email-hint" />
+      </MkField>
+
+      <MkField label="Subject" id="subject">
+        <select class="mk-select" id="subject" name="subject">
+          <option>General question</option>
+          <option>Sales</option>
+          <option>Support</option>
+        </select>
+      </MkField>
+
+      <MkField label="Message" id="message" required>
+        <textarea class="mk-textarea" id="message" name="message" required
+                  placeholder="What can we help with?"></textarea>
+      </MkField>
+
+      <div><MkButton variant="primary">Send message</MkButton></div>
+    </form>
+  </MkSection>
+
+  <MkSection ground="quiet">
+    <MkHeading title="The team" body="Replace these people with yours." />
+    <div style="margin-top:32px">
+      <MkTeam
+        people={[
+          { name: "A. Rivera", role: "Design engineering", initials: "AR" },
+          { name: "S. Moreau", role: "Founder", initials: "SM" },
+          { name: "T. Lambert", role: "Support", initials: "TL" },
+          { name: "J. Okafor", role: "Operations", initials: "JO" },
+        ]}
+      />
+    </div>
+  </MkSection>
+</MarketingLayout>
+`,
+  ),
+
+  file(
+    "src/pages/404.astro",
+    `---
+import MarketingLayout from "../layouts/MarketingLayout.astro";
+import MkSection from "../design-system/astro/marketing/MkSection.astro";
+import MkButton from "../design-system/astro/marketing/MkButton.astro";
+---
+<MarketingLayout title="Page not found">
+  <MkSection>
+    <div class="mk-narrow" style="text-align:center">
+      <p class="mk-eyebrow">404</p>
+      <h1 class="mk-display-lg">We could not find that page.</h1>
+      <p class="mk-subhead mk-muted" style="margin-top:16px">
+        It may have moved, or the link may be wrong. The homepage is a good place to restart.
+      </p>
+      <div style="display:flex;gap:12px;justify-content:center;margin-top:32px">
+        <MkButton variant="primary" href="/">Go home</MkButton>
+        <MkButton variant="secondary" href="/blog">Read the blog</MkButton>
+      </div>
     </div>
   </MkSection>
 </MarketingLayout>
@@ -623,9 +878,12 @@ Scaffolded from esimloop-ui, theme **${theme}**.
 
 | Route | Layer | Exercises |
 | --- | --- | --- |
-| \`/\` | marketing | hero (split), logos, features, split, stats, quotes, CTA |
+| \`/\` | marketing | announce bar, hero (split), logos, features, split, steps, tabs, stats, quotes, CTA |
 | \`/pricing\` | marketing | pricing, comparison table, FAQ, breadcrumb |
 | \`/blog\` | marketing | article grid, breadcrumb |
+| \`/blog/example-post\` | marketing | prose, article header, author, table of contents, callout, post nav |
+| \`/contact\` | marketing | form fields, team grid |
+| \`/404\` | marketing | not-found pattern |
 | \`/app\` | application | shell, sidebar, KPIs, stat strip, data table |
 
 ## Where things live
@@ -679,7 +937,7 @@ for (const { path, body } of files) {
 console.log("\nScaffolded " + pkgName + " in " + dir);
 console.log("  theme:  " + theme);
 console.log("  layers: app (ds-) + marketing (mk-)");
-console.log("  pages:  / · /pricing · /blog · /app");
+console.log("  pages:  / · /pricing · /blog · /blog/example-post · /contact · /404 · /app");
 console.log("\n  cd " + target);
 console.log("  npm install");
 console.log("  npm run dev\n");

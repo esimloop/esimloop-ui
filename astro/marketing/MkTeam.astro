@@ -1,0 +1,24 @@
+---
+export interface Person {
+  name: string;
+  role?: string;
+  photo?: string;
+  initials?: string;
+}
+interface Props {
+  people: Person[];
+  class?: string;
+}
+const { people, class: cls = "" } = Astro.props;
+---
+<div class={["mk-team", cls].filter(Boolean).join(" ")}>
+  {people.map((p) => (
+    <div>
+      <div class="mk-team__photo">
+        {p.photo ? <img src={p.photo} alt="" /> : p.initials}
+      </div>
+      <p class="mk-team__name">{p.name}</p>
+      {p.role && <p class="mk-team__role">{p.role}</p>}
+    </div>
+  ))}
+</div>

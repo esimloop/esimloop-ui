@@ -1,0 +1,57 @@
+---
+import MarketingLayout from "../layouts/MarketingLayout.astro";
+import MkSection from "../design-system/astro/marketing/MkSection.astro";
+import MkHeading from "../design-system/astro/marketing/MkHeading.astro";
+import MkBreadcrumb from "../design-system/astro/marketing/MkBreadcrumb.astro";
+import MkField from "../design-system/astro/marketing/MkField.astro";
+import MkButton from "../design-system/astro/marketing/MkButton.astro";
+import MkTeam from "../design-system/astro/marketing/MkTeam.astro";
+---
+<MarketingLayout title="Contact" description="Replace this description.">
+  <MkSection>
+    <MkBreadcrumb items={[{ label: "Home", href: "/" }, { label: "Contact" }]} />
+    <div style="margin-top:24px">
+      <MkHeading size="lg" title="Get in touch" body="We read everything and reply within two working days." />
+    </div>
+
+    <form class="mk-form" style="margin-top:40px" method="post" action="#">
+      <MkField label="Name" id="name" required>
+        <input class="mk-input" id="name" name="name" type="text" required autocomplete="name" />
+      </MkField>
+
+      <MkField label="Email" id="email" required hint="We only use this to reply.">
+        <input class="mk-input" id="email" name="email" type="email" required
+               autocomplete="email" aria-describedby="email-hint" />
+      </MkField>
+
+      <MkField label="Subject" id="subject">
+        <select class="mk-select" id="subject" name="subject">
+          <option>General question</option>
+          <option>Sales</option>
+          <option>Support</option>
+        </select>
+      </MkField>
+
+      <MkField label="Message" id="message" required>
+        <textarea class="mk-textarea" id="message" name="message" required
+                  placeholder="What can we help with?"></textarea>
+      </MkField>
+
+      <div><MkButton variant="primary">Send message</MkButton></div>
+    </form>
+  </MkSection>
+
+  <MkSection ground="quiet">
+    <MkHeading title="The team" body="Replace these people with yours." />
+    <div style="margin-top:32px">
+      <MkTeam
+        people={[
+          { name: "A. Rivera", role: "Design engineering", initials: "AR" },
+          { name: "S. Moreau", role: "Founder", initials: "SM" },
+          { name: "T. Lambert", role: "Support", initials: "TL" },
+          { name: "J. Okafor", role: "Operations", initials: "JO" },
+        ]}
+      />
+    </div>
+  </MkSection>
+</MarketingLayout>

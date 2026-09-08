@@ -1,0 +1,28 @@
+---
+interface Props {
+  title: string;
+  /** One or two sentences under the title. */
+  standfirst?: string;
+  category?: string;
+  date?: string;
+  readingTime?: string;
+  class?: string;
+}
+const { title, standfirst, category, date, readingTime, class: cls = "" } = Astro.props;
+const meta = [category, date, readingTime].filter(Boolean);
+---
+<header class={["mk-article-head", cls].filter(Boolean).join(" ")}>
+  {meta.length > 0 && (
+    <div class="mk-article-head__meta">
+      {meta.map((m, i) => (
+        <Fragment>
+          {i > 0 && <span aria-hidden="true">&middot;</span>}
+          <span>{m}</span>
+        </Fragment>
+      ))}
+    </div>
+  )}
+  <h1 class="mk-article-head__title">{title}</h1>
+  {standfirst && <p class="mk-article-head__standfirst">{standfirst}</p>}
+  <slot />
+</header>

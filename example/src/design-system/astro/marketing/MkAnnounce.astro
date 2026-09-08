@@ -1,0 +1,17 @@
+---
+/**
+ * Full-width bar above the nav. One message; if you have two, you have none.
+ */
+interface Props {
+  tag?: string;
+  href?: string;
+  linkLabel?: string;
+  class?: string;
+}
+const { tag, href, linkLabel, class: cls = "" } = Astro.props;
+---
+<div class={["mk-announce", cls].filter(Boolean).join(" ")}>
+  {tag && <span class="mk-announce__tag">{tag}</span>}
+  <span><slot /></span>
+  {href && linkLabel && <a href={href}>{linkLabel}</a>}
+</div>

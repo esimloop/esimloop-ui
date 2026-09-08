@@ -1,0 +1,44 @@
+---
+/**
+ * Content switcher with no JavaScript.
+ *
+ * Each radio sits immediately before its own label, and all of them precede the
+ * panels. Both facts are load-bearing - see the note above the tab rules in
+ * css/marketing.css. Panels are children with slot="panel-<id>".
+ *
+ * `name` must be unique per page when several tab sets appear on one page.
+ * Maximum five tabs: the panel rules are matched by index.
+ */
+export interface ContentTab {
+  id: string;
+  label: string;
+}
+interface Props {
+  tabs: ContentTab[];
+  name?: string;
+  class?: string;
+}
+const { tabs, name = "mk-tabs", class: cls = "" } = Astro.props;
+
+if (tabs.length > 5) {
+  throw new Error("MkTabs: at most five tabs are supported.");
+}
+---
+<div class={["mk-tabs", cls].filter(Boolean).join(" ")}>
+  {tabs.map((t, i) => (
+    <Fragment>
+      <input
+        class="mk-tabs__radio"
+        type="radio"
+        name={name}
+        id={name + "-" + t.id}
+        checked={i === 0}
+      />
+      <label class="mk-tabs__label" for={name + "-" + t.id}>{t.label}</label>
+    </Fragment>
+  ))}
+  <span class="mk-tabs__fill" aria-hidden="true"></span>
+  {tabs.map((t) => (
+    <div class="mk-tabs__panel"><slot name={"panel-" + t.id} /></div>
+  ))}
+</div>

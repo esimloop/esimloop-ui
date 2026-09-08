@@ -1,0 +1,15 @@
+---
+/**
+ * A framed media well with a fixed aspect ratio, so a page of them does not
+ * jump while images load.
+ */
+interface Props {
+  /** CSS aspect-ratio, e.g. "16/9". */
+  ratio?: string;
+  class?: string;
+}
+const { ratio = "16/9", class: cls = "" } = Astro.props;
+---
+<div class={["mk-media", cls].filter(Boolean).join(" ")} style={"aspect-ratio:" + ratio}>
+  <slot />
+</div>

@@ -1,0 +1,25 @@
+---
+/**
+ * Sticky table of contents. Pass headings you already have - do not scrape the
+ * DOM at runtime, the ids must exist in the markup anyway.
+ */
+export interface TocItem {
+  id: string;
+  label: string;
+  depth?: 2 | 3;
+}
+interface Props {
+  items: TocItem[];
+  label?: string;
+  class?: string;
+}
+const { items, label = "On this page", class: cls = "" } = Astro.props;
+---
+<nav class={["mk-toc", cls].filter(Boolean).join(" ")} aria-label={label}>
+  <p class="mk-toc__label">{label}</p>
+  <ul class="mk-toc__list">
+    {items.map((i) => (
+      <li data-depth={i.depth ?? 2}><a href={"#" + i.id}>{i.label}</a></li>
+    ))}
+  </ul>
+</nav>

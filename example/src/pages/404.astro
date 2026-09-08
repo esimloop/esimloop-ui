@@ -1,0 +1,20 @@
+---
+import MarketingLayout from "../layouts/MarketingLayout.astro";
+import MkSection from "../design-system/astro/marketing/MkSection.astro";
+import MkButton from "../design-system/astro/marketing/MkButton.astro";
+---
+<MarketingLayout title="Page not found">
+  <MkSection>
+    <div class="mk-narrow" style="text-align:center">
+      <p class="mk-eyebrow">404</p>
+      <h1 class="mk-display-lg">We could not find that page.</h1>
+      <p class="mk-subhead mk-muted" style="margin-top:16px">
+        It may have moved, or the link may be wrong. The homepage is a good place to restart.
+      </p>
+      <div style="display:flex;gap:12px;justify-content:center;margin-top:32px">
+        <MkButton variant="primary" href="/">Go home</MkButton>
+        <MkButton variant="secondary" href="/blog">Read the blog</MkButton>
+      </div>
+    </div>
+  </MkSection>
+</MarketingLayout>
