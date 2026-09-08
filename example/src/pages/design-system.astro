@@ -1270,9 +1270,9 @@ const radii = [
   .ref__mark { width: 26px; height: 26px; border-radius: var(--radius-sm); background: var(--accent);
     color: var(--accent-content); display: grid; place-items: center; font-size: 11px; font-weight: 700; }
   .ref__title { display: block; font-size: 14px; font-weight: 600; }
-  .ref__sub { display: block; font-size: 11px; color: var(--text-subtle); }
+  .ref__sub { display: block; font-size: 11px; color: var(--text-muted); }
   .ref__foot { margin-top: auto; padding-top: 16px; border-top: 1px solid var(--border-default); }
-  .ref__note { margin: 12px 0 0; font-size: 11px; line-height: 1.4; color: var(--text-subtle); }
+  .ref__note { margin: 12px 0 0; font-size: 11px; line-height: 1.4; color: var(--text-muted); }
 
   .ref__main { flex: 1; min-width: 0; background: var(--surface-card); }
   @media (min-width: 1024px) {
@@ -1291,7 +1291,7 @@ const radii = [
   .ref__block > .ds-label { margin: 0 0 12px; }
   .ref__demo { margin-top: 24px; display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start; }
   .ref__cap { width: 100%; margin: 0; font-size: 11px; font-weight: 600; letter-spacing: .05em;
-    text-transform: uppercase; color: var(--text-subtle); }
+    text-transform: uppercase; color: var(--text-muted); }
   .ref__wrap { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
   .ref__grid2 { display: grid; grid-template-columns: 1fr; gap: 16px; width: 100%; }
   @media (min-width: 700px) { .ref__grid2 { grid-template-columns: 1fr 1fr; } }
@@ -1302,7 +1302,7 @@ const radii = [
   .ref__code { font-family: var(--font-mono); font-size: 11px; background: var(--surface-app);
     padding: 2px 6px; border-radius: var(--radius-xs); white-space: nowrap; }
   .ref__use { display: block; margin-top: 4px; font-size: 12px; color: var(--text-muted); }
-  .ref__ratio { font-size: 12px; color: var(--text-subtle); text-align: right; }
+  .ref__ratio { font-size: 12px; color: var(--text-muted); text-align: right; }
 
   .ref__swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; }
   .ref__swatch { display: flex; gap: 12px; align-items: flex-start; }
@@ -1328,7 +1328,7 @@ const radii = [
   .ref__icons { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 8px; margin-top: 24px; }
   .ref__icon { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 14px 6px;
     border: 1px solid var(--border-default); border-radius: var(--radius-field); color: var(--text-secondary); }
-  .ref__icon span { font-size: 10px; color: var(--text-subtle); text-align: center; word-break: break-all; }
+  .ref__icon span { font-size: 10px; color: var(--text-muted); text-align: center; word-break: break-all; }
 
   /* Two-column blocks that must collapse on a phone. Inline grid-template-columns
      cannot carry a media query, which is exactly how they failed before. */
@@ -1343,10 +1343,32 @@ const radii = [
   }
 
   /* A marketing island: the .mk class carries its own tokens, ground and font,
-     so the layer renders correctly inside an application page. */
-  .ref__island { margin-top: 16px; padding: 32px 24px; border-radius: var(--radius-box);
-    border: 1px solid var(--border-default); width: 100%; overflow: hidden; }
-  .ref__island .ref__cap { color: var(--m-ink-subtle); }
+     so the layer renders correctly inside an application page.
+     
+     But the documentation chrome around the demos reads APP tokens, and the
+     island is permanently light while the app follows the theme. In dark mode
+     that put near-black .ref__code text on the app's near-black surface, and
+     light .ref__use text on the island's white ground. Remapping the app tokens
+     onto their marketing equivalents fixes every one of them at once, and keeps
+     fixing anything added here later — overriding class by class would miss the
+     next one. */
+  .ref__island {
+    --surface-card:  var(--m-surface);
+    --surface-app:   var(--m-surface-2);
+    --surface-sunken:var(--m-hairline);
+    --content:       var(--m-ink);
+    --text-primary:  var(--m-ink);
+    --text-secondary:var(--m-ink-muted);
+    --text-muted:    var(--m-ink-subtle);
+    --text-subtle:   var(--m-ink-subtle);
+    --text-faint:    var(--m-ink-tertiary);
+    --border-default:var(--m-hairline);
+    --border-subtle: var(--m-hairline-soft);
+    --border-strong: var(--m-hairline);
+    --accent:        var(--m-accent);
+    margin-top: 16px; padding: 32px 24px; border-radius: var(--radius-box);
+    border: 1px solid var(--border-default); width: 100%; overflow: hidden;
+  }
 </style>
 
 <script>

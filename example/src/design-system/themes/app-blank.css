@@ -32,7 +32,12 @@
 
   /* --- Text scale (opacity steps on --content) ---------------------------
      100% 18.4:1 AAA · 70% 6.8:1 AA · 60% 4.8:1 AA
-     50%  3.5:1 large text only · 40% 2.6:1 decorative only               */
+     50%  3.5:1 large text only · 40% 2.6:1 decorative only
+
+     No component puts small text below --text-muted. The two lower tiers exist
+     for large type, for decoration, and for the opt-in .ds-text-* utilities —
+     a contrast audit across both themes is what proved the components had been
+     reaching past them.                                                    */
   --text-primary:      var(--content);
   --text-secondary:    color-mix(in oklab, var(--content) 70%, transparent);
   --text-muted:        color-mix(in oklab, var(--content) 60%, transparent);
