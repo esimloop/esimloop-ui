@@ -1,0 +1,18 @@
+---
+/**
+ * Indeterminate work. Inside a button the label already says what is happening,
+ * so leave `label` unset there and let the button speak.
+ */
+interface Props {
+  size?: "xs" | "md";
+  label?: string;
+  class?: string;
+}
+const { size = "md", label, class: cls = "" } = Astro.props;
+---
+<span
+  class={["ds-spinner", size === "xs" && "ds-spinner--xs", cls].filter(Boolean).join(" ")}
+  role={label ? "status" : undefined}
+  aria-label={label}
+  aria-hidden={label ? undefined : "true"}
+></span>

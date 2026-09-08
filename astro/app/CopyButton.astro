@@ -1,0 +1,59 @@
+---
+import Button from "./Button.astro";
+
+/**
+ * Copies a value and says so. The confirmation replaces the label for a moment
+ * rather than raising a toast: the feedback belongs where the action was.
+ */
+interface Props {
+  value: string;
+  label?: string;
+  copiedLabel?: string;
+  size?: "xs" | "sm" | "md";
+  square?: boolean;
+  class?: string;
+}
+const { value, label = "Copy", copiedLabel = "Copied", size = "sm", square = false, class: cls = "" } = Astro.props;
+---
+<Button
+  size={size}
+  variant="secondary"
+  square={square}
+  label={square ? label : undefined}
+  iconStart="save"
+  class={cls}
+  data-ds-copy={value}
+  data-ds-copy-label={label}
+  data-ds-copied-label={copiedLabel}
+>
+  {!square && label}
+</Button>
+
+<script>
+  document.addEventListener("click", async (event) => {
+    const button = (event.target as HTMLElement).closest<HTMLElement>("[data-ds-copy]");
+    if (!button) return;
+
+    try {
+      await navigator.clipboard.writeText(button.dataset.dsCopy!);
+    } catch {
+      // Clipboard access can be refused; saying nothing is better than lying.
+      return;
+    }
+
+    const done = button.dataset.dsCopiedLabel!;
+    const idle = button.dataset.dsCopyLabel!;
+    const isSquare = button.classList.contains("ds-btn--square");
+
+    if (isSquare) {
+      button.setAttribute("aria-label", done);
+      setTimeout(() => button.setAttribute("aria-label", idle), 1600);
+      return;
+    }
+    // Only the text node, so the icon survives.
+    const text = [...button.childNodes].find((n) => n.nodeType === 3 && n.textContent!.trim());
+    if (!text) return;
+    text.textContent = done;
+    setTimeout(() => (text.textContent = idle), 1600);
+  });
+</script>

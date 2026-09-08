@@ -1,0 +1,21 @@
+---
+/**
+ * A keyboard shortcut. Pass keys as an array — the separators are drawn, not
+ * typed, so a shortcut never wraps mid-chord.
+ *
+ *   <Kbd keys={["Ctrl", "K"]} />
+ */
+interface Props {
+  keys: string[];
+  class?: string;
+}
+const { keys, class: cls = "" } = Astro.props;
+---
+<span class={["ds-kbd-group", cls].filter(Boolean).join(" ")}>
+  {keys.map((k, i) => (
+    <Fragment>
+      {i > 0 && <span class="ds-kbd-group__sep" aria-hidden="true">+</span>}
+      <kbd class="ds-kbd">{k}</kbd>
+    </Fragment>
+  ))}
+</span>

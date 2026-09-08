@@ -7,9 +7,10 @@ interface Props {
   class?: string;
   /** Set only when the icon carries meaning on its own. */
   label?: string;
+  [key: string]: unknown;
 }
 
-const { name, size = "md", class: cls = "", label } = Astro.props;
+const { name, size = "md", class: cls = "", label, ...rest } = Astro.props;
 const classes = ["ds-icon", size !== "md" && "ds-icon--" + size, cls].filter(Boolean).join(" ");
 ---
 <svg
@@ -18,4 +19,5 @@ const classes = ["ds-icon", size !== "md" && "ds-icon--" + size, cls].filter(Boo
   aria-label={label}
   aria-hidden={label ? undefined : "true"}
   focusable="false"
+  {...rest}
 ><use href={"#i-" + name} /></svg>

@@ -45,19 +45,26 @@ They share a typeface and nothing else. Don't mix their classes on one page.
 
 ## What you get
 
-**53 components.** Application (23): shell, sidebar, button, badge, card, KPI card,
-stat strip, score, tabs, field, alert, empty state, dialog, dropdown, toast, tooltip,
-data table, sort header, pagination, area chart, sparkline, icon + a 33-icon inline
-sprite.
-Marketing (30): nav with mega-menu, announcement bar, hero (centered / split),
-section, heading, split, card, quote, logos, stats, steps, tabs, CTA band, FAQ,
-pricing, comparison table, team, media frame, footer, button, form field — plus a
-content set: prose, article header, author byline, callout, table of contents,
-article card, post navigation, breadcrumb, terminal.
+**91 components** and a 37-icon inline sprite.
 
-**A living reference** at `/design-system` in every scaffolded project. It renders
-the real components from source, so it cannot go stale: change a token and the
-reference changes with it.
+*Application (47)* — shell, sidebar, breadcrumb, drawer, toolbar, stepper, tabs,
+segmented control, workspace switcher · button, dropdown, copy button, kbd ·
+field, input, select, textarea, checkbox, radio, switch, combobox · card, KPI card,
+stat strip, data table, sort header, pagination, filter bar, filter chip, accordion ·
+badge, score, avatar, avatar group · alert, banner, toast, dialog, tooltip, empty
+state, progress, spinner, skeleton · area chart, sparkline, icon.
+*Marketing (44)* — nav with mega-menu, announcement bar, docs nav, anchor nav,
+category filter, pagination, breadcrumb · hero (centered / split), section, heading,
+split, CTA band, sticky CTA · card, quote, pull quote, logos, marquee, stats, steps,
+tabs, team, rating, trust strip · pricing, period toggle, comparison table, FAQ ·
+prose, article header, author byline, author bio, callout, table of contents, article
+card, post navigation, newsletter, share, video facade, media frame, terminal ·
+button, form field, footer.
+
+**A living reference** at `/design-system` in every scaffolded project — 24 sections
+rendering the real components from source, so it cannot go stale: change a token and
+the reference changes with it. It is also the verification surface: a component that
+no page imports is a component the build never checks.
 
 **6 themes**, all interchangeable: `blank` (neutral, AA-clean), `openseo` (the
 reconstructed values) and `editorial` (paper, oxblood, sharp corners, elevated at
@@ -173,7 +180,9 @@ colour.
 
 Node 24.20.0 · Astro 7.3.2. `example/` installs and builds clean (8 pages); checked at
 1280px, 800px and 375px, in dark mode, and under both the `blank` and `editorial`
-themes — no overlaps, no overflow, no clipping in any combination. On
+themes — no overlaps, no overflow, no clipping in any combination. Combobox, dropdown,
+drawer, dialog, toast, period toggle and copy were each driven through their real
+behaviour rather than merely rendered. On
 `/design-system`, the application panel follows the theme while the marketing islands
 stay light. The dialog, dropdown and toast were driven through their real behaviour:
 top-layer entry and focus movement, arrow/Home/End/Escape menu navigation and focus

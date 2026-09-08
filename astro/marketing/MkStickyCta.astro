@@ -1,0 +1,34 @@
+---
+/**
+ * Slides up once the reader has passed the hero, so it never competes with the
+ * page's own first call to action.
+ */
+interface Props {
+  text: string;
+  /** Appears after this element leaves the viewport. Defaults to the hero. */
+  after?: string;
+  class?: string;
+}
+const { text, after = ".mk-hero", class: cls = "" } = Astro.props;
+---
+<div class={["mk-stickycta", cls].filter(Boolean).join(" ")} data-mk-sticky-cta data-after={after} hidden>
+  <span class="mk-stickycta__text">{text}</span>
+  <slot />
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-mk-sticky-cta]").forEach((bar) => {
+    const anchor = document.querySelector(bar.dataset.after!);
+    if (!anchor) return;
+    bar.hidden = false;
+
+    new IntersectionObserver(
+      ([entry]) => {
+        // Shown only once the anchor has scrolled off the top.
+        const passed = !entry.isIntersecting && entry.boundingClientRect.top < 0;
+        bar.toggleAttribute("data-shown", passed);
+      },
+      { threshold: 0 },
+    ).observe(anchor);
+  });
+</script>

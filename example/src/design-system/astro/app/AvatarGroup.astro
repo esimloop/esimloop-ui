@@ -1,0 +1,26 @@
+---
+import Avatar from "./Avatar.astro";
+
+/**
+ * Overlapping faces with an overflow count. Past `max` the rest become "+n",
+ * because a row of twenty avatars tells you nothing a number would not.
+ */
+interface Props {
+  people: { name: string; src?: string }[];
+  max?: number;
+  size?: "xs" | "md" | "lg";
+  class?: string;
+}
+const { people, max = 4, size = "md", class: cls = "" } = Astro.props;
+const shown = people.slice(0, max);
+const extra = people.length - shown.length;
+---
+<span class={["ds-avatar-group", cls].filter(Boolean).join(" ")} role="group" aria-label={`${people.length} people`}>
+  {shown.map((p) => <Avatar name={p.name} src={p.src} size={size} />)}
+  {extra > 0 && (
+    <span class={["ds-avatar", size !== "md" && "ds-avatar--" + size].filter(Boolean).join(" ")} title={`${extra} more`}>
+      <span aria-hidden="true">+{extra}</span>
+      <span class="ds-sr-only">and {extra} more</span>
+    </span>
+  )}
+</span>

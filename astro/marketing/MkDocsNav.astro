@@ -1,0 +1,28 @@
+---
+/**
+ * The sidebar for documentation. Grouped, flat within a group, and the current
+ * page is marked rather than merely highlighted.
+ */
+export interface DocsGroup {
+  label: string;
+  links: { label: string; href: string; current?: boolean }[];
+}
+interface Props {
+  groups: DocsGroup[];
+  label?: string;
+  class?: string;
+}
+const { groups, label = "Documentation", class: cls = "" } = Astro.props;
+---
+<nav class={["mk-docsnav", cls].filter(Boolean).join(" ")} aria-label={label}>
+  {groups.map((g) => (
+    <div class="mk-docsnav__group">
+      <p class="mk-docsnav__label">{g.label}</p>
+      <ul>
+        {g.links.map((l) => (
+          <li><a href={l.href} aria-current={l.current ? "page" : undefined}>{l.label}</a></li>
+        ))}
+      </ul>
+    </div>
+  ))}
+</nav>

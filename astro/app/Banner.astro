@@ -1,0 +1,34 @@
+---
+import Icon from "./Icon.astro";
+import Button from "./Button.astro";
+
+/**
+ * Page-level, full bleed, above the content. Alert is the inline one: use this
+ * for something true of the whole page, that one for something true of a block.
+ */
+interface Props {
+  tone?: "info" | "success" | "warning" | "error";
+  dismissible?: boolean;
+  class?: string;
+}
+const { tone = "info", dismissible = false, class: cls = "" } = Astro.props;
+const icon = tone === "info" ? "info" : tone === "success" ? "check" : "warn";
+---
+<div
+  class={["ds-banner", "ds-banner--" + tone, cls].filter(Boolean).join(" ")}
+  role={tone === "error" ? "alert" : "status"}
+>
+  <Icon name={icon} />
+  <div class="ds-banner__body"><slot /></div>
+  <slot name="action" />
+  {dismissible && (
+    <Button size="xs" variant="ghost" square label="Dismiss" iconStart="x" data-ds-banner-close />
+  )}
+</div>
+
+<script>
+  document.addEventListener("click", (event) => {
+    const button = (event.target as HTMLElement).closest("[data-ds-banner-close]");
+    button?.closest(".ds-banner")?.remove();
+  });
+</script>

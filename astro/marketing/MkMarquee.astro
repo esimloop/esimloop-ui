@@ -1,0 +1,26 @@
+---
+/**
+ * A slow drift of names. The track is duplicated so the loop has no seam; the
+ * copy is hidden from assistive tech.
+ *
+ * It pauses on hover and on focus, and reduced motion turns it into a static
+ * wrapped row — motion is the thing being objected to, so removing it is the
+ * honest answer rather than merely slowing it down.
+ */
+interface Props {
+  items: string[];
+  label?: string;
+  class?: string;
+}
+const { items, label = "Customers", class: cls = "" } = Astro.props;
+---
+<div class={["mk-marquee", cls].filter(Boolean).join(" ")} role="group" aria-label={label}>
+  <div class="mk-marquee__track">
+    <div style="display:flex;gap:56px">
+      {items.map((i) => <span class="mk-marquee__item">{i}</span>)}
+    </div>
+    <div style="display:flex;gap:56px" aria-hidden="true">
+      {items.map((i) => <span class="mk-marquee__item">{i}</span>)}
+    </div>
+  </div>
+</div>

@@ -1,0 +1,137 @@
+---
+/**
+ * A text input that filters a list. Follows the ARIA combobox pattern: the input
+ * owns the listbox, Down opens and moves, Enter selects, Escape closes.
+ *
+ * Options are rendered server-side and filtered in the browser, which suits a
+ * closed set — a market list, a project list. For thousands of remote results
+ * you want a search endpoint, not this.
+ */
+export interface ComboOption {
+  value: string;
+  label: string;
+}
+interface Props {
+  id: string;
+  options: ComboOption[];
+  value?: string;
+  placeholder?: string;
+  name?: string;
+  emptyText?: string;
+  class?: string;
+}
+const { id, options, value, placeholder = "Search…", name, emptyText = "No matches", class: cls = "" } = Astro.props;
+const selected = options.find((o) => o.value === value);
+const listId = id + "-list";
+---
+<div class={["ds-combobox", cls].filter(Boolean).join(" ")} data-ds-combobox>
+  <input
+    class="ds-input"
+    id={id}
+    type="text"
+    role="combobox"
+    autocomplete="off"
+    placeholder={placeholder}
+    value={selected?.label ?? ""}
+    aria-expanded="false"
+    aria-controls={listId}
+    aria-autocomplete="list"
+  />
+  <input type="hidden" name={name} value={value ?? ""} data-ds-combobox-value />
+  <ul class="ds-combobox__list" id={listId} role="listbox" hidden>
+    {options.map((o) => (
+      <li class="ds-combobox__option" role="option" aria-selected={String(o.value === value)} data-value={o.value}>
+        {o.label}
+      </li>
+    ))}
+    <li class="ds-combobox__empty" hidden data-ds-combobox-empty>{emptyText}</li>
+  </ul>
+</div>
+
+<script>
+  function setup(root: HTMLElement) {
+    const input = root.querySelector<HTMLInputElement>('input[role="combobox"]')!;
+    const hidden = root.querySelector<HTMLInputElement>("[data-ds-combobox-value]")!;
+    const list = root.querySelector<HTMLElement>('[role="listbox"]')!;
+    const empty = root.querySelector<HTMLElement>("[data-ds-combobox-empty]")!;
+    const options = () => [...list.querySelectorAll<HTMLElement>('[role="option"]')];
+    const visible = () => options().filter((o) => !o.hidden);
+
+    let active = -1;
+
+    const paint = () => {
+      const list_ = visible();
+      options().forEach((o) => delete o.dataset.active);
+      if (active >= 0 && list_[active]) {
+        list_[active].dataset.active = "";
+        list_[active].scrollIntoView({ block: "nearest" });
+        input.setAttribute("aria-activedescendant", list_[active].id || "");
+      } else {
+        input.removeAttribute("aria-activedescendant");
+      }
+    };
+
+    const open = () => {
+      list.hidden = false;
+      input.setAttribute("aria-expanded", "true");
+    };
+    const close = () => {
+      list.hidden = true;
+      input.setAttribute("aria-expanded", "false");
+      active = -1;
+      paint();
+    };
+
+    const filter = () => {
+      const q = input.value.trim().toLowerCase();
+      options().forEach((o) => (o.hidden = q !== "" && !o.textContent!.toLowerCase().includes(q)));
+      empty.hidden = visible().length > 0;
+      active = -1;
+      paint();
+    };
+
+    const choose = (option: HTMLElement) => {
+      input.value = option.textContent!.trim();
+      hidden.value = option.dataset.value!;
+      options().forEach((o) => o.setAttribute("aria-selected", String(o === option)));
+      close();
+      root.dispatchEvent(new CustomEvent("ds:change", { detail: { value: hidden.value }, bubbles: true }));
+    };
+
+    input.addEventListener("input", () => {
+      open();
+      filter();
+    });
+    input.addEventListener("focus", open);
+
+    input.addEventListener("keydown", (event) => {
+      const list_ = visible();
+      if (event.key === "ArrowDown") {
+        event.preventDefault();
+        open();
+        active = Math.min(active + 1, list_.length - 1);
+        paint();
+      } else if (event.key === "ArrowUp") {
+        event.preventDefault();
+        active = Math.max(active - 1, 0);
+        paint();
+      } else if (event.key === "Enter" && !list.hidden && list_[active]) {
+        event.preventDefault();
+        choose(list_[active]);
+      } else if (event.key === "Escape") {
+        close();
+      }
+    });
+
+    list.addEventListener("click", (event) => {
+      const option = (event.target as HTMLElement).closest<HTMLElement>('[role="option"]');
+      if (option) choose(option);
+    });
+
+    document.addEventListener("click", (event) => {
+      if (!root.contains(event.target as Node)) close();
+    });
+  }
+
+  document.querySelectorAll<HTMLElement>("[data-ds-combobox]").forEach(setup);
+</script>

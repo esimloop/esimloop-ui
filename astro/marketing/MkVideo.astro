@@ -1,0 +1,49 @@
+---
+import Icon from "../app/Icon.astro";
+
+/**
+ * A facade: the poster and a play button until someone asks for the player.
+ * An embedded iframe costs hundreds of kilobytes and sets third-party cookies
+ * before anyone has decided to watch, so it is not loaded until the click.
+ */
+interface Props {
+  /** Full embed URL. Add autoplay yourself if you want it to start on click. */
+  src: string;
+  poster: string;
+  title: string;
+  ratio?: string;
+  class?: string;
+}
+const { src, poster, title, ratio = "16/9", class: cls = "" } = Astro.props;
+---
+<button
+  class={["mk-video", cls].filter(Boolean).join(" ")}
+  type="button"
+  style={`aspect-ratio:${ratio}`}
+  data-mk-video={src}
+  data-title={title}
+  aria-label={`Play video: ${title}`}
+>
+  <img src={poster} alt="" loading="lazy" decoding="async" />
+  <span class="mk-video__play" aria-hidden="true"><span><Icon name="play" size="lg" /></span></span>
+</button>
+
+<script>
+  document.addEventListener("click", (event) => {
+    const facade = (event.target as HTMLElement).closest<HTMLElement>("[data-mk-video]");
+    if (!facade) return;
+
+    const frame = document.createElement("iframe");
+    frame.src = facade.dataset.mkVideo!;
+    frame.title = facade.dataset.title!;
+    frame.allow = "accelerometer; autoplay; encrypted-media; picture-in-picture";
+    frame.allowFullscreen = true;
+
+    const holder = document.createElement("div");
+    holder.className = facade.className;
+    holder.style.aspectRatio = facade.style.aspectRatio;
+    holder.append(frame);
+    facade.replaceWith(holder);
+    frame.focus();
+  });
+</script>

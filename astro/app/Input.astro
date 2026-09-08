@@ -1,0 +1,25 @@
+---
+/**
+ * Wrap it in Field for a label. Pass `describedBy` to point at the hint or error
+ * id Field renders (`<id>-hint` / `<id>-error`).
+ */
+interface Props {
+  id?: string;
+  type?: "text" | "email" | "url" | "password" | "number" | "search" | "tel" | "date";
+  size?: "xs" | "sm" | "md";
+  invalid?: boolean;
+  describedBy?: string;
+  class?: string;
+  [key: string]: unknown;
+}
+const { id, type = "text", size = "md", invalid = false, describedBy, class: cls = "", ...rest } = Astro.props;
+---
+<input
+  class={["ds-input", size !== "md" && "ds-input--" + size, cls].filter(Boolean).join(" ")}
+  id={id}
+  type={type}
+  dir={type === "url" || type === "email" ? "ltr" : undefined}
+  aria-invalid={invalid ? "true" : undefined}
+  aria-describedby={describedBy}
+  {...rest}
+/>

@@ -1,0 +1,25 @@
+---
+/**
+ * Category pills for a blog index. Links, not buttons: a filtered list deserves
+ * its own URL so it can be shared and indexed.
+ */
+export interface Category {
+  label: string;
+  href: string;
+  count?: number;
+  current?: boolean;
+}
+interface Props {
+  categories: Category[];
+  class?: string;
+}
+const { categories, class: cls = "" } = Astro.props;
+---
+<nav class={["mk-categories", cls].filter(Boolean).join(" ")} aria-label="Categories">
+  {categories.map((c) => (
+    <a href={c.href} aria-current={c.current ? "page" : undefined}>
+      {c.label}
+      {c.count !== undefined && <span class="mk-categories__count">{c.count}</span>}
+    </a>
+  ))}
+</nav>

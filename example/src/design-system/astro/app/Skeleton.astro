@@ -1,0 +1,30 @@
+---
+/**
+ * A placeholder for a FIRST load. When data is already on screen, drop it to
+ * 60% opacity instead — replacing a readable answer with grey boxes loses
+ * information the reader had a moment ago.
+ */
+interface Props {
+  /** `text` draws several lines, the last one short, like a paragraph. */
+  variant?: "line" | "text" | "block";
+  lines?: number;
+  width?: string;
+  height?: string;
+  class?: string;
+}
+const { variant = "line", lines = 3, width, height, class: cls = "" } = Astro.props;
+const style = [width && `width:${width}`, height && `height:${height}`].filter(Boolean).join(";");
+---
+{variant === "text" ? (
+  <div style="display:flex;flex-direction:column;gap:var(--space-2)" aria-busy="true">
+    {Array.from({ length: lines }).map((_, i) => (
+      <div class={["ds-skeleton", cls].filter(Boolean).join(" ")} style={`height:14px;width:${i === lines - 1 ? "60%" : "100%"}`} />
+    ))}
+  </div>
+) : (
+  <div
+    class={["ds-skeleton", cls].filter(Boolean).join(" ")}
+    style={style || (variant === "block" ? "height:8rem" : "height:14px")}
+    aria-busy="true"
+  />
+)}

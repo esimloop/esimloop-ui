@@ -1,0 +1,35 @@
+---
+import MkButton from "./MkButton.astro";
+
+/**
+ * Sits mid-article, where someone who has read this far might subscribe.
+ */
+interface Props {
+  title?: string;
+  body?: string;
+  action?: string;
+  cta?: string;
+  class?: string;
+}
+const {
+  title = "Get the next one by email",
+  body = "One message when something new goes up. Unsubscribe in a click.",
+  action = "#",
+  cta = "Subscribe",
+  class: cls = "",
+} = Astro.props;
+---
+<aside class={["mk-signup", cls].filter(Boolean).join(" ")}>
+  <p class="mk-signup__title">{title}</p>
+  <p class="mk-signup__body">{body}</p>
+  <form method="post" action={action}>
+    <label class="mk-sr-only" for="mk-signup-email">Email address</label>
+    <input class="mk-input" id="mk-signup-email" name="email" type="email" required placeholder="you@example.com" />
+    <MkButton variant="primary">{cta}</MkButton>
+  </form>
+</aside>
+
+<style is:global>
+  .mk-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+</style>

@@ -1,0 +1,27 @@
+---
+/**
+ * Two to four mutually exclusive views. More than four and it becomes tabs.
+ * Renders links when `hrefFor` is given so the choice survives a reload.
+ */
+export interface Segment {
+  id: string;
+  label: string;
+}
+interface Props {
+  segments: Segment[];
+  active: string;
+  label: string;
+  hrefFor?: (id: string) => string;
+  class?: string;
+}
+const { segments, active, label, hrefFor, class: cls = "" } = Astro.props;
+---
+<div class={["ds-segmented", cls].filter(Boolean).join(" ")} role="group" aria-label={label}>
+  {segments.map((s) =>
+    hrefFor ? (
+      <a href={hrefFor(s.id)} aria-pressed={String(s.id === active)}>{s.label}</a>
+    ) : (
+      <button type="button" aria-pressed={String(s.id === active)} data-segment={s.id}>{s.label}</button>
+    ),
+  )}
+</div>

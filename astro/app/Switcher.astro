@@ -1,0 +1,29 @@
+---
+import Icon from "./Icon.astro";
+
+/**
+ * The workspace or project switcher that sits under the sidebar brand. The
+ * avatar is a single initial on the accent, which stays legible at 20px where a
+ * logo would not.
+ */
+interface Props {
+  name: string;
+  /** One character. Defaults to the first letter of the name. */
+  initial?: string;
+  href?: string;
+  class?: string;
+}
+const { name, initial, href, class: cls = "" } = Astro.props;
+const mark = (initial ?? name.trim().charAt(0)).toUpperCase();
+const Tag = href ? "a" : "button";
+---
+<Tag
+  class={["ds-switcher", cls].filter(Boolean).join(" ")}
+  href={href}
+  type={href ? undefined : "button"}
+  aria-label={`Current workspace: ${name}. Switch workspace`}
+>
+  <span class="ds-switcher__avatar" aria-hidden="true">{mark}</span>
+  <span class="ds-switcher__name">{name}</span>
+  <Icon name="chev-down" size="sm" class="ds-text-muted" />
+</Tag>

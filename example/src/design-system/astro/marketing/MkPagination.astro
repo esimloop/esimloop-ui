@@ -1,0 +1,41 @@
+---
+import Icon from "../app/Icon.astro";
+
+/**
+ * Numbered pagination for a blog index. Unlike the app's range control, page
+ * numbers matter here: each one is a URL worth linking and indexing.
+ */
+interface Props {
+  page: number;
+  totalPages: number;
+  hrefFor: (page: number) => string;
+  class?: string;
+}
+const { page, totalPages, hrefFor, class: cls = "" } = Astro.props;
+
+// First, last, and a window around the current page; gaps become an ellipsis.
+const window_ = new Set<number>([1, totalPages, page - 1, page, page + 1]);
+const pages = [...window_].filter((n) => n >= 1 && n <= totalPages).sort((a, b) => a - b);
+const withGaps: (number | "gap")[] = [];
+pages.forEach((n, i) => {
+  if (i > 0 && n - pages[i - 1] > 1) withGaps.push("gap");
+  withGaps.push(n);
+});
+---
+<nav class={["mk-pagination", cls].filter(Boolean).join(" ")} aria-label="Pagination">
+  {page > 1 && (
+    <a href={hrefFor(page - 1)} rel="prev" aria-label="Previous page"><Icon name="chev-left" size="sm" /></a>
+  )}
+  {withGaps.map((n) =>
+    n === "gap" ? (
+      <span class="mk-pagination__gap" aria-hidden="true">…</span>
+    ) : n === page ? (
+      <span aria-current="page">{n}</span>
+    ) : (
+      <a href={hrefFor(n)} aria-label={`Page ${n}`}>{n}</a>
+    ),
+  )}
+  {page < totalPages && (
+    <a href={hrefFor(page + 1)} rel="next" aria-label="Next page"><Icon name="chev-right" size="sm" /></a>
+  )}
+</nav>

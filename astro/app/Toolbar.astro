@@ -1,0 +1,19 @@
+---
+/**
+ * A row of controls. `ds-toolbar__sep` between groups; the spacer pushes what
+ * follows to the end.
+ */
+interface Props {
+  label: string;
+  bordered?: boolean;
+  class?: string;
+}
+const { label, bordered = false, class: cls = "" } = Astro.props;
+---
+<div
+  class={["ds-toolbar", bordered && "ds-toolbar--bordered", cls].filter(Boolean).join(" ")}
+  role="toolbar"
+  aria-label={label}
+>
+  <slot />
+</div>

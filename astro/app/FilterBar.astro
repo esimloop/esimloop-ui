@@ -1,0 +1,18 @@
+---
+/**
+ * The row above a table. Keep the count visible: a filter bar without a result
+ * count makes people guess whether anything happened.
+ */
+interface Props {
+  /** e.g. "1,284 items" */
+  count?: string;
+  class?: string;
+}
+const { count, class: cls = "" } = Astro.props;
+---
+<div class={["ds-filterbar", cls].filter(Boolean).join(" ")} role="group" aria-label="Filters">
+  <slot />
+  {count && <span class="ds-body-sm ds-text-muted ds-num">{count}</span>}
+  <span class="ds-spacer"></span>
+  <slot name="actions" />
+</div>

@@ -1,0 +1,17 @@
+---
+/**
+ * A line lifted out of the article to break a long stretch of text. It should
+ * repeat something already in the piece — a pull quote that introduces new
+ * information is a paragraph in disguise.
+ */
+interface Props {
+  quote: string;
+  attribution?: string;
+  class?: string;
+}
+const { quote, attribution, class: cls = "" } = Astro.props;
+---
+<figure class={["mk-pullquote", cls].filter(Boolean).join(" ")}>
+  <p>{quote}</p>
+  {attribution && <footer>{attribution}</footer>}
+</figure>

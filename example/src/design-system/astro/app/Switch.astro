@@ -1,0 +1,26 @@
+---
+/**
+ * A setting that applies immediately. If the change needs a Save button, use a
+ * Checkbox — a switch that does not take effect at once misleads.
+ */
+interface Props {
+  label: string;
+  id?: string;
+  name?: string;
+  checked?: boolean;
+  disabled?: boolean;
+  size?: "sm" | "md";
+  class?: string;
+  [key: string]: unknown;
+}
+const { label, id, name, checked = false, disabled = false, size = "md", class: cls = "", ...rest } = Astro.props;
+---
+<label class={["ds-check-row", cls].filter(Boolean).join(" ")}>
+  <input
+    class={["ds-switch", size === "sm" && "ds-switch--sm"].filter(Boolean).join(" ")}
+    type="checkbox" role="switch"
+    id={id} name={name} checked={checked} disabled={disabled}
+    {...rest}
+  />
+  {label}
+</label>

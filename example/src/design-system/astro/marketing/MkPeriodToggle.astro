@@ -1,0 +1,36 @@
+---
+/**
+ * Monthly / annual switch for a pricing table. Prices live in the page and are
+ * swapped by data attribute, so nothing is fetched and nothing flashes.
+ *
+ * Mark each price `<span data-price-monthly>` / `<span data-price-annual>`.
+ */
+interface Props {
+  /** e.g. "Save 20%" — shown beside the annual option. */
+  saving?: string;
+  class?: string;
+}
+const { saving, class: cls = "" } = Astro.props;
+---
+<div class={["mk-period", cls].filter(Boolean).join(" ")} role="group" aria-label="Billing period" data-mk-period>
+  <button type="button" aria-pressed="true" data-period="monthly">Monthly</button>
+  <button type="button" aria-pressed="false" data-period="annual">Annual</button>
+  {saving && <span class="mk-period__save">{saving}</span>}
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-mk-period]").forEach((group) => {
+    group.addEventListener("click", (event) => {
+      const button = (event.target as HTMLElement).closest<HTMLElement>("[data-period]");
+      if (!button) return;
+      const period = button.dataset.period!;
+
+      group.querySelectorAll<HTMLElement>("[data-period]").forEach((b) =>
+        b.setAttribute("aria-pressed", String(b === button)),
+      );
+      document.querySelectorAll<HTMLElement>("[data-price-monthly], [data-price-annual]").forEach((el) => {
+        el.hidden = el.hasAttribute("data-price-monthly") ? period !== "monthly" : period !== "annual";
+      });
+    });
+  });
+</script>

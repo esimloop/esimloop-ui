@@ -28,6 +28,30 @@ import DataTable from "../design-system/astro/app/DataTable.astro";
 import Pagination from "../design-system/astro/app/Pagination.astro";
 import Sparkline from "../design-system/astro/app/Sparkline.astro";
 import AreaChart from "../design-system/astro/app/AreaChart.astro";
+import Breadcrumb from "../design-system/astro/app/Breadcrumb.astro";
+import Drawer from "../design-system/astro/app/Drawer.astro";
+import SegmentedControl from "../design-system/astro/app/SegmentedControl.astro";
+import Switcher from "../design-system/astro/app/Switcher.astro";
+import Progress from "../design-system/astro/app/Progress.astro";
+import Spinner from "../design-system/astro/app/Spinner.astro";
+import Skeleton from "../design-system/astro/app/Skeleton.astro";
+import Checkbox from "../design-system/astro/app/Checkbox.astro";
+import Radio from "../design-system/astro/app/Radio.astro";
+import Switch from "../design-system/astro/app/Switch.astro";
+import Input from "../design-system/astro/app/Input.astro";
+import Select from "../design-system/astro/app/Select.astro";
+import Textarea from "../design-system/astro/app/Textarea.astro";
+import Avatar from "../design-system/astro/app/Avatar.astro";
+import AvatarGroup from "../design-system/astro/app/AvatarGroup.astro";
+import Accordion from "../design-system/astro/app/Accordion.astro";
+import FilterBar from "../design-system/astro/app/FilterBar.astro";
+import FilterChip from "../design-system/astro/app/FilterChip.astro";
+import Banner from "../design-system/astro/app/Banner.astro";
+import Kbd from "../design-system/astro/app/Kbd.astro";
+import CopyButton from "../design-system/astro/app/CopyButton.astro";
+import Toolbar from "../design-system/astro/app/Toolbar.astro";
+import Stepper from "../design-system/astro/app/Stepper.astro";
+import Combobox from "../design-system/astro/app/Combobox.astro";
 import ToastHost from "../design-system/astro/app/ToastHost.astro";
 import Icon from "../design-system/astro/app/Icon.astro";
 import { ICON_NAMES } from "../design-system/astro/app/icons";
@@ -57,6 +81,19 @@ import MkTerminal from "../design-system/astro/marketing/MkTerminal.astro";
 import MkMedia from "../design-system/astro/marketing/MkMedia.astro";
 import MkField from "../design-system/astro/marketing/MkField.astro";
 import MkNav from "../design-system/astro/marketing/MkNav.astro";
+import MkPeriodToggle from "../design-system/astro/marketing/MkPeriodToggle.astro";
+import MkTrustStrip from "../design-system/astro/marketing/MkTrustStrip.astro";
+import MkVideo from "../design-system/astro/marketing/MkVideo.astro";
+import MkPullQuote from "../design-system/astro/marketing/MkPullQuote.astro";
+import MkNewsletter from "../design-system/astro/marketing/MkNewsletter.astro";
+import MkShare from "../design-system/astro/marketing/MkShare.astro";
+import MkAuthorBio from "../design-system/astro/marketing/MkAuthorBio.astro";
+import MkDocsNav from "../design-system/astro/marketing/MkDocsNav.astro";
+import MkAnchorNav from "../design-system/astro/marketing/MkAnchorNav.astro";
+import MkCategoryFilter from "../design-system/astro/marketing/MkCategoryFilter.astro";
+import MkPagination from "../design-system/astro/marketing/MkPagination.astro";
+import MkMarquee from "../design-system/astro/marketing/MkMarquee.astro";
+import MkRating from "../design-system/astro/marketing/MkRating.astro";
 
 const sections = [
   { id: "colour", label: "Colour" },
@@ -67,6 +104,10 @@ const sections = [
   { id: "status", label: "Status" },
   { id: "surfaces", label: "Surfaces" },
   { id: "data", label: "Data" },
+  { id: "controls", label: "Controls" },
+  { id: "feedback", label: "Feedback" },
+  { id: "navigation", label: "Navigation" },
+  { id: "filters", label: "Filters" },
   { id: "charts", label: "Charts" },
   { id: "overlays", label: "Overlays" },
   { id: "states", label: "States" },
@@ -75,6 +116,9 @@ const sections = [
   { id: "mk-actions", label: "Marketing actions" },
   { id: "mk-sections", label: "Marketing sections" },
   { id: "mk-content", label: "Content" },
+  { id: "mk-conversion", label: "Conversion" },
+  { id: "mk-editorial", label: "Editorial extras" },
+  { id: "mk-sitenav", label: "Site navigation" },
   { id: "mk-chrome", label: "Site chrome" },
 ];
 
@@ -550,6 +594,161 @@ const radii = [
         </div>
       </section>
 
+      <!-- =========================== CONTROLS =========================== -->
+      <section id="controls" class="ref__section">
+        <h2 class="ds-h2">Controls</h2>
+        <p class="ref__lede">Typed wrappers around the controls the CSS already styled. The labelled ones make the whole row the target, so the label is part of the hit area rather than decoration beside it.</p>
+        <div class="ref__demo ref__grid2">
+          <Field label="Text input" id="c-a" hint="Wrap any control in Field for a label.">
+            <Input id="c-a" placeholder="Placeholder" describedBy="c-a-hint" />
+          </Field>
+          <Field label="Select" id="c-b">
+            <Select id="c-b" options={[{ value: "1", label: "First" }, { value: "2", label: "Second" }]} value="1" />
+          </Field>
+          <Field label="Invalid" id="c-c" error="Enter a full domain, for example example.com">
+            <Input id="c-c" value="not a url" invalid describedBy="c-c-error" />
+          </Field>
+          <Field label="Textarea" id="c-d">
+            <Textarea id="c-d" rows={3}>Multi-line input.</Textarea>
+          </Field>
+        </div>
+        <div class="ref__demo">
+          <p class="ref__cap">Labelled toggles</p>
+          <div class="ref__wrap" style="gap:20px">
+            <Checkbox label="Checkbox" checked />
+            <Checkbox label="Indeterminate" indeterminate />
+            <Radio label="Radio" name="c-radio" value="a" checked />
+            <Switch label="Switch" checked />
+            <Checkbox label="Disabled" disabled />
+          </div>
+        </div>
+        <div class="ref__demo">
+          <p class="ref__cap">Segmented control &amp; workspace switcher</p>
+          <div class="ref__wrap" style="gap:20px">
+            <SegmentedControl
+              label="Density"
+              active="compact"
+              segments={[{ id: "compact", label: "Compact" }, { id: "default", label: "Default" }]}
+            />
+            <div style="width:14rem"><Switcher name="Workspace" /></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================== FEEDBACK =========================== -->
+      <section id="feedback" class="ref__section">
+        <h2 class="ds-h2">Feedback</h2>
+        <p class="ref__lede">Banner is page-level and full bleed; Alert is inline. Use the first for something true of the whole page, the second for something true of a block.</p>
+        <div class="ref__demo demo--col" style="flex-direction:column;align-items:stretch">
+          <Banner tone="warning" dismissible>
+            <strong>Setup needed:</strong> connect a data source to see real figures here.
+          </Banner>
+          <Banner tone="info">A page-level notice, without a dismiss control.</Banner>
+        </div>
+        <div class="ref__demo ref__grid2">
+          <Card title="Progress">
+            <Progress value={318} max={500} label="Crawling pages" showLabel />
+          </Card>
+          <Card title="Spinner & skeleton">
+            <div class="ref__wrap" style="gap:16px"><Spinner label="Loading" /><Spinner size="xs" /></div>
+            <Skeleton variant="text" lines={3} />
+          </Card>
+        </div>
+      </section>
+
+      <!-- ========================== NAVIGATION ========================== -->
+      <section id="navigation" class="ref__section">
+        <h2 class="ds-h2">Navigation &amp; identity</h2>
+        <div class="ref__demo">
+          <p class="ref__cap">Breadcrumb — the last item is the page you are on, so it is not a link</p>
+          <Breadcrumb items={[{ label: "Workspace", href: "#navigation" }, { label: "Reports", href: "#navigation" }, { label: "March" }]} />
+        </div>
+        <div class="ref__demo">
+          <p class="ref__cap">Stepper — done steps show a check, not their number</p>
+          <Stepper current={1} steps={[{ label: "Connect" }, { label: "Configure" }, { label: "Review" }]} />
+        </div>
+        <div class="ref__demo">
+          <p class="ref__cap">Toolbar, keyboard hints, copy</p>
+          <div class="ds-card" style="width:100%">
+            <Toolbar label="Example toolbar" bordered>
+              <Button size="xs" variant="ghost" iconStart="filters">Filters</Button>
+              <span class="ds-toolbar__sep"></span>
+              <Kbd keys={["Ctrl", "K"]} />
+              <span class="ds-spacer"></span>
+              <CopyButton size="xs" value="npx github:esimloop/esimloop-ui my-project" />
+            </Toolbar>
+          </div>
+        </div>
+        <div class="ref__demo">
+          <p class="ref__cap">Avatars — past the maximum the rest become a count</p>
+          <div class="ref__wrap" style="gap:24px">
+            <Avatar name="Ana Rivera" />
+            <Avatar name="Ana Rivera" accent />
+            <Avatar name="Ana Rivera" size="lg" />
+            <AvatarGroup
+              max={3}
+              people={[{ name: "Ana Rivera" }, { name: "Sam Moreau" }, { name: "Tom Lambert" }, { name: "Jo Okafor" }, { name: "Kim Park" }]}
+            />
+          </div>
+        </div>
+        <div class="ref__demo">
+          <p class="ref__cap">Drawer — explores; Modal decides</p>
+          <Button data-ds-drawer-open="ref-drawer">Open drawer</Button>
+        </div>
+        <Drawer id="ref-drawer" title="Filters">
+          <Field label="Search" id="d-q"><Input id="d-q" type="search" placeholder="Search items" /></Field>
+          <Checkbox label="Published only" checked />
+          <Checkbox label="Has issues" />
+          <Fragment slot="footer">
+            <Button variant="ghost" data-ds-drawer-close>Reset</Button>
+            <Button variant="primary" data-ds-drawer-close>Apply</Button>
+          </Fragment>
+        </Drawer>
+      </section>
+
+      <!-- ============================ FILTERS =========================== -->
+      <section id="filters" class="ref__section">
+        <h2 class="ds-h2">Filters &amp; disclosure</h2>
+        <p class="ref__lede">A filter bar without a result count makes people guess whether anything happened, so the count is part of the component.</p>
+        <div class="ref__demo">
+          <div class="ds-card" style="width:100%">
+            <FilterBar count="1,284 items">
+              <FilterChip label="Published" active count={842} />
+              <FilterChip label="Draft" count={442} />
+              <FilterChip label="Has issues" removable />
+              <Button slot="actions" size="xs" variant="ghost" iconStart="download">Export</Button>
+            </FilterBar>
+          </div>
+        </div>
+        <div class="ref__demo ref__grid2">
+          <div>
+            <p class="ref__cap">Combobox — type to filter, arrows to move, Enter to choose</p>
+            <div style="margin-top:12px">
+              <Combobox
+                id="ref-combo"
+                value="fr"
+                options={[
+                  { value: "fr", label: "France" }, { value: "de", label: "Germany" },
+                  { value: "es", label: "Spain" }, { value: "it", label: "Italy" },
+                  { value: "uk", label: "United Kingdom" }, { value: "us", label: "United States" },
+                ]}
+              />
+            </div>
+          </div>
+          <div>
+            <p class="ref__cap">Accordion — native details, findable by in-page search</p>
+            <div style="margin-top:12px">
+              <Accordion
+                items={[
+                  { id: "a1", title: "Independent by default", body: "Several can be open at once, because a reader may want two of them side by side.", open: true },
+                  { id: "a2", title: "Exclusive when asked", body: "Pass `exclusive` and a name to group them into one-at-a-time." },
+                ]}
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
       <!-- ============================ CHARTS ============================ -->
       <section id="charts" class="ref__section">
         <h2 class="ds-h2">Charts</h2>
@@ -908,6 +1107,121 @@ const radii = [
                 { name: "J. Okafor", role: "Operations", initials: "JO" },
               ]}
             />
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================== CONVERSION ========================== -->
+      <section id="mk-conversion" class="ref__section">
+        <h2 class="ds-h2">Marketing — conversion</h2>
+        <div class="mk ref__island">
+          <p class="ref__cap">Billing period — prices swap in place, nothing is fetched</p>
+          <div style="margin-top:12px"><MkPeriodToggle saving="Save 20%" /></div>
+          <p class="mk-display-md" style="margin-top:20px">
+            <span data-price-monthly>$29</span><span data-price-annual hidden>$23</span>
+            <span class="mk-body-sm mk-muted"> / month</span>
+          </p>
+
+          <p class="ref__cap" style="margin-top:40px">Trust strip — keep the claims true and specific</p>
+          <div style="margin-top:16px">
+            <MkTrustStrip items={[
+              { label: "30-day refund", icon: "shield" },
+              { label: "No card required", icon: "check" },
+              { label: "Cancel anytime", icon: "check" },
+            ]} />
+          </div>
+
+          <p class="ref__cap" style="margin-top:40px">Rating — the number is not optional</p>
+          <div style="margin-top:12px"><MkRating value={4.8} count={214} /></div>
+
+          <p class="ref__cap" style="margin-top:40px">Marquee — pauses on hover, static under reduced motion</p>
+          <div style="margin-top:16px">
+            <MkMarquee items={["Northwind", "Contoso", "Fabrikam", "Adventure", "Litware", "Tailspin"]} />
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================== EDITORIAL EXTRAS ====================== -->
+      <section id="mk-editorial" class="ref__section">
+        <h2 class="ds-h2">Marketing — editorial extras</h2>
+        <div class="mk ref__island">
+          <MkPullQuote
+            quote="A rule that nothing enforces is a preference, and preferences drift."
+            attribution="From the article above"
+          />
+
+          <div style="margin-top:32px"><MkNewsletter /></div>
+
+          <div style="margin-top:32px">
+            <p class="ref__cap">Share — plain links first, native sheet where there is one</p>
+            <div style="margin-top:12px">
+              <MkShare url="https://example.com/blog/post" title="An example article" />
+            </div>
+          </div>
+
+          <div style="margin-top:32px">
+            <MkAuthorBio
+              name="A. Rivera"
+              role="Design engineering"
+              initials="AR"
+              bio="Writes about interface systems and the small rules that keep them from drifting. Previously built design tooling for data-heavy products."
+            />
+          </div>
+
+          <div style="margin-top:32px">
+            <p class="ref__cap">Video facade — the player is not loaded until the click</p>
+            <div style="margin-top:12px;max-width:32rem">
+              <MkVideo
+                src="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ"
+                poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='9'%3E%3Crect width='16' height='9' fill='%23e9e2d6'/%3E%3C/svg%3E"
+                title="An example video"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================== SITE NAVIGATION ======================= -->
+      <section id="mk-sitenav" class="ref__section">
+        <h2 class="ds-h2">Marketing — site navigation</h2>
+        <div class="mk ref__island">
+          <div style="display:grid;gap:32px;grid-template-columns:minmax(0,220px) minmax(0,1fr)">
+            <MkDocsNav groups={[
+              { label: "Getting started", links: [
+                { label: "Introduction", href: "#mk-sitenav", current: true },
+                { label: "Installation", href: "#mk-sitenav" },
+                { label: "Theming", href: "#mk-sitenav" },
+              ]},
+              { label: "Guides", links: [
+                { label: "Two layers", href: "#mk-sitenav" },
+                { label: "Token contract", href: "#mk-sitenav" },
+              ]},
+            ]} />
+            <div>
+              <p class="ref__cap">Category filter — links, so a filtered list has its own URL</p>
+              <div style="margin-top:12px">
+                <MkCategoryFilter categories={[
+                  { label: "All", href: "#mk-sitenav", current: true, count: 24 },
+                  { label: "Design", href: "#mk-sitenav", count: 11 },
+                  { label: "Engineering", href: "#mk-sitenav", count: 9 },
+                  { label: "Accessibility", href: "#mk-sitenav", count: 4 },
+                ]} />
+              </div>
+
+              <p class="ref__cap" style="margin-top:32px">Blog pagination — every page is a URL worth indexing</p>
+              <div style="margin-top:12px">
+                <MkPagination page={4} totalPages={12} hrefFor={(n) => "#page-" + n} />
+              </div>
+
+              <p class="ref__cap" style="margin-top:32px">Anchor nav — marks the section being read</p>
+              <div style="margin-top:12px">
+                <MkAnchorNav items={[
+                  { id: "mk-conversion", label: "Conversion" },
+                  { id: "mk-editorial", label: "Editorial" },
+                  { id: "mk-sitenav", label: "Navigation" },
+                ]} />
+              </div>
+            </div>
           </div>
         </div>
       </section>

@@ -1,0 +1,35 @@
+---
+/**
+ * A determinate bar. For work with no known end, use Spinner: a bar that never
+ * fills is a lie about progress.
+ */
+interface Props {
+  value: number;
+  max?: number;
+  /** Names what is progressing, e.g. "Crawling pages". */
+  label: string;
+  /** Renders the label and count above the bar. */
+  showLabel?: boolean;
+  class?: string;
+}
+const { value, max = 100, label, showLabel = false, class: cls = "" } = Astro.props;
+const pct = Math.max(0, Math.min(100, (value / max) * 100));
+---
+<div class={cls}>
+  {showLabel && (
+    <div style="display:flex;justify-content:space-between;gap:var(--space-3);margin-bottom:var(--space-2)">
+      <span class="ds-body-sm ds-text-secondary">{label}</span>
+      <span class="ds-body-sm ds-num ds-text-muted">{value.toLocaleString()} / {max.toLocaleString()}</span>
+    </div>
+  )}
+  <div
+    class="ds-progress"
+    role="progressbar"
+    aria-label={showLabel ? undefined : label}
+    aria-valuenow={value}
+    aria-valuemin="0"
+    aria-valuemax={max}
+  >
+    <span style={`width:${pct}%`}></span>
+  </div>
+</div>

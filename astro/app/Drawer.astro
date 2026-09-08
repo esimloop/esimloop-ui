@@ -1,0 +1,78 @@
+---
+import Button from "./Button.astro";
+
+/**
+ * A panel that slides in from an edge, over a scrim. Use it for filters and
+ * detail views that would crowd the page; use Modal when a decision must be
+ * made before anything else can happen.
+ *
+ * Open with `data-ds-drawer-open="<id>"` on any button.
+ */
+interface Props {
+  id: string;
+  title: string;
+  side?: "start" | "end";
+  width?: string;
+  class?: string;
+}
+const { id, title, side = "end", width = "24rem", class: cls = "" } = Astro.props;
+const titleId = id + "-title";
+---
+<div class="ds-scrim" id={id} hidden data-ds-drawer-panel role="dialog" aria-modal="true" aria-labelledby={titleId}>
+  <div
+    class={["ds-drawer-panel", cls].filter(Boolean).join(" ")}
+    data-side={side}
+    style={`width:min(${width}, 100vw)`}
+  >
+    <header class="ds-drawer-panel__head">
+      <h2 class="ds-h3" id={titleId}>{title}</h2>
+      <Button size="xs" variant="ghost" square label="Close" iconStart="x" data-ds-drawer-close />
+    </header>
+    <div class="ds-drawer-panel__body"><slot /></div>
+    {Astro.slots.has("footer") && <footer class="ds-drawer-panel__foot"><slot name="footer" /></footer>}
+  </div>
+</div>
+
+<script>
+  let lastTrigger: HTMLElement | null = null;
+
+  function open(panel: HTMLElement, trigger: HTMLElement) {
+    lastTrigger = trigger;
+    panel.hidden = false;
+    panel.querySelector<HTMLElement>("[data-ds-drawer-close]")?.focus();
+  }
+
+  function close(panel: HTMLElement) {
+    panel.hidden = true;
+    lastTrigger?.focus();
+    lastTrigger = null;
+  }
+
+  document.addEventListener("click", (event) => {
+    const target = event.target as HTMLElement;
+
+    const opener = target.closest<HTMLElement>("[data-ds-drawer-open]");
+    if (opener) {
+      const panel = document.getElementById(opener.dataset.dsDrawerOpen!);
+      if (panel) open(panel, opener);
+      return;
+    }
+
+    const closer = target.closest<HTMLElement>("[data-ds-drawer-close]");
+    if (closer) {
+      const panel = closer.closest<HTMLElement>("[data-ds-drawer-panel]");
+      if (panel) close(panel);
+      return;
+    }
+
+    // The scrim itself, never its contents.
+    if (target.matches("[data-ds-drawer-panel]")) close(target);
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape") return;
+    document
+      .querySelectorAll<HTMLElement>("[data-ds-drawer-panel]:not([hidden])")
+      .forEach((panel) => close(panel));
+  });
+</script>

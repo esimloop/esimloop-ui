@@ -26,9 +26,16 @@ Initial release.
   AA as text; the reconstructed theme shares one set and fails on white.
 
 ### Components
-- 17 application, 30 marketing, plus a 33-icon inline lucide sprite.
-- Overlays: a native `<dialog>`, a keyboard-navigable dropdown, and a toast queue
-  with a polite live region.
+- 47 application, 44 marketing, plus a 37-icon inline lucide sprite.
+- Overlays: a native `<dialog>`, a keyboard-navigable dropdown, a drawer, a
+  portalled tooltip, and a toast queue with a polite live region.
+- Data: a DataTable that renders the chrome and leaves the rows to you, sortable
+  headers that work without JavaScript, an area chart and a sparkline that finally
+  read the chart tokens.
+- Marketing: a content set (prose, article header, author bio, pull quote, share,
+  newsletter, video facade), site navigation (docs nav, anchor nav, category
+  filter, pagination) and conversion pieces (period toggle, trust strip, sticky
+  CTA, marquee, rating).
 - A living component reference at `/design-system`, rendered from source.
 - Marketing covers hero (centered / split), section, heading, split, card, quote,
   logos, stats, CTA band, FAQ, pricing, comparison table, article card,

@@ -425,3 +425,138 @@
 .mk-media{border-radius:var(--m-radius-mockup);overflow:hidden;border:1px solid var(--m-hairline);
   background:var(--m-surface-2);display:grid;place-items:center;color:var(--m-ink-tertiary)}
 .mk-media > img,.mk-media > video,.mk-media > iframe{display:block;width:100%;height:100%;border:0;object-fit:cover}
+
+/* ── Pricing period toggle ───────────────────────────────────────────────── */
+.mk-period { display: inline-flex; align-items: center; gap: 10px; padding: 4px;
+  background: var(--m-surface-2); border-radius: var(--m-radius-pill); }
+.mk-period button { height: 36px; padding-inline: 18px; border: 0; cursor: pointer;
+  font-family: inherit; font-size: 14px; font-weight: 500; color: var(--m-ink-muted);
+  background: transparent; border-radius: var(--m-radius-pill); transition: background-color .15s ease, color .15s ease; }
+.mk-period button[aria-pressed="true"] { background: var(--m-surface); color: var(--m-ink); }
+.mk-period button:focus-visible { outline: 2px solid var(--m-ink); outline-offset: 2px; }
+.mk-period__save { font-size: 13px; color: var(--m-accent); font-weight: 600; padding-right: 8px; }
+
+/* ── Trust strip ─────────────────────────────────────────────────────────── */
+.mk-trust { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px 40px; }
+.mk-trust__item { display: inline-flex; align-items: center; gap: 10px; font-size: 15px; color: var(--m-ink-muted); }
+.mk-trust__item .ds-icon { color: var(--m-ink-subtle); }
+
+/* ── Sticky CTA bar ──────────────────────────────────────────────────────── */
+.mk-stickycta { position: fixed; inset-inline: 0; bottom: 0; z-index: 45;
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 16px;
+  padding: 14px 20px; background: var(--m-ink); color: var(--m-surface);
+  translate: 0 100%; transition: translate .25s ease; }
+.mk-stickycta[data-shown] { translate: 0 0; }
+.mk-stickycta__text { font-size: 15px; }
+.mk-stickycta .mk-btn-primary { background: var(--m-surface); color: var(--m-ink); }
+.mk-stickycta .mk-btn-primary:hover { background: var(--m-surface-2); }
+@media (prefers-reduced-motion: reduce) { .mk-stickycta { transition: none; } }
+
+/* ── Video facade: a poster and a button until someone asks for the player ─ */
+.mk-video { position: relative; display: block; width: 100%; padding: 0; border: 0; cursor: pointer;
+  border-radius: var(--m-radius-mockup); overflow: hidden; background: var(--m-surface-2); }
+.mk-video img, .mk-video iframe { display: block; width: 100%; height: 100%; border: 0; object-fit: cover; }
+.mk-video__play { position: absolute; inset: 0; display: grid; place-items: center; }
+.mk-video__play span { display: grid; place-items: center; width: 64px; height: 64px;
+  border-radius: var(--m-radius-pill); background: var(--m-ink); color: var(--m-surface);
+  transition: scale .15s ease; }
+.mk-video:hover .mk-video__play span { scale: 1.06; }
+.mk-video:focus-visible { outline: 2px solid var(--m-ink); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) { .mk-video__play span { transition: none; } }
+
+/* ── Pull quote ──────────────────────────────────────────────────────────── */
+.mk-pullquote { margin: 0; padding: 8px 0; border-top: 1px solid var(--m-hairline); border-bottom: 1px solid var(--m-hairline); }
+.mk-pullquote p { margin: 24px 0; font-size: clamp(22px, 2.6vw, 30px); font-weight: 500;
+  line-height: 1.3; letter-spacing: -.015em; text-wrap: pretty; }
+.mk-pullquote footer { margin-bottom: 24px; font-size: 14px; color: var(--m-ink-subtle); }
+
+/* ── Inline newsletter ───────────────────────────────────────────────────── */
+.mk-signup { padding: 28px; background: var(--m-band-quiet); border: 1px solid var(--m-hairline);
+  border-radius: var(--m-radius-card); }
+.mk-signup__title { margin: 0; font-size: 20px; font-weight: 500; letter-spacing: -.01em; }
+.mk-signup__body { margin: 8px 0 0; font-size: 15px; line-height: 1.55; color: var(--m-ink-muted); }
+.mk-signup form { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.mk-signup input { flex: 1; min-width: 12rem; }
+
+/* ── Share ───────────────────────────────────────────────────────────────── */
+.mk-share { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.mk-share__label { font-size: 14px; color: var(--m-ink-subtle); margin-right: 4px; }
+.mk-share a, .mk-share button { display: inline-grid; place-items: center; width: 36px; height: 36px;
+  border: 1px solid var(--m-hairline); border-radius: var(--m-radius-btn); color: var(--m-ink-muted);
+  background: var(--m-surface); cursor: pointer; transition: border-color .15s ease, color .15s ease; }
+.mk-share a:hover, .mk-share button:hover { border-color: var(--m-ink); color: var(--m-ink); }
+.mk-share a:focus-visible, .mk-share button:focus-visible { outline: 2px solid var(--m-ink); outline-offset: 2px; }
+
+/* ── Author bio ──────────────────────────────────────────────────────────── */
+.mk-bio { display: flex; gap: 20px; padding: 24px; background: var(--m-band-quiet);
+  border: 1px solid var(--m-hairline); border-radius: var(--m-radius-card); }
+.mk-bio__name { margin: 0; font-size: 17px; font-weight: 500; }
+.mk-bio__role { margin: 2px 0 0; font-size: 14px; color: var(--m-ink-subtle); }
+.mk-bio__text { margin: 12px 0 0; font-size: 15px; line-height: 1.6; color: var(--m-ink-muted); max-width: 60ch; }
+
+/* ── Docs nav ────────────────────────────────────────────────────────────── */
+.mk-docsnav { font-size: 15px; }
+.mk-docsnav__group + .mk-docsnav__group { margin-top: 24px; }
+.mk-docsnav__label { margin: 0 0 8px; font-size: 12px; font-weight: 600; letter-spacing: .05em;
+  text-transform: uppercase; color: var(--m-ink-subtle); }
+.mk-docsnav ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 1px; }
+.mk-docsnav a { display: block; padding: 6px 12px; border-radius: var(--m-radius-btn);
+  color: var(--m-ink-muted); transition: background-color .15s ease, color .15s ease; }
+.mk-docsnav a:hover { background: var(--m-surface-2); color: var(--m-ink); }
+.mk-docsnav a[aria-current="page"] { background: var(--m-surface-2); color: var(--m-ink); font-weight: 500; }
+.mk-docsnav a:focus-visible { outline: 2px solid var(--m-ink); outline-offset: -2px; }
+
+/* ── Sticky anchor nav ───────────────────────────────────────────────────── */
+.mk-anchornav { position: sticky; top: 0; z-index: 30; display: flex; gap: 4px; overflow-x: auto;
+  padding: 10px 0; background: var(--m-canvas); border-bottom: 1px solid var(--m-hairline); }
+.mk-anchornav a { flex: none; padding: 6px 12px; border-radius: var(--m-radius-btn);
+  font-size: 14px; font-weight: 500; color: var(--m-ink-muted); white-space: nowrap;
+  transition: background-color .15s ease, color .15s ease; }
+.mk-anchornav a:hover { color: var(--m-ink); }
+.mk-anchornav a[aria-current="true"] { background: var(--m-surface-2); color: var(--m-ink); }
+.mk-anchornav a:focus-visible { outline: 2px solid var(--m-ink); outline-offset: -2px; }
+
+/* ── Category filter ─────────────────────────────────────────────────────── */
+.mk-categories { display: flex; flex-wrap: wrap; gap: 8px; }
+.mk-categories a { display: inline-flex; align-items: center; gap: 6px; height: 34px; padding-inline: 14px;
+  font-size: 14px; font-weight: 500; color: var(--m-ink-muted); background: var(--m-surface);
+  border: 1px solid var(--m-hairline); border-radius: var(--m-radius-pill);
+  transition: border-color .15s ease, color .15s ease; }
+.mk-categories a:hover { border-color: var(--m-ink); color: var(--m-ink); }
+.mk-categories a[aria-current="page"] { background: var(--m-ink); border-color: var(--m-ink); color: var(--m-surface); }
+.mk-categories a:focus-visible { outline: 2px solid var(--m-ink); outline-offset: 2px; }
+.mk-categories__count { font-size: 13px; opacity: .7; font-variant-numeric: tabular-nums; }
+
+/* ── Blog pagination ─────────────────────────────────────────────────────── */
+.mk-pagination { display: flex; align-items: center; justify-content: center; gap: 6px;
+  padding-top: 32px; border-top: 1px solid var(--m-hairline); }
+.mk-pagination a, .mk-pagination span { display: inline-grid; place-items: center; min-width: 40px; height: 40px;
+  padding-inline: 10px; font-size: 15px; font-variant-numeric: tabular-nums;
+  border-radius: var(--m-radius-btn); color: var(--m-ink-muted); }
+.mk-pagination a:hover { background: var(--m-surface-2); color: var(--m-ink); }
+.mk-pagination a:focus-visible { outline: 2px solid var(--m-ink); outline-offset: 2px; }
+.mk-pagination [aria-current="page"] { background: var(--m-ink); color: var(--m-surface); font-weight: 500; }
+.mk-pagination__gap { color: var(--m-ink-tertiary); }
+
+/* ── Logo marquee ────────────────────────────────────────────────────────────
+   Reduced motion gets a static wrapped row, not a slower crawl: motion is the
+   thing being objected to, so removing it is the honest answer. */
+.mk-marquee { overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, var(--m-ink) 8%, var(--m-ink) 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, var(--m-ink) 8%, var(--m-ink) 92%, transparent); }
+.mk-marquee__track { display: flex; width: max-content; gap: 56px; animation: mk-marquee 32s linear infinite; }
+.mk-marquee:hover .mk-marquee__track, .mk-marquee:focus-within .mk-marquee__track { animation-play-state: paused; }
+.mk-marquee__item { font-size: 18px; font-weight: 600; letter-spacing: -.01em; color: var(--m-ink-tertiary); white-space: nowrap; }
+@keyframes mk-marquee { to { translate: -50% 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .mk-marquee { mask-image: none; -webkit-mask-image: none; }
+  .mk-marquee__track { animation: none; flex-wrap: wrap; width: auto; justify-content: center; gap: 24px 48px; }
+  .mk-marquee__track > [aria-hidden="true"] { display: none; }
+}
+
+/* ── Rating ──────────────────────────────────────────────────────────────── */
+.mk-rating { display: inline-flex; align-items: center; gap: 8px; }
+.mk-rating__stars { display: inline-flex; gap: 2px; color: var(--m-accent); }
+.mk-rating__stars .ds-icon { fill: currentColor; stroke: none; }
+.mk-rating__stars .ds-icon[data-empty] { fill: none; stroke: currentColor; opacity: .35; }
+.mk-rating__value { font-size: 14px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.mk-rating__count { font-size: 14px; color: var(--m-ink-subtle); }

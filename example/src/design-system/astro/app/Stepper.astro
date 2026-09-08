@@ -1,0 +1,39 @@
+---
+import Icon from "./Icon.astro";
+
+/**
+ * Progress through a flow with a known number of steps. Completed steps show a
+ * check rather than their number: the number is only useful while it is ahead
+ * of you.
+ */
+export interface Step {
+  label: string;
+  href?: string;
+}
+interface Props {
+  steps: Step[];
+  /** Zero-based index of the current step. */
+  current: number;
+  class?: string;
+}
+const { steps, current, class: cls = "" } = Astro.props;
+---
+<ol class={["ds-stepper", cls].filter(Boolean).join(" ")} aria-label="Progress">
+  {steps.map((s, i) => {
+    const state = i < current ? "done" : i === current ? "current" : "todo";
+    return (
+      <Fragment>
+        <li class="ds-stepper__step" data-state={state} aria-current={state === "current" ? "step" : undefined}>
+          <span class="ds-stepper__mark">
+            {state === "done" ? <Icon name="check" size="xs" /> : i + 1}
+          </span>
+          {s.href && state !== "todo" ? <a href={s.href} class="ds-link">{s.label}</a> : <span>{s.label}</span>}
+          <span class="ds-sr-only">
+            {state === "done" ? "(completed)" : state === "current" ? "(current step)" : "(not started)"}
+          </span>
+        </li>
+        {i < steps.length - 1 && <li class="ds-stepper__bar" aria-hidden="true"></li>}
+      </Fragment>
+    );
+  })}
+</ol>

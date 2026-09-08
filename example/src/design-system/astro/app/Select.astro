@@ -1,0 +1,27 @@
+---
+export interface Option {
+  value: string;
+  label: string;
+  disabled?: boolean;
+}
+interface Props {
+  options: Option[];
+  id?: string;
+  value?: string;
+  size?: "xs" | "sm" | "md";
+  describedBy?: string;
+  class?: string;
+  [key: string]: unknown;
+}
+const { options, id, value, size = "md", describedBy, class: cls = "", ...rest } = Astro.props;
+---
+<select
+  class={["ds-select", size !== "md" && "ds-select--" + size, cls].filter(Boolean).join(" ")}
+  id={id}
+  aria-describedby={describedBy}
+  {...rest}
+>
+  {options.map((o) => (
+    <option value={o.value} selected={o.value === value} disabled={o.disabled}>{o.label}</option>
+  ))}
+</select>

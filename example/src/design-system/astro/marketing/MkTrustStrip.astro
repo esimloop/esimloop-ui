@@ -1,0 +1,23 @@
+---
+import Icon from "../app/Icon.astro";
+import type { IconName } from "../app/icons";
+
+/**
+ * A quiet row of reassurances near a call to action. Keep them true and
+ * specific: "30-day refund" earns trust, "world class" spends it.
+ */
+export interface TrustItem {
+  label: string;
+  icon?: IconName;
+}
+interface Props {
+  items: TrustItem[];
+  class?: string;
+}
+const { items, class: cls = "" } = Astro.props;
+---
+<div class={["mk-trust", cls].filter(Boolean).join(" ")}>
+  {items.map((i) => (
+    <span class="mk-trust__item"><Icon name={i.icon ?? "shield"} size="sm" />{i.label}</span>
+  ))}
+</div>

@@ -1,0 +1,20 @@
+---
+interface Props {
+  name: string;
+  src?: string;
+  size?: "xs" | "md" | "lg";
+  /** Accent fill, for the current user or workspace. */
+  accent?: boolean;
+  class?: string;
+}
+const { name, src, size = "md", accent = false, class: cls = "" } = Astro.props;
+// Two letters read better than one at every size except xs.
+const initials = name.trim().split(/\s+/).slice(0, 2).map((w) => w[0]).join("").toUpperCase();
+---
+<span
+  class={["ds-avatar", size !== "md" && "ds-avatar--" + size, accent && "ds-avatar--accent", cls].filter(Boolean).join(" ")}
+  title={name}
+>
+  {src ? <img src={src} alt="" width="40" height="40" /> : <span aria-hidden="true">{initials}</span>}
+  <span class="ds-sr-only">{name}</span>
+</span>

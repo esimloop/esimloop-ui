@@ -1,0 +1,30 @@
+---
+import Icon from "./Icon.astro";
+
+/**
+ * A toggled filter, or an applied one that can be removed. `count` shows how
+ * many rows it would keep, which is what makes a filter worth clicking.
+ */
+interface Props {
+  label: string;
+  active?: boolean;
+  count?: number;
+  /** Renders an x. The chip then reads as applied rather than available. */
+  removable?: boolean;
+  value?: string;
+  class?: string;
+}
+const { label, active = false, count, removable = false, value, class: cls = "" } = Astro.props;
+---
+<button
+  class={["ds-filter-chip", cls].filter(Boolean).join(" ")}
+  type="button"
+  aria-pressed={String(active)}
+  data-filter={value ?? label}
+>
+  {label}
+  {count !== undefined && <span class="ds-num ds-text-muted">{count.toLocaleString()}</span>}
+  {removable && (
+    <span class="ds-filter-chip__remove" aria-hidden="true"><Icon name="x" size="xs" /></span>
+  )}
+</button>

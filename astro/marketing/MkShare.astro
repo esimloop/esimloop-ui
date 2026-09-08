@@ -1,0 +1,57 @@
+---
+import Icon from "../app/Icon.astro";
+
+/**
+ * Share links, plus copy-the-URL. Uses the native share sheet where the browser
+ * has one, which is what people expect on a phone.
+ *
+ * The links are plain hrefs so they work without script.
+ */
+interface Props {
+  url: string;
+  title: string;
+  label?: string;
+  class?: string;
+}
+const { url, title, label = "Share", class: cls = "" } = Astro.props;
+const encoded = encodeURIComponent(url);
+const text = encodeURIComponent(title);
+---
+<div class={["mk-share", cls].filter(Boolean).join(" ")}>
+  <span class="mk-share__label">{label}</span>
+  <a href={`mailto:?subject=${text}&body=${encoded}`} aria-label="Share by email">
+    <Icon name="inbox" size="sm" />
+  </a>
+  <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${encoded}`} target="_blank" rel="noopener noreferrer" aria-label="Share on LinkedIn">
+    <Icon name="external" size="sm" />
+  </a>
+  <button type="button" data-mk-share={url} data-title={title} aria-label="Share or copy link">
+    <Icon name="share" size="sm" />
+  </button>
+</div>
+
+<script>
+  document.addEventListener("click", async (event) => {
+    const button = (event.target as HTMLElement).closest<HTMLElement>("[data-mk-share]");
+    if (!button) return;
+    const url = button.dataset.mkShare!;
+    const title = button.dataset.title!;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({ url, title });
+        return;
+      } catch {
+        // Cancelled, or refused. Fall through to copying.
+      }
+    }
+    try {
+      await navigator.clipboard.writeText(url);
+      const previous = button.getAttribute("aria-label")!;
+      button.setAttribute("aria-label", "Link copied");
+      setTimeout(() => button.setAttribute("aria-label", previous), 1600);
+    } catch {
+      /* nothing we can do, and a false confirmation would be worse */
+    }
+  });
+</script>

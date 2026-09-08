@@ -1,0 +1,39 @@
+---
+import Icon from "./Icon.astro";
+
+/**
+ * Collapsible sections built on <details>, so they open before any script runs
+ * and stay findable by the browser's in-page search.
+ *
+ * Independent by default. Pass `exclusive` for one-at-a-time — use it sparingly:
+ * it hides content the reader may want side by side.
+ */
+export interface AccordionItem {
+  id: string;
+  title: string;
+  body?: string;
+  open?: boolean;
+}
+interface Props {
+  items: AccordionItem[];
+  exclusive?: boolean;
+  /** Required when `exclusive`, to group the items. */
+  name?: string;
+  class?: string;
+}
+const { items, exclusive = false, name = "ds-accordion", class: cls = "" } = Astro.props;
+---
+<div class={["ds-accordion", cls].filter(Boolean).join(" ")}>
+  {items.map((item) => (
+    <details class="ds-accordion__item" open={item.open} name={exclusive ? name : undefined}>
+      <summary class="ds-accordion__summary">
+        {item.title}
+        <Icon name="chev-right" size="sm" class="ds-accordion__chevron" />
+      </summary>
+      <div class="ds-accordion__body">
+        {item.body}
+        <slot name={item.id} />
+      </div>
+    </details>
+  ))}
+</div>

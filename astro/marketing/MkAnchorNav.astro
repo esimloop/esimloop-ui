@@ -1,0 +1,43 @@
+---
+/**
+ * A sticky strip of section links that marks the section you are reading.
+ * Scroll position is observed, never polled.
+ */
+export interface Anchor {
+  id: string;
+  label: string;
+}
+interface Props {
+  items: Anchor[];
+  label?: string;
+  class?: string;
+}
+const { items, label = "On this page", class: cls = "" } = Astro.props;
+---
+<nav class={["mk-anchornav", cls].filter(Boolean).join(" ")} aria-label={label} data-mk-anchornav>
+  {items.map((i) => <a href={"#" + i.id} data-anchor={i.id}>{i.label}</a>)}
+</nav>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-mk-anchornav]").forEach((nav) => {
+    const links = [...nav.querySelectorAll<HTMLElement>("[data-anchor]")];
+    const sections = links
+      .map((l) => document.getElementById(l.dataset.anchor!))
+      .filter((s): s is HTMLElement => s !== null);
+    if (!sections.length) return;
+
+    const mark = (id: string) =>
+      links.forEach((l) => l.setAttribute("aria-current", String(l.dataset.anchor === id)));
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
+        if (visible) mark(visible.target.id);
+      },
+      { rootMargin: "-20% 0px -70% 0px" },
+    );
+    sections.forEach((s) => observer.observe(s));
+  });
+</script>

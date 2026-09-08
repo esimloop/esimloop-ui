@@ -1,0 +1,31 @@
+---
+import MkAuthor from "./MkAuthor.astro";
+
+/**
+ * The fuller card at the end of an article. MkAuthor is the byline at the top;
+ * this one carries the paragraph.
+ */
+interface Props {
+  name: string;
+  role?: string;
+  bio: string;
+  initials?: string;
+  avatar?: string;
+  class?: string;
+}
+const { name, role, bio, initials, avatar, class: cls = "" } = Astro.props;
+---
+<aside class={["mk-bio", cls].filter(Boolean).join(" ")}>
+  <MkAuthor name={name} role={role} initials={initials} avatar={avatar} size="lg" class="mk-bio__avatar" />
+  <div>
+    <p class="mk-bio__name">{name}</p>
+    {role && <p class="mk-bio__role">{role}</p>}
+    <p class="mk-bio__text">{bio}</p>
+    <slot />
+  </div>
+</aside>
+
+<style is:global>
+  /* The card already prints the name, so the byline contributes only its face. */
+  .mk-bio__avatar > span:last-child { display: none; }
+</style>

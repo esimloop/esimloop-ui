@@ -1,0 +1,19 @@
+---
+interface Props {
+  id?: string;
+  rows?: number;
+  invalid?: boolean;
+  describedBy?: string;
+  class?: string;
+  [key: string]: unknown;
+}
+const { id, rows = 4, invalid = false, describedBy, class: cls = "", ...rest } = Astro.props;
+---
+<textarea
+  class={["ds-textarea", cls].filter(Boolean).join(" ")}
+  id={id}
+  rows={rows}
+  aria-invalid={invalid ? "true" : undefined}
+  aria-describedby={describedBy}
+  {...rest}
+><slot /></textarea>
