@@ -1,0 +1,49 @@
+---
+/**
+ * Sidebar rail. Groups are static headings, never toggles - the navigation is
+ * deliberately flat.
+ */
+import Icon from "./Icon.astro";
+import type { IconName } from "./icons";
+
+export interface NavItem {
+  label: string;
+  href: string;
+  icon?: IconName;
+  /** Marks the current page. Match exactly for index routes. */
+  active?: boolean;
+}
+export interface NavGroup {
+  label: string;
+  items: NavItem[];
+}
+interface Props {
+  brand?: string;
+  groups: NavGroup[];
+  class?: string;
+}
+const { brand = "Product", groups, class: cls = "" } = Astro.props;
+---
+<div class={["ds-sidebar", cls].filter(Boolean).join(" ")} style="display:flex;width:var(--sidebar-w);height:100%;flex-direction:column">
+  <div class="ds-sidebar__brand">
+    <a href="/" style="font-size:1rem;font-weight:600;text-decoration:none;color:var(--text-primary)">{brand}</a>
+  </div>
+
+  <div style="padding:0 var(--space-3) var(--space-1)"><slot name="switcher" /></div>
+
+  <nav class="ds-sidebar__nav">
+    {groups.map((g) => (
+      <div style="margin-bottom:var(--space-1)">
+        <div class="ds-sidebar__group-label">{g.label}</div>
+        {g.items.map((i) => (
+          <a class="ds-navitem" href={i.href} aria-current={i.active ? "page" : undefined}>
+            {i.icon && <Icon name={i.icon} />}
+            <span>{i.label}</span>
+          </a>
+        ))}
+      </div>
+    ))}
+  </nav>
+
+  <div class="ds-sidebar__footer"><slot name="footer" /></div>
+</div>

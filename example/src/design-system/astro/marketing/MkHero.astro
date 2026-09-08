@@ -1,0 +1,20 @@
+---
+interface Props {
+  eyebrow?: string;
+  title: string;
+  subtitle?: string;
+  /** One line under the buttons, e.g. "No credit card required". */
+  note?: string;
+  class?: string;
+}
+const { eyebrow, title, subtitle, note, class: cls = "" } = Astro.props;
+---
+<div class={["mk-hero", cls].filter(Boolean).join(" ")}>
+  <div class="mk-container mk-narrow">
+    {eyebrow && <p class="mk-eyebrow">{eyebrow}</p>}
+    <h1 class="mk-display-xl">{title}</h1>
+    {subtitle && <p class="mk-subhead mk-muted" style="margin-top:20px">{subtitle}</p>}
+    <div class="mk-hero__ctas"><slot /></div>
+    {note && <p class="mk-hero__note">{note}</p>}
+  </div>
+</div>

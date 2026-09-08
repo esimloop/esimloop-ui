@@ -1,0 +1,19 @@
+---
+/**
+ * A page band. Sections are separated by shifting the ground a few percent and
+ * framing it with a hairline - not by alternating white and grey.
+ */
+interface Props {
+  ground?: "canvas" | "quiet" | "warm";
+  narrow?: boolean;
+  class?: string;
+  id?: string;
+}
+const { ground = "canvas", narrow = false, class: cls = "", id } = Astro.props;
+const band = ground === "quiet" ? "mk-band-quiet" : ground === "warm" ? "mk-band-warm" : "";
+---
+<section class={["mk-section", band, cls].filter(Boolean).join(" ")} id={id}>
+  <div class={["mk-container", narrow && "mk-narrow"].filter(Boolean).join(" ")}>
+    <slot />
+  </div>
+</section>

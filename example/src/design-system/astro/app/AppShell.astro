@@ -1,0 +1,60 @@
+---
+/**
+ * The application shell: fixed sidebar on the app ground, content lifted onto
+ * a raised panel that is cut away at the top left.
+ *
+ * Slots: `sidebar` (desktop rail and mobile drawer), `banner`, default (page).
+ */
+import Icon from "./Icon.astro";
+interface Props {
+  brand?: string;
+  /** Constrains the content column. */
+  width?: "default" | "narrow" | "prose" | "full";
+  class?: string;
+}
+const { brand = "Product", width = "default", class: cls = "" } = Astro.props;
+const maxWidth = {
+  default: "var(--content-max)",
+  narrow: "var(--content-max-narrow)",
+  prose: "var(--content-max-prose)",
+  full: "none",
+}[width];
+---
+<div class={["ds-shell", cls].filter(Boolean).join(" ")} style="height:100dvh;overflow:hidden">
+  <aside class="ds-sidebar"><slot name="sidebar" /></aside>
+
+  <div class="ds-main">
+    <div class="ds-topbar">
+      <button class="ds-btn ds-btn--sm ds-btn--square ds-btn--ghost" type="button" aria-label="Open navigation" data-ds-drawer-open>
+        <Icon name="menu" size="lg" />
+      </button>
+      <span style="margin-left:4px;font-weight:600">{brand}</span>
+    </div>
+
+    <div class="ds-panel-outer">
+      <div class="ds-panel">
+        <slot name="banner" />
+        <div style="min-height:0;flex:1;overflow:auto">
+          <div class="ds-page">
+            <div class="ds-page__inner" style={"max-width:" + maxWidth}>
+              <slot />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ds-scrim" hidden data-ds-drawer>
+    <div class="ds-drawer"><slot name="sidebar" /></div>
+  </div>
+</div>
+
+<script>
+  const scrim = document.querySelector<HTMLElement>("[data-ds-drawer]");
+  const openBtn = document.querySelector<HTMLElement>("[data-ds-drawer-open]");
+  const close = () => scrim && (scrim.hidden = true);
+  openBtn?.addEventListener("click", () => scrim && (scrim.hidden = false));
+  scrim?.addEventListener("click", (e) => { if (e.target === scrim) close(); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") close(); });
+</script>

@@ -1,0 +1,90 @@
+/* ============================================================================
+   MARKETING THEME — "blank"
+   A neutral, WCAG-AA starting point for the public site. Same token contract as
+   themes/marketing-openseo.css, so every component in css/marketing.css works
+   unchanged.
+
+   THIS IS THE FILE YOU EDIT PER PROJECT.
+
+   The structure to preserve when you re-skin it:
+   - FOUR grounds, not one. Sections are separated by shifting the ground a few
+     percent and framing it with a hairline — that is what replaces alternating
+     white/grey banding. Keep four distinguishable but closely related values.
+   - ONE accent, used once per page. If you find yourself using --m-accent twice,
+     the page has two calls to action and the design has stopped working.
+   - White (or your lightest surface) on the canvas IS the elevation mechanism.
+     Cards have a hairline and no shadow.
+
+   LIGHT-ONLY. There is no dark palette here, and adding one is a design project
+   rather than a token swap: the four grounds have no automatic dark equivalents.
+   ========================================================================== */
+
+.mk {
+  /* --- Grounds — keep four, keep them close together --------------------- */
+  --m-canvas:        #FAFAFA;   /* page ground                              */
+  --m-surface:       #FFFFFF;   /* cards, nav, mockup frames                */
+  --m-surface-2:     #F0F0F0;   /* quiet insets, icon tiles                 */
+  --m-band-quiet:    #F5F5F5;   /* a half step off canvas, hairline-framed  */
+  --m-band-warm:     #EFEFEF;   /* footer and feature bands                 */
+
+  /* --- Ink --------------------------------------------------------------- */
+  --m-ink:           #111111;   /* 18.9:1 on canvas — headlines, body, CTA  */
+  --m-ink-muted:     #5C5C5C;   /*  6.8:1 — subheads, footer, nav at rest   */
+  --m-ink-subtle:    #6E6E6E;   /*  5.2:1 — notes, handles, labels          */
+  --m-ink-tertiary:  #9A9A9A;   /*  2.8:1 — DECORATIVE ONLY, never text     */
+
+  /* --- Lines ------------------------------------------------------------- */
+  --m-hairline:      #DDDDDD;   /* every card, band and section edge        */
+  --m-hairline-soft: #EDEDED;   /* inner edge of a mockup media well        */
+  --m-border-subtle: #E0E0E0;   /* nav border                               */
+
+  /* --- Accent — ONE saturated moment per page ---------------------------- */
+  --m-accent:        #1D4ED8;   /* 6.7:1 as text, 6.7:1 for white-on-accent */
+  --m-accent-hover:  #1A45BE;
+
+  /* --- Dark surfaces ------------------------------------------------------ */
+  --m-inverse:         #000000;
+  --m-inverse-surface: #2E2E2E;
+  --m-inverse-muted:   #9A9A9A;
+  --m-feat-bg:         #1C1C1C;   /* featured plan card                     */
+  --m-term-bg:         #1C1C1C;   /* terminal                               */
+  --m-term-fg:         #D8D8D8;   /* 11.2:1 on the terminal ground          */
+  --m-term-rule:       #2A2A2A;
+
+  /* --- Testimonial band --------------------------------------------------- */
+  --m-q-bg:          #ECECEC;   /* band behind the cards                    */
+  --m-q-card:        #FFFFFF;
+  --m-q-card-border: #DCDCDC;
+  --m-q-text:        #111111;
+  --m-q-muted:       #6E6E6E;
+  --m-q-mark:        #BDBDBD;   /* opening quote glyph                      */
+
+  /* --- Radii — buttons are NEVER pills ------------------------------------
+     The pill radius is reserved for the nav, avatars and the floating
+     contact button, so a rounded rectangle always reads as an action and a
+     capsule always reads as chrome.                                       */
+  --m-radius-btn:     8px;
+  --m-radius-btn-lg:  10px;
+  --m-radius-card:    12px;
+  --m-radius-mockup:  16px;
+  --m-radius-panel:   16px;
+  --m-radius-pill:    9999px;
+
+  /* --- Type --------------------------------------------------------------- */
+  --m-font: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --m-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* --- Layout -------------------------------------------------------------- */
+  --m-container: 1232px;   /* section container                              */
+  --m-narrow:     760px;   /* prose and centred headline blocks              */
+  --m-nav:       1024px;   /* narrower than the content it floats over       */
+
+  font-family: var(--m-font);
+  background: var(--m-canvas);
+  color: var(--m-ink);
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}

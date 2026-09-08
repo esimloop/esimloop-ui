@@ -1,0 +1,35 @@
+---
+interface Props {
+  label: string;
+  value: string;
+  /** Signed percentage. The glyph carries direction, so colour is not alone. */
+  delta?: number | null;
+  deltaLabel?: string;
+  hint?: string;
+  loading?: boolean;
+  class?: string;
+}
+const { label, value, delta = null, deltaLabel, hint, loading = false, class: cls = "" } = Astro.props;
+const dir = delta === null ? null : delta > 0 ? "up" : delta < 0 ? "down" : "flat";
+const glyph = dir === "up" ? "\u25B2" : dir === "down" ? "\u25BC" : "\u2014";
+---
+<div class={["ds-kpi", cls].filter(Boolean).join(" ")}>
+  <p class="ds-kpi__label">{label}</p>
+  {loading ? (
+    <Fragment>
+      <div class="ds-skeleton" style="height:32px;width:70%;margin-top:6px" />
+      <div class="ds-skeleton" style="height:12px;width:45%;margin-top:8px" />
+    </Fragment>
+  ) : (
+    <Fragment>
+      <p class="ds-kpi__value">{value}</p>
+      {dir !== null && (
+        <p class={"ds-kpi__delta ds-delta--" + dir}>
+          {glyph} {Math.abs(delta as number)}%
+          {deltaLabel && <span class="ds-text-muted" style="font-weight:400;margin-left:4px">{deltaLabel}</span>}
+        </p>
+      )}
+      {hint && dir === null && <p class="ds-kpi__hint">{hint}</p>}
+    </Fragment>
+  )}
+</div>

@@ -1,0 +1,81 @@
+---
+import MarketingLayout from "../layouts/MarketingLayout.astro";
+import MkNav from "../design-system/astro/marketing/MkNav.astro";
+import MkHero from "../design-system/astro/marketing/MkHero.astro";
+import MkSection from "../design-system/astro/marketing/MkSection.astro";
+import MkButton from "../design-system/astro/marketing/MkButton.astro";
+import MkCard from "../design-system/astro/marketing/MkCard.astro";
+import MkQuote from "../design-system/astro/marketing/MkQuote.astro";
+import MkFooter from "../design-system/astro/marketing/MkFooter.astro";
+import Icon from "../design-system/astro/app/Icon.astro";
+
+const features = [
+  { title: "Keyword research", body: "Find ideas, demand, difficulty and live results.", icon: "search" },
+  { title: "Domain overview", body: "Estimate organic traffic and ranking keywords.", icon: "globe" },
+  { title: "Site audit", body: "Crawl pages and surface technical issues.", icon: "audit" },
+] as const;
+---
+<MarketingLayout title="Product" description="Replace this description.">
+  <MkNav
+    brand="Product"
+    links={[
+      { label: "Features", href: "#features" },
+      { label: "Pricing", href: "#" },
+    ]}
+    ctaHref="/app"
+  />
+
+  <MkHero
+    title="A headline that says what this does."
+    subtitle="One sentence of support underneath, in muted ink, never wider than about fifty characters."
+    note="No credit card required"
+  >
+    <MkButton size="lg" variant="primary" href="/app">Start free</MkButton>
+    <MkButton size="lg" variant="secondary" href="#features">See features</MkButton>
+  </MkHero>
+
+  <MkSection ground="quiet" id="features">
+    <div style="max-width:640px">
+      <p class="mk-eyebrow">Everything in one place</p>
+      <h2 class="mk-display-md">See the whole picture</h2>
+      <p class="mk-body-lg mk-muted" style="margin:16px 0 0">
+        Replace this copy. The accent colour is used exactly once on this page - on
+        the one action that matters most.
+      </p>
+    </div>
+
+    <div class="mk-feature-grid">
+      {features.map((f) => (
+        <MkCard kind="feature" title={f.title} body={f.body} href="#">
+          <div
+            slot="media"
+            style="height:120px;display:grid;place-items:center;color:var(--m-ink-tertiary)"
+          >
+            <Icon name={f.icon} size="xl" />
+          </div>
+        </MkCard>
+      ))}
+    </div>
+  </MkSection>
+
+  <div class="mk-quotes">
+    <div class="mk-container">
+      <h2 class="mk-display-md" style="text-align:center">What people say</h2>
+      <div class="mk-quote-grid">
+        <MkQuote quote="Replace with a real quote." name="A. Rivera" meta="Head of growth" initials="AR" />
+        <MkQuote quote="Replace with a real quote." name="S. Moreau" meta="Founder" initials="SM" />
+        <MkQuote quote="Replace with a real quote." name="T. Lambert" meta="Consultant" initials="TL" />
+      </div>
+    </div>
+  </div>
+
+  <MkFooter
+    brand="Product"
+    blurb="Product updates and the occasional behind-the-scenes."
+    columns={[
+      { label: "Product", links: [{ label: "Features", href: "#features" }, { label: "Pricing", href: "#" }] },
+      { label: "Resources", links: [{ label: "Docs", href: "#" }, { label: "Blog", href: "#" }] },
+      { label: "Company", links: [{ label: "Privacy", href: "#" }, { label: "Terms", href: "#" }] },
+    ]}
+  />
+</MarketingLayout>

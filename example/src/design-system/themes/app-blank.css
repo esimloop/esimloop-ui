@@ -1,0 +1,253 @@
+/* ============================================================================
+   APP THEME — "blank"
+   A neutral, WCAG-AA starting point. Same token contract as app-openseo.css,
+   so every component in css/system.css works unchanged.
+
+   THIS IS THE FILE YOU EDIT PER PROJECT. Nothing else needs to change.
+
+   Differences from app-openseo.css, on purpose:
+   - Feedback hues are darkened for the light theme so they pass AA as TEXT.
+     (The reconstructed theme shares one set across both themes, which fails AA
+     on white — see section 09 of the spec.) Here, light and dark each get their
+     own set. Measured ratios are in the comments.
+   - Neutrals are pure grey. Give them a slight hue bias toward your accent to
+     make the palette feel chosen rather than inherited.
+
+   WHERE TO START
+   1. --accent            your brand colour (must reach 4.5:1 on --surface-card)
+   2. --content           your ink
+   3. --surface-app / --surface-card / --surface-sunken   your ramp
+   4. --font-sans         your typeface
+   Everything else derives.
+   ========================================================================== */
+
+:root {
+  color-scheme: light;
+
+  /* --- Base ramp --------------------------------------------------------- */
+  --surface-card:      #FFFFFF;   /* content panel, cards, table body          */
+  --surface-app:       #F6F6F6;   /* app ground, sidebar, sticky table headers */
+  --surface-sunken:    #E5E5E5;   /* default border, wells, neutral badges     */
+  --content:           #141414;   /* foreground — every text tier derives      */
+
+  /* --- Text scale (opacity steps on --content) ---------------------------
+     100% 18.4:1 AAA · 70% 6.8:1 AA · 60% 4.8:1 AA
+     50%  3.5:1 large text only · 40% 2.6:1 decorative only               */
+  --text-primary:      var(--content);
+  --text-secondary:    color-mix(in oklab, var(--content) 70%, transparent);
+  --text-muted:        color-mix(in oklab, var(--content) 60%, transparent);
+  --text-subtle:       color-mix(in oklab, var(--content) 50%, transparent);
+  --text-faint:        color-mix(in oklab, var(--content) 40%, transparent);
+  --text-disabled:     color-mix(in oklab, var(--content) 40%, transparent);
+  --text-placeholder:  color-mix(in oklab, var(--content) 40%, transparent);
+
+  /* --- Borders ------------------------------------------------------------ */
+  --border-width:      1px;
+  --border-default:    var(--surface-sunken);
+  --border-subtle:     color-mix(in oklab, var(--content) 5%,  transparent);
+  --border-field:      color-mix(in oklab, var(--content) 20%, transparent);
+  --border-strong:     color-mix(in oklab, var(--content) 15%, transparent);
+
+  /* --- Interaction surfaces ---------------------------------------------- */
+  --surface-hover:      color-mix(in oklab, var(--surface-app) 50%, transparent);
+  --surface-nav-hover:  color-mix(in oklab, var(--surface-sunken) 30%, transparent);
+  --surface-nav-active: color-mix(in oklab, var(--surface-sunken) 50%, transparent);
+  --surface-selected:   color-mix(in oklab, var(--accent) 5%, transparent);
+
+  /* --- Accent ------------------------------------------------------------- */
+  --accent:            #1D4ED8;   /* 6.7:1 on white, 6.7:1 for white-on-accent */
+  --accent-content:    #FFFFFF;
+  --accent-hover:      color-mix(in oklab, var(--accent), #000 7%);
+  --accent-active:     color-mix(in oklab, var(--accent), #000 5%);
+  --accent-soft:       color-mix(in oklab, var(--accent) 15%, transparent);
+  --accent-tint:       color-mix(in oklab, var(--accent) 10%, transparent);
+
+  --secondary:         #15803D;
+  --neutral:           #1F1F1F;
+  --neutral-content:   #FFFFFF;
+
+  /* --- Feedback — light set, all AA as text on --surface-card ------------- */
+  --success:           #15803D;   /* 5.0:1 */
+  --warning:           #B45309;   /* 5.0:1 */
+  --error:             #B91C1C;   /* 6.5:1 */
+  --info:              #0369A1;   /* 5.9:1 */
+  --success-content:   #FFFFFF;
+  --warning-content:   #FFFFFF;
+  --error-content:     #FFFFFF;
+  --info-content:      #FFFFFF;
+
+  /* --- Radii -------------------------------------------------------------- */
+  --radius-selector:   0.5rem;
+  --radius-field:      0.5rem;
+  --radius-box:        0.75rem;
+  --radius-sm:         0.375rem;
+  --radius-xs:         0.25rem;
+  --radius-full:       9999px;
+
+  /* --- Control sizing ------------------------------------------------------ */
+  --size-field:        0.25rem;
+  --size-selector:     0.25rem;
+  --control-xs:        1.5rem;
+  --control-sm:        2rem;
+  --control-md:        2.5rem;
+  --control-lg:        3rem;
+
+  /* --- Elevation ----------------------------------------------------------
+     Flat by default: only genuinely floating layers get a shadow. If your
+     brand wants elevation, change these — but change them everywhere at once,
+     not per component.                                                     */
+  --depth: 0;
+  --shadow-none:     none;
+  --shadow-popover:  0 4px 6px -1px rgb(0 0 0 / .1), 0 2px 4px -2px rgb(0 0 0 / .1);
+  --shadow-modal:    0 20px 25px -5px rgb(0 0 0 / .1), 0 8px 10px -6px rgb(0 0 0 / .1);
+  --shadow-tooltip:  0 4px 6px -1px rgb(0 0 0 / .1), 0 2px 4px -2px rgb(0 0 0 / .1);
+  --shadow-bulkbar:  0 25px 50px -12px rgb(0 0 0 / .25);
+
+  /* --- Typography ---------------------------------------------------------- */
+  --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+               "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco, Consolas,
+               "Liberation Mono", "Courier New", monospace;
+
+  /* --- Motion -------------------------------------------------------------- */
+  --ease:       cubic-bezier(0, 0, .2, 1);
+  --ease-inout: cubic-bezier(.4, 0, .2, 1);
+  --dur-fast:   .15s;
+  --dur-base:   .2s;
+  --dur-slow:   .3s;
+
+  /* --- Chart ---------------------------------------------------------------- */
+  --chart-grid:           color-mix(in oklab, var(--content) 14%, transparent);
+  --chart-axis:           color-mix(in oklab, var(--content) 55%, transparent);
+  --chart-fill-start:     .32;
+  --chart-fill-end:       .05;
+  --chart-tooltip-bg:     var(--surface-card);
+  --chart-tooltip-border: var(--border-default);
+  --chart-tooltip-shadow: rgb(0 0 0 / .1);
+  --chart-series-1: var(--accent);
+  --chart-series-2: var(--success);
+  --chart-series-3: var(--warning);
+  --chart-series-4: var(--error);
+  --chart-series-5: var(--info);
+
+  /* --- Layout --------------------------------------------------------------- */
+  --sidebar-w:          15rem;
+  --topbar-h-mobile:    2.75rem;
+  --content-max:        80rem;
+  --content-max-narrow: 64rem;
+  --content-max-prose:  48rem;
+  --page-pad-x:         1rem;
+  --page-pad-x-md:      1.5rem;
+
+  /* --- Severity ------------------------------------------------------------- */
+  --sev-critical: var(--error);
+  --sev-warning:  var(--warning);
+  --sev-info:     color-mix(in oklab, var(--content) 30%, transparent);
+  --sev-passed:   var(--success);
+
+  /* --- Score ramp (0–100 in six steps, plus n/a) ----------------------------
+     Domain-specific. Rename freely — this is "keyword difficulty" in an SEO
+     product, but it fits any low-is-good / high-is-bad score.             */
+  --kd-na-bg: color-mix(in oklab, #94a3b8 12%, transparent); --kd-na-fg: #475569; --kd-na-ring: color-mix(in oklab, #94a3b8 28%, transparent);
+  --kd-1-bg:  color-mix(in oklab, #10b981 15%, transparent); --kd-1-fg:  #065f46; --kd-1-ring:  color-mix(in oklab, #10b981 30%, transparent);
+  --kd-2-bg:  color-mix(in oklab, #84cc16 15%, transparent); --kd-2-fg:  #3f6212; --kd-2-ring:  color-mix(in oklab, #84cc16 30%, transparent);
+  --kd-3-bg:  color-mix(in oklab, #eab308 16%, transparent); --kd-3-fg:  #854d0e; --kd-3-ring:  color-mix(in oklab, #eab308 32%, transparent);
+  --kd-4-bg:  color-mix(in oklab, #f97316 16%, transparent); --kd-4-fg:  #9a3412; --kd-4-ring:  color-mix(in oklab, #f97316 32%, transparent);
+  --kd-5-bg:  color-mix(in oklab, #ef4444 15%, transparent); --kd-5-fg:  #991b1b; --kd-5-ring:  color-mix(in oklab, #ef4444 30%, transparent);
+  --kd-6-bg:  color-mix(in oklab, #b91c1c 18%, transparent); --kd-6-fg:  #7f1d1d; --kd-6-ring:  color-mix(in oklab, #b91c1c 32%, transparent);
+
+  /* --- Tag chips (categorical, user-assigned labels) ------------------------ */
+  --tag-slate-bg:   color-mix(in oklab, #64748b 14%, transparent); --tag-slate-fg:   #334155;
+  --tag-rose-bg:    color-mix(in oklab, #f43f5e 14%, transparent); --tag-rose-fg:    #9f1239;
+  --tag-amber-bg:   color-mix(in oklab, #f59e0b 16%, transparent); --tag-amber-fg:   #92400e;
+  --tag-lime-bg:    color-mix(in oklab, #84cc16 16%, transparent); --tag-lime-fg:    #3f6212;
+  --tag-emerald-bg: color-mix(in oklab, #10b981 14%, transparent); --tag-emerald-fg: #065f46;
+  --tag-sky-bg:     color-mix(in oklab, #0ea5e9 14%, transparent); --tag-sky-fg:     #075985;
+  --tag-violet-bg:  color-mix(in oklab, #8b5cf6 16%, transparent); --tag-violet-fg:  #5b21b6;
+  --tag-fuchsia-bg: color-mix(in oklab, #d946ef 14%, transparent); --tag-fuchsia-fg: #86198f;
+
+  /* --- Type scale -----------------------------------------------------------
+     Every style needs size, line height, weight and tracking. The skeleton
+     reads all four, so a theme must declare all four or the component falls
+     back to the browser default.                                          */
+  --t-display-size: 4.5rem;   --t-display-lh: 1.05;   --t-display-ls: -0.028em; --t-display-w: 500;
+  --t-h1-size: 1.5rem;        --t-h1-lh: 2rem;        --t-h1-ls: -0.01em;       --t-h1-w: 600;
+  --t-h2-size: 1.125rem;      --t-h2-lh: 1.75rem;     --t-h2-ls: -0.005em;      --t-h2-w: 600;
+  --t-h3-size: 1rem;          --t-h3-lh: 1.5rem;      --t-h3-ls: 0;             --t-h3-w: 600;
+  --t-h4-size: .875rem;       --t-h4-lh: 1.25rem;     --t-h4-ls: 0;             --t-h4-w: 600;
+  --t-body-lg-size: 1rem;     --t-body-lg-lh: 1.5rem;
+  --t-body-size: .875rem;     --t-body-lh: 1.25rem;
+  --t-body-sm-size: .75rem;   --t-body-sm-lh: 1rem;
+  --t-label-size: .75rem;     --t-label-lh: 1rem;     --t-label-ls: 0.05em;     --t-label-w: 600;
+  --t-table-size: .75rem;     --t-table-lh: 1rem;
+  --t-table-xs-size: .6875rem;--t-table-xs-lh: 1rem;
+  --t-caption-size: .6875rem; --t-caption-lh: 1rem;
+  --t-metric-size: 1.5rem;    --t-metric-lh: 2rem;    --t-metric-w: 600;
+  --t-metric-sm-size: 1.25rem;--t-metric-sm-lh: 1.75rem;
+  --t-mono-size: .75rem;      --t-mono-lh: 1rem;
+
+  /* --- Spacing (4px rhythm) -------------------------------------------------- */
+  --space-0-5: .125rem; --space-1: .25rem;  --space-1-5: .375rem; --space-2: .5rem;
+  --space-2-5: .625rem; --space-3: .75rem;  --space-4: 1rem;      --space-5: 1.25rem;
+  --space-6: 1.5rem;    --space-8: 2rem;    --space-10: 2.5rem;   --space-12: 3rem;
+  --space-16: 4rem;
+
+  /* --- Framework compatibility ------------------------------------------------
+     Kept so a daisyUI/Tailwind build reads the same flat, noiseless surfaces
+     the components assume. Leave at 0 unless you deliberately want texture.  */
+  --noise: 0;
+}
+
+/* ---- Dark: OS preference, unless the viewer explicitly chose light -------- */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --surface-card:   #171717;
+    --surface-app:    #0D0D0D;
+    --surface-sunken: #2B2B2B;
+    --content:        #EDEDED;
+    --accent:         #7EA6F0;   /* 7.5:1 on #171717 */
+    --accent-content: #0D0D0D;
+    --accent-hover:   color-mix(in oklab, var(--accent), #fff 8%);
+    --secondary:      #4ADE80;
+    --neutral:        #D4D4D4;
+    --neutral-content:#171717;
+    --success:        #4ADE80;   /* 10.6:1 */
+    --warning:        #FBBF24;   /* 11.0:1 */
+    --error:          #F87171;   /*  6.7:1 */
+    --info:           #38BDF8;   /*  8.6:1 */
+    --success-content:#0D0D0D; --warning-content:#0D0D0D;
+    --error-content:  #0D0D0D; --info-content:   #0D0D0D;
+    --kd-na-fg: #cbd5e1; --kd-1-fg: #6ee7b7; --kd-2-fg: #bef264; --kd-3-fg: #fde047;
+    --kd-4-fg:  #fdba74; --kd-5-fg: #fca5a5; --kd-6-fg: #fda4af;
+    --tag-slate-fg:  #cbd5e1; --tag-rose-fg:   #fda4af; --tag-amber-fg:  #fcd34d;
+    --tag-lime-fg:   #d9f99d; --tag-emerald-fg:#6ee7b7; --tag-sky-fg:    #7dd3fc;
+    --tag-violet-fg: #c4b5fd; --tag-fuchsia-fg:#f5d0fe;
+  }
+}
+
+/* ---- Dark: explicit choice ------------------------------------------------ */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --surface-card:   #171717;
+  --surface-app:    #0D0D0D;
+  --surface-sunken: #2B2B2B;
+  --content:        #EDEDED;
+  --accent:         #7EA6F0;
+  --accent-content: #0D0D0D;
+  --accent-hover:   color-mix(in oklab, var(--accent), #fff 8%);
+  --secondary:      #4ADE80;
+  --neutral:        #D4D4D4;
+  --neutral-content:#171717;
+  --success:        #4ADE80;
+  --warning:        #FBBF24;
+  --error:          #F87171;
+  --info:           #38BDF8;
+  --success-content:#0D0D0D; --warning-content:#0D0D0D;
+  --error-content:  #0D0D0D; --info-content:   #0D0D0D;
+  --kd-na-fg: #cbd5e1; --kd-1-fg: #6ee7b7; --kd-2-fg: #bef264; --kd-3-fg: #fde047;
+  --kd-4-fg:  #fdba74; --kd-5-fg: #fca5a5; --kd-6-fg: #fda4af;
+  --tag-slate-fg:  #cbd5e1; --tag-rose-fg:   #fda4af; --tag-amber-fg:  #fcd34d;
+  --tag-lime-fg:   #d9f99d; --tag-emerald-fg:#6ee7b7; --tag-sky-fg:    #7dd3fc;
+  --tag-violet-fg: #c4b5fd; --tag-fuchsia-fg:#f5d0fe;
+}

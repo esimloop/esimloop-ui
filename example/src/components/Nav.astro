@@ -1,0 +1,40 @@
+---
+import Sidebar from "../design-system/astro/app/Sidebar.astro";
+import type { NavGroup } from "../design-system/astro/app/Sidebar.astro";
+
+interface Props {
+  active?: string;
+}
+const { active = "dashboard" } = Astro.props;
+
+// Grouped by what the data is ABOUT: tools that can point at any domain, versus
+// this workspace's own site. That distinction is the information architecture.
+const groups: NavGroup[] = [
+  {
+    label: "Overview",
+    items: [{ label: "Dashboard", href: "/app", icon: "dashboard", active: active === "dashboard" }],
+  },
+  {
+    label: "Research",
+    items: [
+      { label: "Keyword research", href: "/app", icon: "search", active: active === "keywords" },
+      { label: "Domain overview", href: "/app", icon: "globe", active: active === "domain" },
+      { label: "Backlinks", href: "/app", icon: "link", active: active === "backlinks" },
+    ],
+  },
+  {
+    label: "My site",
+    items: [
+      { label: "Rank tracking", href: "/app", icon: "trend", active: active === "rank" },
+      { label: "Site audit", href: "/app", icon: "audit", active: active === "audit" },
+    ],
+  },
+];
+---
+<Sidebar brand="Product" groups={groups}>
+  <button slot="switcher" class="ds-switcher" type="button">
+    <span class="ds-switcher__avatar">W</span>
+    <span class="ds-switcher__name">Workspace</span>
+  </button>
+  <a slot="footer" class="ds-navitem" href="/app"><span>Settings</span></a>
+</Sidebar>

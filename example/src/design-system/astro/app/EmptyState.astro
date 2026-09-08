@@ -1,0 +1,21 @@
+---
+import Icon from "./Icon.astro";
+import type { IconName } from "./icons";
+
+interface Props {
+  icon?: IconName;
+  title: string;
+  /** Say why it is empty and what to do next, not just "no data". */
+  body?: string;
+  class?: string;
+}
+const { icon = "inbox", title, body, class: cls = "" } = Astro.props;
+---
+<div class={["ds-empty", cls].filter(Boolean).join(" ")}>
+  <Icon name={icon} size="xl" />
+  <div>
+    <p class="ds-empty__title">{title}</p>
+    {body && <p class="ds-empty__body" style="margin-top:6px">{body}</p>}
+  </div>
+  <slot />
+</div>

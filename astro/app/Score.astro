@@ -1,0 +1,26 @@
+---
+/**
+ * A 0-100 score as a tinted circle. Low is good.
+ * The number is always rendered, so the tier colour reinforces it and is never
+ * the only channel.
+ */
+interface Props {
+  value: number | null;
+  /** Names the metric for assistive tech, e.g. "Keyword difficulty 41". */
+  label?: string;
+  class?: string;
+}
+const { value, label, class: cls = "" } = Astro.props;
+
+function tier(v: number | null): string {
+  if (v === null) return "na";
+  if (v < 15) return "1";
+  if (v < 30) return "2";
+  if (v < 50) return "3";
+  if (v < 70) return "4";
+  if (v < 85) return "5";
+  return "6";
+}
+const classes = ["ds-score", "ds-score--" + tier(value), cls].filter(Boolean).join(" ");
+---
+<span class={classes} title={label} aria-label={label}>{value === null ? "\u2014" : value}</span>

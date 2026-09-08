@@ -1,0 +1,45 @@
+{
+  "name": "seo-design-system",
+  "version": "1.0.0",
+  "description": "A data-dense design system for SEO SaaS products: an application layer and a marketing layer, with swappable themes.",
+  "type": "module",
+  "license": "MIT",
+  "private": true,
+  "files": [
+    "css",
+    "themes",
+    "astro",
+    "bin",
+    "scripts",
+    "docs"
+  ],
+  "exports": {
+    "./css/*": "./css/*",
+    "./themes/*": "./themes/*",
+    "./astro/*": "./astro/*",
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "seo-ds": "./bin/init.mjs"
+  },
+  "scripts": {
+    "check": "node scripts/check-tokens.mjs",
+    "init": "node bin/init.mjs",
+    "example": "node bin/init.mjs example --name example --theme blank --force",
+    "example:install": "npm --prefix example install",
+    "example:dev": "npm --prefix example run dev",
+    "example:build": "npm --prefix example run build",
+    "verify": "npm run check && npm run example && npm run example:install && npm run example:build"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [
+    "design-system",
+    "design-tokens",
+    "astro",
+    "seo",
+    "saas",
+    "dashboard"
+  ]
+}

@@ -1,0 +1,35 @@
+---
+/**
+ * The floating pill nav. Narrower than the content it floats over - that inset
+ * is what makes it read as an object rather than a bar.
+ *
+ * Slots: `menu` (mega-menu panels), `end` (extra actions before Sign in).
+ */
+export interface NavLink {
+  label: string;
+  href: string;
+}
+interface Props {
+  brand?: string;
+  links?: NavLink[];
+  ctaLabel?: string;
+  ctaHref?: string;
+  class?: string;
+}
+const { brand = "Product", links = [], ctaLabel = "Sign in", ctaHref = "#", class: cls = "" } = Astro.props;
+---
+<div style="padding:24px 16px 0">
+  <div style="max-width:var(--m-nav);margin-inline:auto">
+    <nav class={["mk-nav", cls].filter(Boolean).join(" ")} aria-label="Main">
+      <a class="mk-nav__brand" href="/">{brand}</a>
+      <div class="mk-nav__links">
+        {links.map((l) => <a class="mk-nav__link" href={l.href}>{l.label}</a>)}
+        <slot name="menu" />
+      </div>
+      <div class="mk-nav__end">
+        <slot name="end" />
+        <a class="mk-nav__signin" href={ctaHref}>{ctaLabel}</a>
+      </div>
+    </nav>
+  </div>
+</div>

@@ -1,0 +1,33 @@
+---
+/**
+ * The dense KPI row: one bordered container whose 1px grid gaps become the
+ * dividers, so the cells carry no borders of their own.
+ */
+export interface Stat {
+  label: string;
+  value: string;
+  tone?: "success" | "warning" | "error";
+  sub?: string;
+}
+interface Props {
+  stats: Stat[];
+  columns?: 2 | 3 | 4;
+  class?: string;
+}
+const { stats, columns = 4, class: cls = "" } = Astro.props;
+---
+<div class={["ds-statstrip", cls].filter(Boolean).join(" ")} data-columns={columns} style="grid-template-columns:repeat(2,1fr)">
+  {stats.map((s) => (
+    <div>
+      <p class="ds-statstrip__label">{s.label}</p>
+      <p class="ds-statstrip__value" style={s.tone ? "color:var(--" + s.tone + ")" : undefined}>{s.value}</p>
+      {s.sub && <div class="ds-statstrip__sub">{s.sub}</div>}
+    </div>
+  ))}
+</div>
+<style is:global>
+  @media (min-width: 640px) {
+    .ds-statstrip[data-columns="3"] { grid-template-columns: repeat(3, 1fr) !important; }
+    .ds-statstrip[data-columns="4"] { grid-template-columns: repeat(4, 1fr) !important; }
+  }
+</style>

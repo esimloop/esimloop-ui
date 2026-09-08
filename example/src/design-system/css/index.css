@@ -1,0 +1,12 @@
+/* ============================================================================
+   SEO PLATFORM DESIGN SYSTEM — entry point (SKELETON ONLY)
+   Load a theme FIRST, then this file.
+
+     @import "seo-design-system/themes/app-blank.css";
+     @import "seo-design-system/themes/marketing-blank.css";
+     @import "seo-design-system/css/index.css";
+
+   Import only the layer you need if a project is app-only or site-only.
+   ========================================================================== */
+@import "./system.css";
+@import "./marketing.css";

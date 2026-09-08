@@ -1,0 +1,27 @@
+---
+interface Props {
+  /** Adds a header row separated by a hairline. */
+  title?: string;
+  /** Removes body padding so a table can sit flush to the card edge. */
+  flush?: boolean;
+  class?: string;
+}
+const { title, flush = false, class: cls = "" } = Astro.props;
+const hasActions = Astro.slots.has("actions");
+const hasHeader = Boolean(title) || hasActions;
+---
+<div class={["ds-card", flush && "ds-card--flush", cls].filter(Boolean).join(" ")}>
+  {hasHeader && (
+    <div class="ds-card__header">
+      {title && <h2 class="ds-h3">{title}</h2>}
+      {hasActions && <div class="row-tight"><slot name="actions" /></div>}
+    </div>
+  )}
+  {flush ? (
+    <div class={hasHeader ? "ds-card__divider" : undefined}><slot /></div>
+  ) : (
+    <div class={["ds-card__body", hasHeader && "ds-card__divider"].filter(Boolean).join(" ")}>
+      <slot />
+    </div>
+  )}
+</div>

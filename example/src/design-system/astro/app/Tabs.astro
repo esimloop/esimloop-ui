@@ -1,0 +1,24 @@
+---
+export interface Tab {
+  id: string;
+  label: string;
+  disabled?: boolean;
+  href?: string;
+}
+interface Props {
+  tabs: Tab[];
+  active: string;
+  label?: string;
+  class?: string;
+}
+const { tabs, active, label = "Sections", class: cls = "" } = Astro.props;
+---
+<div class={["ds-tabs", cls].filter(Boolean).join(" ")} role="tablist" aria-label={label}>
+  {tabs.map((t) =>
+    t.href ? (
+      <a class="ds-tab" role="tab" href={t.href} aria-selected={String(t.id === active)}>{t.label}</a>
+    ) : (
+      <button class="ds-tab" type="button" role="tab" aria-selected={String(t.id === active)} disabled={t.disabled} data-tab={t.id}>{t.label}</button>
+    ),
+  )}
+</div>

@@ -1,0 +1,18 @@
+---
+interface Props {
+  variant?: "primary" | "secondary" | "accent";
+  size?: "md" | "lg";
+  href?: string;
+  /** Renders a nudging arrow. Use on the one link that continues the story. */
+  arrow?: boolean;
+  class?: string;
+  [key: string]: unknown;
+}
+const { variant = "primary", size = "md", href, arrow = false, class: cls = "", ...rest } = Astro.props;
+const classes = ["mk-btn", size === "lg" && "mk-btn-lg", "mk-btn-" + variant, cls].filter(Boolean).join(" ");
+---
+{href ? (
+  <a class={classes} href={href} {...rest}><slot />{arrow && <span class="mk-arrow" aria-hidden="true">&#8594;</span>}</a>
+) : (
+  <button class={classes} type="button" {...rest}><slot />{arrow && <span class="mk-arrow" aria-hidden="true">&#8594;</span>}</button>
+)}

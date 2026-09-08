@@ -1,0 +1,15 @@
+---
+interface Props {
+  tone?: "default" | "neutral" | "success" | "warning" | "error" | "info" | "accent";
+  size?: "xs" | "sm" | "md";
+  class?: string;
+}
+const { tone = "default", size = "sm", class: cls = "" } = Astro.props;
+const classes = [
+  "ds-badge",
+  size !== "md" && "ds-badge--" + size,
+  tone !== "default" && "ds-badge--" + tone,
+  cls,
+].filter(Boolean).join(" ");
+---
+<span class={classes}><slot /></span>

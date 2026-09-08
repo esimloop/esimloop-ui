@@ -1,0 +1,32 @@
+---
+export interface FooterColumn {
+  label: string;
+  links: { label: string; href: string }[];
+}
+interface Props {
+  brand?: string;
+  blurb?: string;
+  columns?: FooterColumn[];
+  class?: string;
+}
+const { brand = "Product", blurb, columns = [], class: cls = "" } = Astro.props;
+---
+<footer class={["mk-footer", cls].filter(Boolean).join(" ")}>
+  <div class="mk-container">
+    <div class="mk-footer__grid">
+      <div>
+        <p class="mk-footer__label">{brand}</p>
+        {blurb && <p class="mk-body-sm" style="margin:0;max-width:34ch">{blurb}</p>}
+        <slot name="newsletter" />
+      </div>
+      {columns.map((c) => (
+        <div>
+          <p class="mk-footer__label">{c.label}</p>
+          <ul class="mk-footer__list">
+            {c.links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </div>
+</footer>

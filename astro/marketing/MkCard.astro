@@ -1,0 +1,37 @@
+---
+interface Props {
+  title?: string;
+  body?: string;
+  href?: string;
+  /** `feature` carries a media well above the text; `list` is text only. */
+  kind?: "plain" | "feature" | "list";
+  class?: string;
+}
+const { title, body, href, kind = "plain", class: cls = "" } = Astro.props;
+const classes = [
+  "mk-card",
+  kind === "feature" && "mk-feature-card",
+  kind === "list" && "mk-feature-list__card",
+  cls,
+].filter(Boolean).join(" ");
+const hasMedia = Astro.slots.has("media");
+---
+{href ? (
+  <a class={classes} href={href}>
+    {hasMedia && <div class="mk-mockup-media"><slot name="media" /></div>}
+    <div class={kind === "feature" ? "mk-feature-card__body" : undefined}>
+      {title && <h3 class="mk-card-title">{title}</h3>}
+      {body && <p class="mk-body-sm mk-muted" style="margin:8px 0 0">{body}</p>}
+      <slot />
+    </div>
+  </a>
+) : (
+  <div class={classes}>
+    {hasMedia && <div class="mk-mockup-media"><slot name="media" /></div>}
+    <div class={kind === "feature" ? "mk-feature-card__body" : undefined}>
+      {title && <h3 class="mk-card-title">{title}</h3>}
+      {body && <p class="mk-body-sm mk-muted" style="margin:8px 0 0">{body}</p>}
+      <slot />
+    </div>
+  </div>
+)}

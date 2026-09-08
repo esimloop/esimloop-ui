@@ -1,0 +1,13 @@
+---
+import Icon from "./Icon.astro";
+interface Props {
+  tone?: "info" | "success" | "warning" | "error";
+  class?: string;
+}
+const { tone = "info", class: cls = "" } = Astro.props;
+const icon = tone === "info" ? "info" : tone === "success" ? "check" : "warn";
+---
+<div class={["ds-alert", "ds-alert--" + tone, cls].filter(Boolean).join(" ")} role={tone === "error" ? "alert" : "status"}>
+  <Icon name={icon} />
+  <div><slot /></div>
+</div>

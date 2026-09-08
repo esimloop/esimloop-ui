@@ -1,0 +1,26 @@
+---
+interface Props {
+  quote: string;
+  name: string;
+  /** Role or handle. Kept short - it sits under the name at 13px. */
+  meta?: string;
+  /** Two letters. Rendered on an ink circle when no image is given. */
+  initials?: string;
+  avatar?: string;
+  class?: string;
+}
+const { quote, name, meta, initials, avatar, class: cls = "" } = Astro.props;
+---
+<figure class={["mk-quote-card", cls].filter(Boolean).join(" ")}>
+  <span class="mk-quote-mark" aria-hidden="true">&ldquo;</span>
+  <p class="mk-quote-text">{quote}</p>
+  <figcaption class="mk-quote-attr">
+    <span class="mk-quote-avatar">
+      {avatar ? <img src={avatar} alt="" width="40" height="40" style="width:100%;height:100%;object-fit:cover" /> : initials}
+    </span>
+    <span>
+      <span class="mk-quote-name">{name}</span>
+      {meta && <span class="mk-quote-handle">{meta}</span>}
+    </span>
+  </figcaption>
+</figure>

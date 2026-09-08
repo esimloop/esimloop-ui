@@ -1,0 +1,11 @@
+/* Load a THEME first, then the SKELETON. That order is the whole system:
+   the skeleton only references tokens, the theme supplies their values.
+
+   To re-skin this project, edit src/design-system/themes/app-blank.css
+   (and marketing-blank.css). Nothing else needs to change.
+
+   Swap in the reconstructed values instead by pointing these at
+   app-openseo.css / marketing-openseo.css. */
+@import "../design-system/themes/app-blank.css";
+@import "../design-system/themes/marketing-blank.css";
+@import "../design-system/css/index.css";

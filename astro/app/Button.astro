@@ -1,0 +1,64 @@
+---
+import Icon from "./Icon.astro";
+import type { IconName } from "./icons";
+
+interface Props {
+  variant?: "primary" | "secondary" | "ghost" | "destructive";
+  size?: "xs" | "sm" | "md" | "lg";
+  /** Icon-only. Requires `label`. */
+  square?: boolean;
+  loading?: boolean;
+  disabled?: boolean;
+  iconStart?: IconName;
+  iconEnd?: IconName;
+  href?: string;
+  type?: "button" | "submit" | "reset";
+  /** Accessible name. Required when `square` is set. */
+  label?: string;
+  class?: string;
+  [key: string]: unknown;
+}
+
+const {
+  variant = "secondary",
+  size = "md",
+  square = false,
+  loading = false,
+  disabled = false,
+  iconStart,
+  iconEnd,
+  href,
+  type = "button",
+  label,
+  class: cls = "",
+  ...rest
+} = Astro.props;
+
+if (square && !label) {
+  throw new Error("Button: an icon-only button needs `label` for its accessible name.");
+}
+
+const classes = [
+  "ds-btn",
+  "ds-btn--" + variant,
+  size !== "md" && "ds-btn--" + size,
+  square && "ds-btn--square",
+  loading && "ds-btn--loading",
+  cls,
+].filter(Boolean).join(" ");
+
+const iconSize = size === "xs" || size === "sm" ? "sm" : "md";
+---
+{href ? (
+  <a class={classes} href={href} aria-label={label} aria-disabled={disabled ? "true" : undefined} {...rest}>
+    {loading ? <span class="ds-spinner" aria-hidden="true" /> : iconStart && <Icon name={iconStart} size={iconSize} />}
+    <slot />
+    {iconEnd && !loading && <Icon name={iconEnd} size={iconSize} />}
+  </a>
+) : (
+  <button class={classes} type={type} disabled={disabled || loading} aria-label={label} {...rest}>
+    {loading ? <span class="ds-spinner" aria-hidden="true" /> : iconStart && <Icon name={iconStart} size={iconSize} />}
+    <slot />
+    {iconEnd && !loading && <Icon name={iconEnd} size={iconSize} />}
+  </button>
+)}

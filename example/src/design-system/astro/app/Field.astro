@@ -1,0 +1,24 @@
+---
+/**
+ * Label + control + hint or error. Wrap any .ds-input / .ds-select /
+ * .ds-textarea. Pass `id` and wire aria-describedby on the control yourself;
+ * the ids this renders are `${id}-hint` and `${id}-error`.
+ */
+interface Props {
+  label: string;
+  id: string;
+  hint?: string;
+  error?: string;
+  class?: string;
+}
+const { label, id, hint, error, class: cls = "" } = Astro.props;
+---
+<div class={["ds-field", cls].filter(Boolean).join(" ")}>
+  <label for={id}>{label}</label>
+  <slot />
+  {error ? (
+    <p class="ds-field-error" id={id + "-error"}>{error}</p>
+  ) : hint ? (
+    <p class="ds-field-hint" id={id + "-hint"}>{hint}</p>
+  ) : null}
+</div>
