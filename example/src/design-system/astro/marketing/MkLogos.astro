@@ -1,0 +1,15 @@
+---
+/**
+ * A quiet row of names. Real logos go in the default slot as <img> or inline
+ * SVG; `items` renders wordmarks, which is honest placeholder content.
+ */
+interface Props {
+  items?: string[];
+  class?: string;
+}
+const { items = [], class: cls = "" } = Astro.props;
+---
+<div class={["mk-logos", cls].filter(Boolean).join(" ")}>
+  {items.map((i) => <span class="mk-logos__item">{i}</span>)}
+  <slot />
+</div>

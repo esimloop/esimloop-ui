@@ -1,56 +1,55 @@
 ---
 import MarketingLayout from "../layouts/MarketingLayout.astro";
-import MkNav from "../design-system/astro/marketing/MkNav.astro";
 import MkHero from "../design-system/astro/marketing/MkHero.astro";
 import MkSection from "../design-system/astro/marketing/MkSection.astro";
+import MkHeading from "../design-system/astro/marketing/MkHeading.astro";
+import MkSplit from "../design-system/astro/marketing/MkSplit.astro";
 import MkButton from "../design-system/astro/marketing/MkButton.astro";
 import MkCard from "../design-system/astro/marketing/MkCard.astro";
 import MkQuote from "../design-system/astro/marketing/MkQuote.astro";
-import MkFooter from "../design-system/astro/marketing/MkFooter.astro";
+import MkLogos from "../design-system/astro/marketing/MkLogos.astro";
+import MkStats from "../design-system/astro/marketing/MkStats.astro";
+import MkCta from "../design-system/astro/marketing/MkCta.astro";
 import Icon from "../design-system/astro/app/Icon.astro";
 
 const features = [
-  { title: "Keyword research", body: "Find ideas, demand, difficulty and live results.", icon: "search" },
-  { title: "Domain overview", body: "Estimate organic traffic and ranking keywords.", icon: "globe" },
-  { title: "Site audit", body: "Crawl pages and surface technical issues.", icon: "audit" },
-] as const;
+  { title: "Fast to start", body: "Everything you need on day one, nothing you have to rip out later.", icon: "dashboard" },
+  { title: "Built to read", body: "Dense tables, clear hierarchy, and states that say what happened.", icon: "search" },
+  { title: "Yours to shape", body: "One theme file drives every colour, size and radius.", icon: "settings" },
+];
 ---
 <MarketingLayout title="Product" description="Replace this description.">
-  <MkNav
-    brand="Product"
-    links={[
-      { label: "Features", href: "#features" },
-      { label: "Pricing", href: "#" },
-    ]}
-    ctaHref="/app"
-  />
-
   <MkHero
-    title="A headline that says what this does."
-    subtitle="One sentence of support underneath, in muted ink, never wider than about fifty characters."
+    layout="split"
+    eyebrow="Introducing Product"
+    title="Ship your next project without rebuilding the basics."
+    subtitle="A complete interface layer for apps and sites, so you start on the work that is actually yours."
     note="No credit card required"
   >
     <MkButton size="lg" variant="primary" href="/app">Start free</MkButton>
     <MkButton size="lg" variant="secondary" href="#features">See features</MkButton>
+    <div slot="media" class="mk-mockup">
+      <div class="mk-mockup-media" style="aspect-ratio:16/10;display:grid;place-items:center;color:var(--m-ink-tertiary)">
+        <Icon name="dashboard" size="xl" />
+      </div>
+    </div>
   </MkHero>
 
-  <MkSection ground="quiet" id="features">
-    <div style="max-width:640px">
-      <p class="mk-eyebrow">Everything in one place</p>
-      <h2 class="mk-display-md">See the whole picture</h2>
-      <p class="mk-body-lg mk-muted" style="margin:16px 0 0">
-        Replace this copy. The accent colour is used exactly once on this page - on
-        the one action that matters most.
-      </p>
-    </div>
+  <MkSection ground="quiet">
+    <p class="mk-body-sm mk-subtle" style="text-align:center;margin:0 0 28px">Trusted by teams at</p>
+    <MkLogos items={["Northwind", "Contoso", "Fabrikam", "Adventure", "Litware"]} />
+  </MkSection>
 
+  <MkSection id="features">
+    <MkHeading
+      eyebrow="Everything in one place"
+      title="See the whole picture"
+      body="Replace this copy. The accent colour appears exactly once on this page, on the one action that matters most."
+    />
     <div class="mk-feature-grid">
       {features.map((f) => (
         <MkCard kind="feature" title={f.title} body={f.body} href="#">
-          <div
-            slot="media"
-            style="height:120px;display:grid;place-items:center;color:var(--m-ink-tertiary)"
-          >
+          <div slot="media" style="height:120px;display:grid;place-items:center;color:var(--m-ink-tertiary)">
             <Icon name={f.icon} size="xl" />
           </div>
         </MkCard>
@@ -58,24 +57,50 @@ const features = [
     </div>
   </MkSection>
 
+  <MkSection ground="warm">
+    <MkSplit media="end">
+      <MkHeading
+        eyebrow="How it works"
+        title="One theme file, every screen"
+        body="Change four values and the whole interface follows. No component knows a colour."
+      />
+      <div style="margin-top:24px">
+        <MkButton variant="accent" href="/pricing" arrow>See pricing</MkButton>
+      </div>
+      <div slot="media" class="mk-mockup">
+        <div class="mk-mockup-media" style="aspect-ratio:4/3;display:grid;place-items:center;color:var(--m-ink-tertiary)">
+          <Icon name="settings" size="xl" />
+        </div>
+      </div>
+    </MkSplit>
+  </MkSection>
+
+  <MkSection>
+    <MkStats
+      stats={[
+        { value: "32", label: "Components across two layers" },
+        { value: "4", label: "Themes, fully interchangeable" },
+        { value: "AA", label: "Contrast, measured not assumed" },
+        { value: "0", label: "Runtime dependencies" },
+      ]}
+    />
+  </MkSection>
+
   <div class="mk-quotes">
     <div class="mk-container">
       <h2 class="mk-display-md" style="text-align:center">What people say</h2>
       <div class="mk-quote-grid">
-        <MkQuote quote="Replace with a real quote." name="A. Rivera" meta="Head of growth" initials="AR" />
-        <MkQuote quote="Replace with a real quote." name="S. Moreau" meta="Founder" initials="SM" />
-        <MkQuote quote="Replace with a real quote." name="T. Lambert" meta="Consultant" initials="TL" />
+        <MkQuote quote="Replace with a real quote from a real person." name="A. Rivera" meta="Head of growth" initials="AR" />
+        <MkQuote quote="Replace with a real quote from a real person." name="S. Moreau" meta="Founder" initials="SM" />
+        <MkQuote quote="Replace with a real quote from a real person." name="T. Lambert" meta="Consultant" initials="TL" />
       </div>
     </div>
   </div>
 
-  <MkFooter
-    brand="Product"
-    blurb="Product updates and the occasional behind-the-scenes."
-    columns={[
-      { label: "Product", links: [{ label: "Features", href: "#features" }, { label: "Pricing", href: "#" }] },
-      { label: "Resources", links: [{ label: "Docs", href: "#" }, { label: "Blog", href: "#" }] },
-      { label: "Company", links: [{ label: "Privacy", href: "#" }, { label: "Terms", href: "#" }] },
-    ]}
-  />
+  <MkSection>
+    <MkCta title="Start building today" body="Scaffold a project in one command and keep every screen consistent from the first commit.">
+      <MkButton size="lg" variant="primary" href="/app">Start free</MkButton>
+      <MkButton size="lg" variant="secondary" href="/pricing">See pricing</MkButton>
+    </MkCta>
+  </MkSection>
 </MarketingLayout>

@@ -5,16 +5,34 @@ interface Props {
   subtitle?: string;
   /** One line under the buttons, e.g. "No credit card required". */
   note?: string;
+  /** `centered` is the default opener; `split` puts a mockup beside the copy. */
+  layout?: "centered" | "split";
   class?: string;
 }
-const { eyebrow, title, subtitle, note, class: cls = "" } = Astro.props;
+const { eyebrow, title, subtitle, note, layout = "centered", class: cls = "" } = Astro.props;
+const isSplit = layout === "split";
 ---
-<div class={["mk-hero", cls].filter(Boolean).join(" ")}>
-  <div class="mk-container mk-narrow">
-    {eyebrow && <p class="mk-eyebrow">{eyebrow}</p>}
-    <h1 class="mk-display-xl">{title}</h1>
-    {subtitle && <p class="mk-subhead mk-muted" style="margin-top:20px">{subtitle}</p>}
-    <div class="mk-hero__ctas"><slot /></div>
-    {note && <p class="mk-hero__note">{note}</p>}
+<div class={["mk-hero", isSplit && "mk-hero--split", cls].filter(Boolean).join(" ")}>
+  <div class={isSplit ? "mk-container" : "mk-container mk-narrow"}>
+    {isSplit ? (
+      <div class="mk-hero__grid">
+        <div>
+          {eyebrow && <p class="mk-eyebrow">{eyebrow}</p>}
+          <h1 class="mk-display-xl">{title}</h1>
+          {subtitle && <p class="mk-subhead mk-muted" style="margin-top:20px">{subtitle}</p>}
+          <div class="mk-hero__ctas"><slot /></div>
+          {note && <p class="mk-hero__note">{note}</p>}
+        </div>
+        <div><slot name="media" /></div>
+      </div>
+    ) : (
+      <Fragment>
+        {eyebrow && <p class="mk-eyebrow">{eyebrow}</p>}
+        <h1 class="mk-display-xl">{title}</h1>
+        {subtitle && <p class="mk-subhead mk-muted" style="margin-top:20px">{subtitle}</p>}
+        <div class="mk-hero__ctas"><slot /></div>
+        {note && <p class="mk-hero__note">{note}</p>}
+      </Fragment>
+    )}
   </div>
 </div>

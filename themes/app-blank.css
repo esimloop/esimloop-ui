@@ -146,15 +146,15 @@
   --sev-passed:   var(--success);
 
   /* --- Score ramp (0–100 in six steps, plus n/a) ----------------------------
-     Domain-specific. Rename freely — this is "keyword difficulty" in an SEO
-     product, but it fits any low-is-good / high-is-bad score.             */
-  --kd-na-bg: color-mix(in oklab, #94a3b8 12%, transparent); --kd-na-fg: #475569; --kd-na-ring: color-mix(in oklab, #94a3b8 28%, transparent);
-  --kd-1-bg:  color-mix(in oklab, #10b981 15%, transparent); --kd-1-fg:  #065f46; --kd-1-ring:  color-mix(in oklab, #10b981 30%, transparent);
-  --kd-2-bg:  color-mix(in oklab, #84cc16 15%, transparent); --kd-2-fg:  #3f6212; --kd-2-ring:  color-mix(in oklab, #84cc16 30%, transparent);
-  --kd-3-bg:  color-mix(in oklab, #eab308 16%, transparent); --kd-3-fg:  #854d0e; --kd-3-ring:  color-mix(in oklab, #eab308 32%, transparent);
-  --kd-4-bg:  color-mix(in oklab, #f97316 16%, transparent); --kd-4-fg:  #9a3412; --kd-4-ring:  color-mix(in oklab, #f97316 32%, transparent);
-  --kd-5-bg:  color-mix(in oklab, #ef4444 15%, transparent); --kd-5-fg:  #991b1b; --kd-5-ring:  color-mix(in oklab, #ef4444 30%, transparent);
-  --kd-6-bg:  color-mix(in oklab, #b91c1c 18%, transparent); --kd-6-fg:  #7f1d1d; --kd-6-ring:  color-mix(in oklab, #b91c1c 32%, transparent);
+     A low-is-good score: green through red. Invert the order if your metric
+     reads the other way (a quality score, say).                           */
+  --score-na-bg: color-mix(in oklab, #94a3b8 12%, transparent); --score-na-fg: #475569; --score-na-ring: color-mix(in oklab, #94a3b8 28%, transparent);
+  --score-1-bg:  color-mix(in oklab, #10b981 15%, transparent); --score-1-fg:  #065f46; --score-1-ring:  color-mix(in oklab, #10b981 30%, transparent);
+  --score-2-bg:  color-mix(in oklab, #84cc16 15%, transparent); --score-2-fg:  #3f6212; --score-2-ring:  color-mix(in oklab, #84cc16 30%, transparent);
+  --score-3-bg:  color-mix(in oklab, #eab308 16%, transparent); --score-3-fg:  #854d0e; --score-3-ring:  color-mix(in oklab, #eab308 32%, transparent);
+  --score-4-bg:  color-mix(in oklab, #f97316 16%, transparent); --score-4-fg:  #9a3412; --score-4-ring:  color-mix(in oklab, #f97316 32%, transparent);
+  --score-5-bg:  color-mix(in oklab, #ef4444 15%, transparent); --score-5-fg:  #991b1b; --score-5-ring:  color-mix(in oklab, #ef4444 30%, transparent);
+  --score-6-bg:  color-mix(in oklab, #b91c1c 18%, transparent); --score-6-fg:  #7f1d1d; --score-6-ring:  color-mix(in oklab, #b91c1c 32%, transparent);
 
   /* --- Tag chips (categorical, user-assigned labels) ------------------------ */
   --tag-slate-bg:   color-mix(in oklab, #64748b 14%, transparent); --tag-slate-fg:   #334155;
@@ -218,8 +218,8 @@
     --info:           #38BDF8;   /*  8.6:1 */
     --success-content:#0D0D0D; --warning-content:#0D0D0D;
     --error-content:  #0D0D0D; --info-content:   #0D0D0D;
-    --kd-na-fg: #cbd5e1; --kd-1-fg: #6ee7b7; --kd-2-fg: #bef264; --kd-3-fg: #fde047;
-    --kd-4-fg:  #fdba74; --kd-5-fg: #fca5a5; --kd-6-fg: #fda4af;
+    --score-na-fg: #cbd5e1; --score-1-fg: #6ee7b7; --score-2-fg: #bef264; --score-3-fg: #fde047;
+    --score-4-fg:  #fdba74; --score-5-fg: #fca5a5; --score-6-fg: #fda4af;
     --tag-slate-fg:  #cbd5e1; --tag-rose-fg:   #fda4af; --tag-amber-fg:  #fcd34d;
     --tag-lime-fg:   #d9f99d; --tag-emerald-fg:#6ee7b7; --tag-sky-fg:    #7dd3fc;
     --tag-violet-fg: #c4b5fd; --tag-fuchsia-fg:#f5d0fe;
@@ -245,8 +245,8 @@
   --info:           #38BDF8;
   --success-content:#0D0D0D; --warning-content:#0D0D0D;
   --error-content:  #0D0D0D; --info-content:   #0D0D0D;
-  --kd-na-fg: #cbd5e1; --kd-1-fg: #6ee7b7; --kd-2-fg: #bef264; --kd-3-fg: #fde047;
-  --kd-4-fg:  #fdba74; --kd-5-fg: #fca5a5; --kd-6-fg: #fda4af;
+  --score-na-fg: #cbd5e1; --score-1-fg: #6ee7b7; --score-2-fg: #bef264; --score-3-fg: #fde047;
+  --score-4-fg:  #fdba74; --score-5-fg: #fca5a5; --score-6-fg: #fda4af;
   --tag-slate-fg:  #cbd5e1; --tag-rose-fg:   #fda4af; --tag-amber-fg:  #fcd34d;
   --tag-lime-fg:   #d9f99d; --tag-emerald-fg:#6ee7b7; --tag-sky-fg:    #7dd3fc;
   --tag-violet-fg: #c4b5fd; --tag-fuchsia-fg:#f5d0fe;

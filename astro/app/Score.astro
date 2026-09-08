@@ -1,12 +1,13 @@
 ---
 /**
- * A 0-100 score as a tinted circle. Low is good.
+ * A 0-100 score as a tinted circle. Low is good (invert the tiers if your
+ * metric reads the other way).
  * The number is always rendered, so the tier colour reinforces it and is never
  * the only channel.
  */
 interface Props {
   value: number | null;
-  /** Names the metric for assistive tech, e.g. "Keyword difficulty 41". */
+  /** Names the metric for assistive tech, e.g. "Difficulty 41". */
   label?: string;
   class?: string;
 }

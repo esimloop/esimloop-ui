@@ -2,7 +2,10 @@
 /**
  * Scaffold a new Astro project wired to this design system.
  *
- *   node bin/init.mjs <target-dir> [--name <pkg-name>] [--theme openseo|blank]
+ *   node bin/init.mjs <target-dir> [--name <pkg-name>] [--theme blank|openseo] [--force]
+ *
+ * Themes: `blank` (neutral, AA-clean — the default) or `openseo` (the
+ * reconstructed values; named for provenance, not for a domain).
  *
  * The system is VENDORED (copied into src/design-system), not installed as a
  * dependency. For a starter kit that is the right trade: you own the files, the
@@ -18,15 +21,16 @@ const KIT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
 // ---------------------------------------------------------------- arguments
 const argv = process.argv.slice(2);
+const VALUE_FLAGS = new Set(["--name", "--theme"]);
 const flag = (name, fallback) => {
-  const i = argv.indexOf(`--${name}`);
+  const i = argv.indexOf("--" + name);
   return i === -1 ? fallback : argv[i + 1];
 };
-const has = (name) => argv.includes(`--${name}`);
-const target = argv.find((a) => !a.startsWith("--") && argv[argv.indexOf(a) - 1] !== `--name` && argv[argv.indexOf(a) - 1] !== `--theme`);
+const has = (name) => argv.includes("--" + name);
+const target = argv.find((a, i) => !a.startsWith("--") && !VALUE_FLAGS.has(argv[i - 1]));
 
 if (!target) {
-  console.error("Usage: node bin/init.mjs <target-dir> [--name <pkg>] [--theme openseo|blank] [--force]");
+  console.error("Usage: node bin/init.mjs <target-dir> [--name <pkg>] [--theme blank|openseo] [--force]");
   process.exit(1);
 }
 
@@ -34,20 +38,20 @@ const dir = resolve(process.cwd(), target);
 const pkgName = flag("name", basename(dir));
 const theme = flag("theme", "blank");
 if (!["openseo", "blank"].includes(theme)) {
-  console.error(`Unknown theme "${theme}". Use "openseo" or "blank".`);
+  console.error('Unknown theme "' + theme + '". Use "blank" or "openseo".');
   process.exit(1);
 }
 
 if (existsSync(dir) && !has("force")) {
   const entries = await readdir(dir);
   if (entries.length) {
-    console.error(`${dir} is not empty. Re-run with --force to overwrite.`);
+    console.error(dir + " is not empty. Re-run with --force to overwrite.");
     process.exit(1);
   }
 }
 
 // ------------------------------------------------------------------- files
-const file = (p, body) => ({ path: p, body });
+const file = (path, body) => ({ path, body });
 
 const files = [
   file(
@@ -81,10 +85,7 @@ export default defineConfig({
 `,
   ),
 
-  file(
-    "tsconfig.json",
-    JSON.stringify({ extends: "astro/tsconfigs/strict" }, null, 2) + "\n",
-  ),
+  file("tsconfig.json", JSON.stringify({ extends: "astro/tsconfigs/strict" }, null, 2) + "\n"),
 
   file(".gitignore", "node_modules/\ndist/\n.astro/\n.env\n.DS_Store\n"),
 
@@ -94,16 +95,14 @@ export default defineConfig({
    the skeleton only references tokens, the theme supplies their values.
 
    To re-skin this project, edit src/design-system/themes/app-${theme}.css
-   (and marketing-${theme}.css). Nothing else needs to change.
-
-   Swap in the reconstructed values instead by pointing these at
-   app-openseo.css / marketing-openseo.css. */
+   (and marketing-${theme}.css). Nothing else needs to change. */
 @import "../design-system/themes/app-${theme}.css";
 @import "../design-system/themes/marketing-${theme}.css";
 @import "../design-system/css/index.css";
 `,
   ),
 
+  // ------------------------------------------------------------- layouts
   file(
     "src/layouts/AppLayout.astro",
     `---
@@ -141,6 +140,8 @@ const { title } = Astro.props;
     `---
 import "../styles/app.css";
 import IconSprite from "../design-system/astro/app/IconSprite.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import SiteFooter from "../components/SiteFooter.astro";
 
 interface Props {
   title: string;
@@ -165,9 +166,52 @@ const { title, description } = Astro.props;
   <!-- The marketing layer is light-only by design; it declares no dark palette. -->
   <body class="mk" style="margin:0">
     <IconSprite />
-    <slot />
+    <SiteHeader />
+    <main><slot /></main>
+    <SiteFooter />
   </body>
 </html>
+`,
+  ),
+
+  // ---------------------------------------------------------- components
+  file(
+    "src/components/SiteHeader.astro",
+    `---
+import MkNav from "../design-system/astro/marketing/MkNav.astro";
+---
+<MkNav
+  brand="Product"
+  links={[
+    { label: "Features", href: "/#features" },
+    { label: "Pricing", href: "/pricing" },
+    { label: "Blog", href: "/blog" },
+  ]}
+  ctaLabel="Open app"
+  ctaHref="/app"
+/>
+`,
+  ),
+
+  file(
+    "src/components/SiteFooter.astro",
+    `---
+import MkFooter from "../design-system/astro/marketing/MkFooter.astro";
+---
+<MkFooter
+  brand="Product"
+  blurb="Replace this line with what your product does, in one sentence."
+  columns={[
+    { label: "Product", links: [{ label: "Features", href: "/#features" }, { label: "Pricing", href: "/pricing" }] },
+    { label: "Resources", links: [{ label: "Blog", href: "/blog" }, { label: "Docs", href: "#" }] },
+    { label: "Company", links: [{ label: "Privacy", href: "#" }, { label: "Terms", href: "#" }] },
+  ]}
+>
+  <form slot="newsletter" class="mk-newsletter">
+    <input type="email" placeholder="Email address" aria-label="Email address" />
+    <button type="submit">Subscribe</button>
+  </form>
+</MkFooter>
 `,
   ),
 
@@ -182,26 +226,27 @@ interface Props {
 }
 const { active = "dashboard" } = Astro.props;
 
-// Grouped by what the data is ABOUT: tools that can point at any domain, versus
-// this workspace's own site. That distinction is the information architecture.
+// Group by what the data is ABOUT, not by feature area. Keep it flat - the
+// sidebar has no nesting and group labels are headings, not toggles.
 const groups: NavGroup[] = [
   {
     label: "Overview",
     items: [{ label: "Dashboard", href: "/app", icon: "dashboard", active: active === "dashboard" }],
   },
   {
-    label: "Research",
+    label: "Analyse",
     items: [
-      { label: "Keyword research", href: "/app", icon: "search", active: active === "keywords" },
-      { label: "Domain overview", href: "/app", icon: "globe", active: active === "domain" },
-      { label: "Backlinks", href: "/app", icon: "link", active: active === "backlinks" },
+      { label: "Reports", href: "/app", icon: "trend", active: active === "reports" },
+      { label: "Segments", href: "/app", icon: "filters", active: active === "segments" },
+      { label: "Sources", href: "/app", icon: "link", active: active === "sources" },
     ],
   },
   {
-    label: "My site",
+    label: "Workspace",
     items: [
-      { label: "Rank tracking", href: "/app", icon: "trend", active: active === "rank" },
-      { label: "Site audit", href: "/app", icon: "audit", active: active === "audit" },
+      { label: "Items", href: "/app", icon: "inbox", active: active === "items" },
+      { label: "Audit", href: "/app", icon: "audit", active: active === "audit" },
+      { label: "Settings", href: "/app", icon: "settings", active: active === "settings" },
     ],
   },
 ];
@@ -211,11 +256,12 @@ const groups: NavGroup[] = [
     <span class="ds-switcher__avatar">W</span>
     <span class="ds-switcher__name">Workspace</span>
   </button>
-  <a slot="footer" class="ds-navitem" href="/app"><span>Settings</span></a>
+  <a slot="footer" class="ds-navitem" href="/app"><span>Help</span></a>
 </Sidebar>
 `,
   ),
 
+  // --------------------------------------------------------------- pages
   file(
     "src/pages/app.astro",
     `---
@@ -227,13 +273,19 @@ import Card from "../design-system/astro/app/Card.astro";
 import KpiCard from "../design-system/astro/app/KpiCard.astro";
 import Score from "../design-system/astro/app/Score.astro";
 import Badge from "../design-system/astro/app/Badge.astro";
+import StatStrip from "../design-system/astro/app/StatStrip.astro";
 
-// Example rows, so the first paint shows what the screen does.
+// Example rows, so the first paint shows what the screen does. Replace them.
 const rows = [
-  { keyword: "seo audit tool", volume: "14,800", kd: 41, cpc: "2.41", position: 3 },
-  { keyword: "technical seo checklist", volume: "9,900", kd: 28, cpc: "1.85", position: 7 },
-  { keyword: "free backlink checker", volume: "22,200", kd: 88, cpc: "3.05", position: 18 },
+  { name: "Getting started guide", views: "14,800", score: 24, change: 12, status: "Published" },
+  { name: "Pricing page", views: "9,900", score: 41, change: -4, status: "Published" },
+  { name: "Integrations overview", views: "22,200", score: 88, change: 2, status: "Draft" },
+  { name: "Changelog", views: "3,600", score: null, change: 0, status: "Draft" },
 ];
+
+const arrow = (n) => (n > 0 ? "\\u25B2" : n < 0 ? "\\u25BC" : "\\u2014");
+const deltaClass = (n) =>
+  "ds-kpi__delta " + (n > 0 ? "ds-delta--up" : n < 0 ? "ds-delta--down" : "ds-delta--flat");
 ---
 <AppLayout title="Dashboard">
   <AppShell brand="Product">
@@ -243,48 +295,56 @@ const rows = [
       <div>
         <h1 class="ds-h1">Dashboard</h1>
         <p class="ds-body ds-text-secondary" style="margin:4px 0 0">
-          Example data. Replace with your own.
+          Example data. Replace it with your own.
         </p>
       </div>
-      <div class="row-tight" style="display:flex;gap:8px">
+      <div style="display:flex;gap:8px;flex-shrink:0">
         <Button size="sm" iconStart="download">Export</Button>
-        <Button size="sm" variant="primary" iconStart="plus">New project</Button>
+        <Button size="sm" variant="primary" iconStart="plus">New item</Button>
       </div>
     </div>
 
     <div style="display:grid;gap:16px;grid-template-columns:repeat(2,1fr)">
-      <KpiCard label="Organic traffic" value="128.4K" delta={12} deltaLabel="vs. prev. 30d" />
-      <KpiCard label="Organic keywords" value="24,180" delta={-3} deltaLabel="vs. prev. 30d" />
-      <KpiCard label="Referring domains" value="3,942" hint="Updated today" />
-      <KpiCard label="Backlinks" value="318K" loading />
+      <KpiCard label="Total views" value="128.4K" delta={12} deltaLabel="vs. prev. 30d" />
+      <KpiCard label="Active items" value="24,180" delta={-3} deltaLabel="vs. prev. 30d" />
+      <KpiCard label="Average score" value="38" hint="Lower is better" />
+      <KpiCard label="Open issues" value="42" loading />
     </div>
 
-    <Card title="Top keywords" flush>
+    <StatStrip
+      columns={4}
+      stats={[
+        { label: "Items", value: "318" },
+        { label: "Issues", value: "42", sub: "6 critical" },
+        { label: "Avg. response", value: "412ms" },
+        { label: "Health", value: "94", tone: "success" },
+      ]}
+    />
+
+    <Card title="Top items" flush>
       <Button slot="actions" size="xs" variant="ghost" iconStart="filters">Filters</Button>
       <div class="ds-table-wrap">
         <table class="ds-table ds-table--sm">
           <thead>
             <tr>
-              <th data-col="id">Keyword</th>
-              <th data-align="right">Volume</th>
-              <th data-align="right">KD</th>
-              <th data-align="right">CPC</th>
-              <th data-align="right">Position</th>
+              <th data-col="id">Name</th>
+              <th data-align="right">Views</th>
+              <th data-align="right">Score</th>
+              <th data-align="right">Change</th>
               <th data-align="center">Status</th>
             </tr>
           </thead>
           <tbody>
             {rows.map((r) => (
               <tr>
-                <td data-col="id" style="font-weight:500">{r.keyword}</td>
-                <td data-align="right">{r.volume}</td>
-                <td data-align="right"><Score value={r.kd} label={\`Difficulty \${r.kd}\`} /></td>
-                <td data-align="right">{r.cpc}</td>
-                <td data-align="right"><span class="ds-mono">{r.position}</span></td>
+                <td data-col="id" style="font-weight:500">{r.name}</td>
+                <td data-align="right">{r.views}</td>
+                <td data-align="right"><Score value={r.score} label={"Score " + (r.score ?? "not available")} /></td>
+                <td data-align="right">
+                  <span class={deltaClass(r.change)}>{arrow(r.change)} {Math.abs(r.change)}%</span>
+                </td>
                 <td data-align="center">
-                  <Badge tone={r.position <= 10 ? "success" : "neutral"}>
-                    {r.position <= 10 ? "Top 10" : "Tracking"}
-                  </Badge>
+                  <Badge tone={r.status === "Published" ? "success" : "neutral"}>{r.status}</Badge>
                 </td>
               </tr>
             ))}
@@ -301,57 +361,56 @@ const rows = [
     "src/pages/index.astro",
     `---
 import MarketingLayout from "../layouts/MarketingLayout.astro";
-import MkNav from "../design-system/astro/marketing/MkNav.astro";
 import MkHero from "../design-system/astro/marketing/MkHero.astro";
 import MkSection from "../design-system/astro/marketing/MkSection.astro";
+import MkHeading from "../design-system/astro/marketing/MkHeading.astro";
+import MkSplit from "../design-system/astro/marketing/MkSplit.astro";
 import MkButton from "../design-system/astro/marketing/MkButton.astro";
 import MkCard from "../design-system/astro/marketing/MkCard.astro";
 import MkQuote from "../design-system/astro/marketing/MkQuote.astro";
-import MkFooter from "../design-system/astro/marketing/MkFooter.astro";
+import MkLogos from "../design-system/astro/marketing/MkLogos.astro";
+import MkStats from "../design-system/astro/marketing/MkStats.astro";
+import MkCta from "../design-system/astro/marketing/MkCta.astro";
 import Icon from "../design-system/astro/app/Icon.astro";
 
 const features = [
-  { title: "Keyword research", body: "Find ideas, demand, difficulty and live results.", icon: "search" },
-  { title: "Domain overview", body: "Estimate organic traffic and ranking keywords.", icon: "globe" },
-  { title: "Site audit", body: "Crawl pages and surface technical issues.", icon: "audit" },
-] as const;
+  { title: "Fast to start", body: "Everything you need on day one, nothing you have to rip out later.", icon: "dashboard" },
+  { title: "Built to read", body: "Dense tables, clear hierarchy, and states that say what happened.", icon: "search" },
+  { title: "Yours to shape", body: "One theme file drives every colour, size and radius.", icon: "settings" },
+];
 ---
 <MarketingLayout title="Product" description="Replace this description.">
-  <MkNav
-    brand="Product"
-    links={[
-      { label: "Features", href: "#features" },
-      { label: "Pricing", href: "#" },
-    ]}
-    ctaHref="/app"
-  />
-
   <MkHero
-    title="A headline that says what this does."
-    subtitle="One sentence of support underneath, in muted ink, never wider than about fifty characters."
+    layout="split"
+    eyebrow="Introducing Product"
+    title="Ship your next project without rebuilding the basics."
+    subtitle="A complete interface layer for apps and sites, so you start on the work that is actually yours."
     note="No credit card required"
   >
     <MkButton size="lg" variant="primary" href="/app">Start free</MkButton>
     <MkButton size="lg" variant="secondary" href="#features">See features</MkButton>
+    <div slot="media" class="mk-mockup">
+      <div class="mk-mockup-media" style="aspect-ratio:16/10;display:grid;place-items:center;color:var(--m-ink-tertiary)">
+        <Icon name="dashboard" size="xl" />
+      </div>
+    </div>
   </MkHero>
 
-  <MkSection ground="quiet" id="features">
-    <div style="max-width:640px">
-      <p class="mk-eyebrow">Everything in one place</p>
-      <h2 class="mk-display-md">See the whole picture</h2>
-      <p class="mk-body-lg mk-muted" style="margin:16px 0 0">
-        Replace this copy. The accent colour is used exactly once on this page - on
-        the one action that matters most.
-      </p>
-    </div>
+  <MkSection ground="quiet">
+    <p class="mk-body-sm mk-subtle" style="text-align:center;margin:0 0 28px">Trusted by teams at</p>
+    <MkLogos items={["Northwind", "Contoso", "Fabrikam", "Adventure", "Litware"]} />
+  </MkSection>
 
+  <MkSection id="features">
+    <MkHeading
+      eyebrow="Everything in one place"
+      title="See the whole picture"
+      body="Replace this copy. The accent colour appears exactly once on this page, on the one action that matters most."
+    />
     <div class="mk-feature-grid">
       {features.map((f) => (
         <MkCard kind="feature" title={f.title} body={f.body} href="#">
-          <div
-            slot="media"
-            style="height:120px;display:grid;place-items:center;color:var(--m-ink-tertiary)"
-          >
+          <div slot="media" style="height:120px;display:grid;place-items:center;color:var(--m-ink-tertiary)">
             <Icon name={f.icon} size="xl" />
           </div>
         </MkCard>
@@ -359,26 +418,194 @@ const features = [
     </div>
   </MkSection>
 
+  <MkSection ground="warm">
+    <MkSplit media="end">
+      <MkHeading
+        eyebrow="How it works"
+        title="One theme file, every screen"
+        body="Change four values and the whole interface follows. No component knows a colour."
+      />
+      <div style="margin-top:24px">
+        <MkButton variant="accent" href="/pricing" arrow>See pricing</MkButton>
+      </div>
+      <div slot="media" class="mk-mockup">
+        <div class="mk-mockup-media" style="aspect-ratio:4/3;display:grid;place-items:center;color:var(--m-ink-tertiary)">
+          <Icon name="settings" size="xl" />
+        </div>
+      </div>
+    </MkSplit>
+  </MkSection>
+
+  <MkSection>
+    <MkStats
+      stats={[
+        { value: "32", label: "Components across two layers" },
+        { value: "4", label: "Themes, fully interchangeable" },
+        { value: "AA", label: "Contrast, measured not assumed" },
+        { value: "0", label: "Runtime dependencies" },
+      ]}
+    />
+  </MkSection>
+
   <div class="mk-quotes">
     <div class="mk-container">
       <h2 class="mk-display-md" style="text-align:center">What people say</h2>
       <div class="mk-quote-grid">
-        <MkQuote quote="Replace with a real quote." name="A. Rivera" meta="Head of growth" initials="AR" />
-        <MkQuote quote="Replace with a real quote." name="S. Moreau" meta="Founder" initials="SM" />
-        <MkQuote quote="Replace with a real quote." name="T. Lambert" meta="Consultant" initials="TL" />
+        <MkQuote quote="Replace with a real quote from a real person." name="A. Rivera" meta="Head of growth" initials="AR" />
+        <MkQuote quote="Replace with a real quote from a real person." name="S. Moreau" meta="Founder" initials="SM" />
+        <MkQuote quote="Replace with a real quote from a real person." name="T. Lambert" meta="Consultant" initials="TL" />
       </div>
     </div>
   </div>
 
-  <MkFooter
-    brand="Product"
-    blurb="Product updates and the occasional behind-the-scenes."
-    columns={[
-      { label: "Product", links: [{ label: "Features", href: "#features" }, { label: "Pricing", href: "#" }] },
-      { label: "Resources", links: [{ label: "Docs", href: "#" }, { label: "Blog", href: "#" }] },
-      { label: "Company", links: [{ label: "Privacy", href: "#" }, { label: "Terms", href: "#" }] },
-    ]}
-  />
+  <MkSection>
+    <MkCta title="Start building today" body="Scaffold a project in one command and keep every screen consistent from the first commit.">
+      <MkButton size="lg" variant="primary" href="/app">Start free</MkButton>
+      <MkButton size="lg" variant="secondary" href="/pricing">See pricing</MkButton>
+    </MkCta>
+  </MkSection>
+</MarketingLayout>
+`,
+  ),
+
+  file(
+    "src/pages/pricing.astro",
+    `---
+import MarketingLayout from "../layouts/MarketingLayout.astro";
+import MkSection from "../design-system/astro/marketing/MkSection.astro";
+import MkHeading from "../design-system/astro/marketing/MkHeading.astro";
+import MkBreadcrumb from "../design-system/astro/marketing/MkBreadcrumb.astro";
+import MkPricing from "../design-system/astro/marketing/MkPricing.astro";
+import MkCompare from "../design-system/astro/marketing/MkCompare.astro";
+import MkFaq from "../design-system/astro/marketing/MkFaq.astro";
+import MkCta from "../design-system/astro/marketing/MkCta.astro";
+import MkButton from "../design-system/astro/marketing/MkButton.astro";
+---
+<MarketingLayout title="Pricing" description="Replace this description.">
+  <MkSection>
+    <MkBreadcrumb items={[{ label: "Home", href: "/" }, { label: "Pricing" }]} />
+    <div style="margin-top:24px">
+      <MkHeading
+        align="center"
+        size="lg"
+        title="Simple pricing"
+        body="Replace these plans. At most one card is featured - a second cancels the emphasis of the first."
+      />
+    </div>
+    <div style="margin-top:40px">
+      <MkPricing
+        plans={[
+          {
+            name: "Starter",
+            amount: "Free",
+            blurb: "For a first project.",
+            features: ["1 workspace", "Community support", "Core components"],
+            ctaLabel: "Start free",
+            ctaHref: "/app",
+          },
+          {
+            name: "Team",
+            amount: "$29",
+            period: "/ month",
+            blurb: "For small teams shipping regularly.",
+            features: ["Unlimited workspaces", "Email support", "All components", "Custom themes"],
+            ctaLabel: "Start free trial",
+            ctaHref: "/app",
+            featured: true,
+            tag: "Popular",
+          },
+          {
+            name: "Business",
+            amount: "$99",
+            period: "/ month",
+            blurb: "For organisations with many projects.",
+            features: ["Everything in Team", "Priority support", "SSO", "Audit log"],
+            ctaLabel: "Contact sales",
+            ctaHref: "#",
+          },
+        ]}
+      />
+    </div>
+  </MkSection>
+
+  <MkSection ground="quiet">
+    <MkHeading title="Compare plans" body="Every row is a real difference between the plans." />
+    <div style="margin-top:28px">
+      <MkCompare
+        rowHeader="Feature"
+        columns={["Starter", "Team", "Business"]}
+        rows={[
+          { label: "Workspaces", values: ["1", "Unlimited", "Unlimited"] },
+          { label: "Components", values: ["Core", true, true] },
+          { label: "Custom themes", values: [false, true, true] },
+          { label: "Priority support", values: [false, false, true] },
+          { label: "SSO", values: [false, false, true] },
+        ]}
+      />
+    </div>
+  </MkSection>
+
+  <MkSection>
+    <div class="mk-narrow">
+      <MkHeading title="Questions" />
+      <div style="margin-top:24px">
+        <MkFaq
+          items={[
+            { q: "Can I change plans later?", a: "Yes. Changes take effect at the start of the next billing period, and you are only charged the difference." },
+            { q: "What happens when a trial ends?", a: "The workspace stays, and it drops to the Starter plan. Nothing is deleted." },
+            { q: "Do you offer refunds?", a: "Within 30 days, for any reason. Write to us and we process it the same week." },
+          ]}
+        />
+      </div>
+    </div>
+  </MkSection>
+
+  <MkSection ground="warm">
+    <MkCta title="Still deciding?" body="Start on the free plan and upgrade when the team grows.">
+      <MkButton size="lg" variant="primary" href="/app">Start free</MkButton>
+    </MkCta>
+  </MkSection>
+</MarketingLayout>
+`,
+  ),
+
+  file(
+    "src/pages/blog.astro",
+    `---
+import MarketingLayout from "../layouts/MarketingLayout.astro";
+import MkSection from "../design-system/astro/marketing/MkSection.astro";
+import MkHeading from "../design-system/astro/marketing/MkHeading.astro";
+import MkBreadcrumb from "../design-system/astro/marketing/MkBreadcrumb.astro";
+import MkArticleCard from "../design-system/astro/marketing/MkArticleCard.astro";
+
+const posts = [
+  { title: "How we keep two design systems from drifting", excerpt: "A token contract, checked in CI.", category: "Engineering", date: "12 Mar", readingTime: "6 min" },
+  { title: "Density is a feature, not a setting", excerpt: "Why the tables are 12px and stay that way.", category: "Design", date: "4 Mar", readingTime: "4 min" },
+  { title: "Measuring contrast instead of assuming it", excerpt: "Every pair in the palette, with its ratio.", category: "Accessibility", date: "26 Feb", readingTime: "8 min" },
+  { title: "One accent, used once", excerpt: "What happens when a page has two calls to action.", category: "Design", date: "18 Feb", readingTime: "3 min" },
+  { title: "Shipping a marketing site from the same repo", excerpt: "Two layers, namespaced, no collisions.", category: "Engineering", date: "9 Feb", readingTime: "7 min" },
+  { title: "Why the sidebar does not collapse", excerpt: "A rail you cannot read is not a feature.", category: "Design", date: "1 Feb", readingTime: "5 min" },
+];
+---
+<MarketingLayout title="Blog" description="Replace this description.">
+  <MkSection>
+    <MkBreadcrumb items={[{ label: "Home", href: "/" }, { label: "Blog" }]} />
+    <div style="margin-top:24px">
+      <MkHeading size="lg" title="Writing" body="Replace these posts with your own." />
+    </div>
+    <div class="mk-article-grid">
+      {posts.map((p) => (
+        <MkArticleCard
+          title={p.title}
+          excerpt={p.excerpt}
+          href="#"
+          category={p.category}
+          date={p.date}
+          readingTime={p.readingTime}
+        />
+      ))}
+    </div>
+  </MkSection>
 </MarketingLayout>
 `,
   ),
@@ -387,10 +614,19 @@ const features = [
     "README.md",
     `# ${pkgName}
 
-Scaffolded from the SEO platform design system, theme **${theme}**.
+Scaffolded from esimloop-ui, theme **${theme}**.
 
     npm install
     npm run dev
+
+## Pages
+
+| Route | Layer | Exercises |
+| --- | --- | --- |
+| \`/\` | marketing | hero (split), logos, features, split, stats, quotes, CTA |
+| \`/pricing\` | marketing | pricing, comparison table, FAQ, breadcrumb |
+| \`/blog\` | marketing | article grid, breadcrumb |
+| \`/app\` | application | shell, sidebar, KPIs, stat strip, data table |
 
 ## Where things live
 
@@ -398,20 +634,21 @@ Scaffolded from the SEO platform design system, theme **${theme}**.
 | --- | --- |
 | \`src/design-system/themes/\` | **The skin — edit this.** \`app-${theme}.css\` and \`marketing-${theme}.css\` hold every colour, size and radius. |
 | \`src/design-system/css/\` | The skeleton. Components reference tokens and never hard-code a value — leave it alone. |
-| \`src/design-system/astro/\` | Astro components for both layers. |
+| \`src/design-system/astro/\` | Components for both layers. |
 | \`src/styles/app.css\` | Loads the theme, then the skeleton. That order matters. |
 
 ## Two layers
 
-- **App** (\`ds-\` classes) — dense, flat, border-driven. Light and dark.
-- **Marketing** (\`mk-\` classes) — warm, editorial, one accent per page. Light only.
+- **App** (\`ds-\`) — dense, flat, border-driven. Light and dark.
+- **Marketing** (\`mk-\`) — warm, editorial, one accent per page. Light only.
 
-They share a typeface and nothing else. Do not mix their classes on one page.
+They share a typeface and nothing else. Don't mix their classes on one page.
 
 ## Re-skinning
 
-Change \`--accent\`, \`--content\` and the surface ramp in the theme file. Everything
-else derives. Keep the accent at 4.5:1 or better against \`--surface-card\`.
+Open the theme file and change four things: \`--accent\` (keep it at 4.5:1 or
+better against \`--surface-card\`), \`--content\`, the surface ramp, and
+\`--font-sans\`. Everything else derives.
 `,
   ),
 ];
@@ -428,9 +665,9 @@ for (const part of ["css", "themes", "astro"]) {
 }
 await writeFile(
   join(vendor, "README.md"),
-  "Vendored from the SEO platform design system.\n\n" +
+  "Vendored from esimloop-ui.\n\n" +
     "Edit `themes/` freely - that is the skin.\n" +
-    "Avoid editing `css/` - re-running the kit's init with --force overwrites it.\n",
+    "Avoid editing `css/` - re-running init with --force overwrites it.\n",
 );
 
 for (const { path, body } of files) {
@@ -439,9 +676,10 @@ for (const { path, body } of files) {
   await writeFile(full, body);
 }
 
-console.log(`\nScaffolded ${pkgName} in ${dir}`);
-console.log(`  theme:  ${theme}`);
-console.log(`  layers: app (ds-) + marketing (mk-)`);
-console.log(`\n  cd ${target}`);
+console.log("\nScaffolded " + pkgName + " in " + dir);
+console.log("  theme:  " + theme);
+console.log("  layers: app (ds-) + marketing (mk-)");
+console.log("  pages:  / · /pricing · /blog · /app");
+console.log("\n  cd " + target);
 console.log("  npm install");
 console.log("  npm run dev\n");

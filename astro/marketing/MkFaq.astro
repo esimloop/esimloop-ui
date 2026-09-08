@@ -1,0 +1,26 @@
+---
+import Icon from "../app/Icon.astro";
+
+export interface FaqItem {
+  q: string;
+  a: string;
+}
+interface Props {
+  items: FaqItem[];
+  /** Index of the item to leave open on load, or -1 for all closed. */
+  openIndex?: number;
+  class?: string;
+}
+const { items, openIndex = 0, class: cls = "" } = Astro.props;
+---
+<div class={["mk-faq", cls].filter(Boolean).join(" ")}>
+  {items.map((item, i) => (
+    <details class="mk-faq__item" open={i === openIndex}>
+      <summary class="mk-faq__q">
+        {item.q}
+        <Icon name="plus" size="lg" class="mk-faq__icon" />
+      </summary>
+      <p class="mk-faq__a">{item.a}</p>
+    </details>
+  ))}
+</div>

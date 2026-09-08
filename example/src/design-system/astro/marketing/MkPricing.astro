@@ -1,0 +1,45 @@
+---
+import Icon from "../app/Icon.astro";
+import MkButton from "./MkButton.astro";
+
+export interface Plan {
+  name: string;
+  amount: string;
+  period?: string;
+  blurb?: string;
+  features: string[];
+  ctaLabel: string;
+  ctaHref: string;
+  /** At most one. Renders on the dark emphasis surface with a tag. */
+  featured?: boolean;
+  tag?: string;
+}
+interface Props {
+  plans: Plan[];
+  class?: string;
+}
+const { plans, class: cls = "" } = Astro.props;
+---
+<div class={["mk-pricing", cls].filter(Boolean).join(" ")}>
+  {plans.map((p) => (
+    <div class={["mk-plan", p.featured && "mk-plan--featured"].filter(Boolean).join(" ")}>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+        <h3 class="mk-plan__name">{p.name}</h3>
+        {p.tag && <span class="mk-plan__tag">{p.tag}</span>}
+      </div>
+      <div class="mk-plan__price">
+        <span class="mk-plan__amount">{p.amount}</span>
+        {p.period && <span class="mk-plan__period">{p.period}</span>}
+      </div>
+      {p.blurb && <p class="mk-plan__blurb">{p.blurb}</p>}
+      <ul class="mk-plan__list">
+        {p.features.map((f) => (
+          <li><Icon name="check" size="sm" />{f}</li>
+        ))}
+      </ul>
+      <div class="mk-plan__foot">
+        <MkButton variant={p.featured ? "primary" : "secondary"} href={p.ctaHref}>{p.ctaLabel}</MkButton>
+      </div>
+    </div>
+  ))}
+</div>

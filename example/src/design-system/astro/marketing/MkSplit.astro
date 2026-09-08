@@ -1,0 +1,20 @@
+---
+/**
+ * Media beside copy. Alternate `media` between "end" and "start" down a page so
+ * consecutive splits do not read as one column.
+ *
+ * Slots: default (copy), `media`.
+ */
+interface Props {
+  /** Which side the media sits on. */
+  media?: "start" | "end";
+  /** `media` gives the media side more room (5fr/6fr); `even` splits it. */
+  weight?: "media" | "even";
+  class?: string;
+}
+const { media = "end", weight = "media", class: cls = "" } = Astro.props;
+---
+<div class={["mk-split", cls].filter(Boolean).join(" ")} data-media={media} data-weight={weight}>
+  <div><slot /></div>
+  <div class="mk-split__media"><slot name="media" /></div>
+</div>

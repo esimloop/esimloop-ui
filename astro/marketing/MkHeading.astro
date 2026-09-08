@@ -1,0 +1,19 @@
+---
+interface Props {
+  eyebrow?: string;
+  title: string;
+  body?: string;
+  level?: "h2" | "h3";
+  size?: "lg" | "md";
+  align?: "start" | "center";
+  class?: string;
+}
+const { eyebrow, title, body, level = "h2", size = "md", align = "start", class: cls = "" } = Astro.props;
+const Tag = level;
+const titleClass = size === "lg" ? "mk-display-lg" : "mk-display-md";
+---
+<div class={["mk-heading", align === "center" && "mk-heading--center", cls].filter(Boolean).join(" ")}>
+  {eyebrow && <p class="mk-eyebrow">{eyebrow}</p>}
+  <Tag class={titleClass}>{title}</Tag>
+  {body && <p class="mk-heading__body">{body}</p>}
+</div>

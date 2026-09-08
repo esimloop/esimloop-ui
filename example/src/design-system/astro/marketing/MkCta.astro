@@ -1,0 +1,17 @@
+---
+/**
+ * The closing call to action, on the dark emphasis surface. Use it once - a
+ * second dark band on the same page cancels the emphasis of the first.
+ */
+interface Props {
+  title: string;
+  body?: string;
+  class?: string;
+}
+const { title, body, class: cls = "" } = Astro.props;
+---
+<div class={["mk-cta", cls].filter(Boolean).join(" ")}>
+  <h2 class="mk-cta__title">{title}</h2>
+  {body && <p class="mk-cta__body">{body}</p>}
+  <div class="mk-cta__actions"><slot /></div>
+</div>

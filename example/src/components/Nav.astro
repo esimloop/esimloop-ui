@@ -7,26 +7,27 @@ interface Props {
 }
 const { active = "dashboard" } = Astro.props;
 
-// Grouped by what the data is ABOUT: tools that can point at any domain, versus
-// this workspace's own site. That distinction is the information architecture.
+// Group by what the data is ABOUT, not by feature area. Keep it flat - the
+// sidebar has no nesting and group labels are headings, not toggles.
 const groups: NavGroup[] = [
   {
     label: "Overview",
     items: [{ label: "Dashboard", href: "/app", icon: "dashboard", active: active === "dashboard" }],
   },
   {
-    label: "Research",
+    label: "Analyse",
     items: [
-      { label: "Keyword research", href: "/app", icon: "search", active: active === "keywords" },
-      { label: "Domain overview", href: "/app", icon: "globe", active: active === "domain" },
-      { label: "Backlinks", href: "/app", icon: "link", active: active === "backlinks" },
+      { label: "Reports", href: "/app", icon: "trend", active: active === "reports" },
+      { label: "Segments", href: "/app", icon: "filters", active: active === "segments" },
+      { label: "Sources", href: "/app", icon: "link", active: active === "sources" },
     ],
   },
   {
-    label: "My site",
+    label: "Workspace",
     items: [
-      { label: "Rank tracking", href: "/app", icon: "trend", active: active === "rank" },
-      { label: "Site audit", href: "/app", icon: "audit", active: active === "audit" },
+      { label: "Items", href: "/app", icon: "inbox", active: active === "items" },
+      { label: "Audit", href: "/app", icon: "audit", active: active === "audit" },
+      { label: "Settings", href: "/app", icon: "settings", active: active === "settings" },
     ],
   },
 ];
@@ -36,5 +37,5 @@ const groups: NavGroup[] = [
     <span class="ds-switcher__avatar">W</span>
     <span class="ds-switcher__name">Workspace</span>
   </button>
-  <a slot="footer" class="ds-navitem" href="/app"><span>Settings</span></a>
+  <a slot="footer" class="ds-navitem" href="/app"><span>Help</span></a>
 </Sidebar>

@@ -1,10 +1,9 @@
 {
-  "name": "seo-design-system",
+  "name": "esimloop-ui",
   "version": "1.0.0",
-  "description": "A data-dense design system for SEO SaaS products: an application layer and a marketing layer, with swappable themes.",
+  "description": "A two-layer design system starter kit: a data-dense application layer and an editorial marketing layer, with swappable themes and an Astro scaffold.",
   "type": "module",
   "license": "MIT",
-  "private": true,
   "files": [
     "css",
     "themes",
@@ -20,7 +19,8 @@
     "./package.json": "./package.json"
   },
   "bin": {
-    "seo-ds": "./bin/init.mjs"
+    "esimloop-ui": "./bin/init.mjs",
+    "eui": "./bin/init.mjs"
   },
   "scripts": {
     "check": "node scripts/check-tokens.mjs",
@@ -38,8 +38,8 @@
     "design-system",
     "design-tokens",
     "astro",
-    "seo",
-    "saas",
+    "starter-kit",
+    "ui",
     "dashboard"
   ]
 }

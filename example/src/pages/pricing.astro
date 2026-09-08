@@ -1,0 +1,96 @@
+---
+import MarketingLayout from "../layouts/MarketingLayout.astro";
+import MkSection from "../design-system/astro/marketing/MkSection.astro";
+import MkHeading from "../design-system/astro/marketing/MkHeading.astro";
+import MkBreadcrumb from "../design-system/astro/marketing/MkBreadcrumb.astro";
+import MkPricing from "../design-system/astro/marketing/MkPricing.astro";
+import MkCompare from "../design-system/astro/marketing/MkCompare.astro";
+import MkFaq from "../design-system/astro/marketing/MkFaq.astro";
+import MkCta from "../design-system/astro/marketing/MkCta.astro";
+import MkButton from "../design-system/astro/marketing/MkButton.astro";
+---
+<MarketingLayout title="Pricing" description="Replace this description.">
+  <MkSection>
+    <MkBreadcrumb items={[{ label: "Home", href: "/" }, { label: "Pricing" }]} />
+    <div style="margin-top:24px">
+      <MkHeading
+        align="center"
+        size="lg"
+        title="Simple pricing"
+        body="Replace these plans. At most one card is featured - a second cancels the emphasis of the first."
+      />
+    </div>
+    <div style="margin-top:40px">
+      <MkPricing
+        plans={[
+          {
+            name: "Starter",
+            amount: "Free",
+            blurb: "For a first project.",
+            features: ["1 workspace", "Community support", "Core components"],
+            ctaLabel: "Start free",
+            ctaHref: "/app",
+          },
+          {
+            name: "Team",
+            amount: "$29",
+            period: "/ month",
+            blurb: "For small teams shipping regularly.",
+            features: ["Unlimited workspaces", "Email support", "All components", "Custom themes"],
+            ctaLabel: "Start free trial",
+            ctaHref: "/app",
+            featured: true,
+            tag: "Popular",
+          },
+          {
+            name: "Business",
+            amount: "$99",
+            period: "/ month",
+            blurb: "For organisations with many projects.",
+            features: ["Everything in Team", "Priority support", "SSO", "Audit log"],
+            ctaLabel: "Contact sales",
+            ctaHref: "#",
+          },
+        ]}
+      />
+    </div>
+  </MkSection>
+
+  <MkSection ground="quiet">
+    <MkHeading title="Compare plans" body="Every row is a real difference between the plans." />
+    <div style="margin-top:28px">
+      <MkCompare
+        rowHeader="Feature"
+        columns={["Starter", "Team", "Business"]}
+        rows={[
+          { label: "Workspaces", values: ["1", "Unlimited", "Unlimited"] },
+          { label: "Components", values: ["Core", true, true] },
+          { label: "Custom themes", values: [false, true, true] },
+          { label: "Priority support", values: [false, false, true] },
+          { label: "SSO", values: [false, false, true] },
+        ]}
+      />
+    </div>
+  </MkSection>
+
+  <MkSection>
+    <div class="mk-narrow">
+      <MkHeading title="Questions" />
+      <div style="margin-top:24px">
+        <MkFaq
+          items={[
+            { q: "Can I change plans later?", a: "Yes. Changes take effect at the start of the next billing period, and you are only charged the difference." },
+            { q: "What happens when a trial ends?", a: "The workspace stays, and it drops to the Starter plan. Nothing is deleted." },
+            { q: "Do you offer refunds?", a: "Within 30 days, for any reason. Write to us and we process it the same week." },
+          ]}
+        />
+      </div>
+    </div>
+  </MkSection>
+
+  <MkSection ground="warm">
+    <MkCta title="Still deciding?" body="Start on the free plan and upgrade when the team grows.">
+      <MkButton size="lg" variant="primary" href="/app">Start free</MkButton>
+    </MkCta>
+  </MkSection>
+</MarketingLayout>

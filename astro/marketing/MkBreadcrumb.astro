@@ -1,0 +1,21 @@
+---
+import Icon from "../app/Icon.astro";
+
+export interface Crumb {
+  label: string;
+  href?: string;
+}
+interface Props {
+  items: Crumb[];
+  class?: string;
+}
+const { items, class: cls = "" } = Astro.props;
+---
+<nav class={["mk-breadcrumb", cls].filter(Boolean).join(" ")} aria-label="Breadcrumb">
+  {items.map((c, i) => (
+    <Fragment>
+      {i > 0 && <Icon name="chev-right" size="xs" />}
+      {c.href ? <a href={c.href}>{c.label}</a> : <span aria-current="page">{c.label}</span>}
+    </Fragment>
+  ))}
+</nav>

@@ -1,10 +1,10 @@
 /* ============================================================================
-   SEO PLATFORM DESIGN SYSTEM — entry point (SKELETON ONLY)
+   esimloop-ui — entry point (SKELETON ONLY)
    Load a theme FIRST, then this file.
 
-     @import "seo-design-system/themes/app-blank.css";
-     @import "seo-design-system/themes/marketing-blank.css";
-     @import "seo-design-system/css/index.css";
+     @import "esimloop-ui/themes/app-blank.css";
+     @import "esimloop-ui/themes/marketing-blank.css";
+     @import "esimloop-ui/css/index.css";
 
    Import only the layer you need if a project is app-only or site-only.
    ========================================================================== */

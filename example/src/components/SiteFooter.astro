@@ -1,0 +1,17 @@
+---
+import MkFooter from "../design-system/astro/marketing/MkFooter.astro";
+---
+<MkFooter
+  brand="Product"
+  blurb="Replace this line with what your product does, in one sentence."
+  columns={[
+    { label: "Product", links: [{ label: "Features", href: "/#features" }, { label: "Pricing", href: "/pricing" }] },
+    { label: "Resources", links: [{ label: "Blog", href: "/blog" }, { label: "Docs", href: "#" }] },
+    { label: "Company", links: [{ label: "Privacy", href: "#" }, { label: "Terms", href: "#" }] },
+  ]}
+>
+  <form slot="newsletter" class="mk-newsletter">
+    <input type="email" placeholder="Email address" aria-label="Email address" />
+    <button type="submit">Subscribe</button>
+  </form>
+</MkFooter>

@@ -2,13 +2,16 @@
 interface Props {
   tone?: "default" | "neutral" | "success" | "warning" | "error" | "info" | "accent";
   size?: "xs" | "sm" | "md";
+  /** `pill` is fully rounded with a minimum width, so a column of them aligns. */
+  shape?: "default" | "pill";
   class?: string;
 }
-const { tone = "default", size = "sm", class: cls = "" } = Astro.props;
+const { tone = "default", size = "sm", shape = "default", class: cls = "" } = Astro.props;
 const classes = [
   "ds-badge",
   size !== "md" && "ds-badge--" + size,
   tone !== "default" && "ds-badge--" + tone,
+  shape === "pill" && "ds-badge--pill",
   cls,
 ].filter(Boolean).join(" ");
 ---

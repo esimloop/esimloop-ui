@@ -1,10 +1,14 @@
 /* ============================================================================
-   SEO PLATFORM DESIGN SYSTEM — COMPONENTS
+   esimloop-ui — APPLICATION COMPONENTS  (the SKELETON)
    Depends on tokens.css. Every value here resolves to a token; there are no
    one-off literals. Class names are framework-neutral (prefix `ds-`).
 
-   Reconstructed from the OpenSEO implementation. Where the original relies on
-   daisyUI defaults, the exact computed value from daisyUI 5.5 is written out.
+   Domain-neutral. Every value resolves to a token declared by an app theme;
+   this file declares none of its own (enforced by scripts/check-tokens.mjs).
+
+   Reconstructed from the OpenSEO implementation (MIT). Where the original
+   relied on daisyUI defaults, the exact computed value is written out here, so
+   nothing depends on that framework.
    ========================================================================== */
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -312,21 +316,16 @@
 .ds-badge--info    { background: color-mix(in oklab, var(--info) 15%, transparent);    border-color: color-mix(in oklab, var(--info) 30%, transparent);    color: var(--info); }
 .ds-badge--accent  { background: var(--accent); border-color: transparent; color: var(--accent-content); }
 
-/* Intent pill — pill radius, fixed min width so a column of them aligns */
-.ds-intent {
-  display: inline-flex; align-items: center; justify-content: center;
-  height: 1.5rem; min-width: 2.75rem; padding-inline: var(--space-2);
-  font-size: var(--t-body-sm-size); font-weight: 600; line-height: 1;
-  border: var(--border-width) solid; border-radius: var(--radius-full);
-  cursor: help;
+/* Pill badge — same metrics as a badge, fully rounded, with a minimum width so
+   a column of them lines up. Use for a small closed set of categories. */
+.ds-badge--pill {
+  border-radius: var(--radius-full);
+  min-width: 2.75rem;
+  font-weight: 600;
 }
-.ds-intent--informational { border-color: color-mix(in oklab, var(--info) 30%, transparent);    background: color-mix(in oklab, var(--info) 15%, transparent);    color: var(--info); }
-.ds-intent--commercial    { border-color: color-mix(in oklab, var(--warning) 35%, transparent); background: color-mix(in oklab, var(--warning) 20%, transparent); color: var(--warning); }
-.ds-intent--transactional { border-color: color-mix(in oklab, var(--success) 30%, transparent); background: color-mix(in oklab, var(--success) 15%, transparent); color: var(--success); }
-.ds-intent--navigational  { border-color: color-mix(in oklab, var(--accent) 30%, transparent);  background: color-mix(in oklab, var(--accent) 15%, transparent);  color: var(--accent); }
-.ds-intent--unknown       { border-color: var(--border-default); background: var(--surface-app); color: var(--text-muted); }
 
-/* Difficulty score — 24px circle, tinted fill + inset ring, tabular digits */
+/* Score — 24px circle, tinted fill + inset ring, tabular digits.
+   A 0-100 value where low is good. The number is always rendered. */
 .ds-score {
   display: inline-flex; align-items: center; justify-content: center;
   width: 1.5rem; height: 1.5rem;
@@ -334,13 +333,13 @@
   border-radius: var(--radius-full);
   box-shadow: inset 0 0 0 1px var(--ring, transparent);
 }
-.ds-score--na { background: var(--kd-na-bg); color: var(--kd-na-fg); --ring: var(--kd-na-ring); }
-.ds-score--1  { background: var(--kd-1-bg);  color: var(--kd-1-fg);  --ring: var(--kd-1-ring); }
-.ds-score--2  { background: var(--kd-2-bg);  color: var(--kd-2-fg);  --ring: var(--kd-2-ring); }
-.ds-score--3  { background: var(--kd-3-bg);  color: var(--kd-3-fg);  --ring: var(--kd-3-ring); }
-.ds-score--4  { background: var(--kd-4-bg);  color: var(--kd-4-fg);  --ring: var(--kd-4-ring); }
-.ds-score--5  { background: var(--kd-5-bg);  color: var(--kd-5-fg);  --ring: var(--kd-5-ring); }
-.ds-score--6  { background: var(--kd-6-bg);  color: var(--kd-6-fg);  --ring: var(--kd-6-ring); }
+.ds-score--na { background: var(--score-na-bg); color: var(--score-na-fg); --ring: var(--score-na-ring); }
+.ds-score--1  { background: var(--score-1-bg);  color: var(--score-1-fg);  --ring: var(--score-1-ring); }
+.ds-score--2  { background: var(--score-2-bg);  color: var(--score-2-fg);  --ring: var(--score-2-ring); }
+.ds-score--3  { background: var(--score-3-bg);  color: var(--score-3-fg);  --ring: var(--score-3-ring); }
+.ds-score--4  { background: var(--score-4-bg);  color: var(--score-4-fg);  --ring: var(--score-4-ring); }
+.ds-score--5  { background: var(--score-5-bg);  color: var(--score-5-fg);  --ring: var(--score-5-ring); }
+.ds-score--6  { background: var(--score-6-bg);  color: var(--score-6-fg);  --ring: var(--score-6-ring); }
 
 /* Tag chip */
 .ds-chip { display: inline-flex; align-items: center; height: 1.25rem; padding-inline: var(--space-2); border-radius: var(--radius-selector); font-size: var(--t-body-sm-size); font-weight: 500; }

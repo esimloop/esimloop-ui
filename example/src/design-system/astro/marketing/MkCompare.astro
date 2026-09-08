@@ -1,0 +1,45 @@
+---
+import Icon from "../app/Icon.astro";
+
+export interface CompareRow {
+  label: string;
+  /** One cell per column. `true` renders a check, `false` a dash. */
+  values: (string | boolean)[];
+}
+interface Props {
+  columns: string[];
+  rows: CompareRow[];
+  /** Names the first column, which holds the row labels. */
+  rowHeader?: string;
+  class?: string;
+}
+const { columns, rows, rowHeader = "Feature", class: cls = "" } = Astro.props;
+---
+<div class="mk-compare-wrap">
+  <table class={["mk-compare", cls].filter(Boolean).join(" ")}>
+    <thead>
+      <tr>
+        <th scope="col">{rowHeader}</th>
+        {columns.map((c) => <th scope="col" data-align="center">{c}</th>)}
+      </tr>
+    </thead>
+    <tbody>
+      {rows.map((r) => (
+        <tr>
+          <th scope="row">{r.label}</th>
+          {r.values.map((v) => (
+            <td data-align="center">
+              {v === true ? (
+                <Icon name="check" label="Included" />
+              ) : v === false ? (
+                <span class="mk-compare__none" aria-label="Not included">&#8212;</span>
+              ) : (
+                v
+              )}
+            </td>
+          ))}
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>

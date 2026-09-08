@@ -1,0 +1,19 @@
+---
+export interface MarketingStat {
+  value: string;
+  label: string;
+}
+interface Props {
+  stats: MarketingStat[];
+  class?: string;
+}
+const { stats, class: cls = "" } = Astro.props;
+---
+<div class={["mk-stats", cls].filter(Boolean).join(" ")}>
+  {stats.map((s) => (
+    <div>
+      <p class="mk-stat__value">{s.value}</p>
+      <p class="mk-stat__label">{s.label}</p>
+    </div>
+  ))}
+</div>

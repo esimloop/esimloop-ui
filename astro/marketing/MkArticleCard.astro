@@ -1,0 +1,28 @@
+---
+interface Props {
+  title: string;
+  excerpt?: string;
+  href: string;
+  /** Short, e.g. "Guides". */
+  category?: string;
+  date?: string;
+  readingTime?: string;
+  class?: string;
+}
+const { title, excerpt, href, category, date, readingTime, class: cls = "" } = Astro.props;
+const meta = [category, date, readingTime].filter(Boolean);
+---
+<a class={["mk-article", cls].filter(Boolean).join(" ")} href={href}>
+  {meta.length > 0 && (
+    <div class="mk-article__meta">
+      {meta.map((m, i) => (
+        <Fragment>
+          {i > 0 && <span aria-hidden="true">&middot;</span>}
+          <span>{m}</span>
+        </Fragment>
+      ))}
+    </div>
+  )}
+  <h3 class="mk-article__title">{title}</h3>
+  {excerpt && <p class="mk-article__excerpt">{excerpt}</p>}
+</a>
