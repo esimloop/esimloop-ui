@@ -124,6 +124,7 @@ const radii = [
 <AppLayout title="Component reference">
   <div class="ref">
     <aside class="ref__nav">
+     <div class="ref__nav-inner">
       <div class="ref__brand">
         <span class="ref__mark">UI</span>
         <span>
@@ -147,6 +148,7 @@ const radii = [
         </div>
         <p class="ref__note">The marketing layer is light-only by design.</p>
       </div>
+     </div>
     </aside>
 
     <main class="ref__main">
@@ -637,7 +639,7 @@ const radii = [
 
           <div style="margin-top:40px">
             <p class="ref__cap">Testimonials</p>
-            <div class="mk-quote-grid" style="grid-template-columns:1fr 1fr">
+            <div class="ref__two">
               <MkQuote quote="A short, specific quote works better than a long vague one." name="A. Rivera" meta="Head of growth" initials="AR" />
               <MkQuote quote="Attributions align on a baseline because the cards stretch." name="S. Moreau" meta="Founder" initials="SM" />
             </div>
@@ -691,7 +693,7 @@ const radii = [
         <h2 class="ds-h2">Content</h2>
         <p class="ref__lede">Prose styles raw HTML through element selectors, so markdown output drops in without a single class.</p>
         <div class="mk ref__island">
-          <div style="display:grid;gap:40px;grid-template-columns:minmax(0,1fr) 200px;align-items:start">
+          <div class="ref__prose-layout">
             <div>
               <MkProse>
                 <h2 id="ref-prose-h2">A heading inside prose</h2>
@@ -728,7 +730,7 @@ const radii = [
               <MkCallout tone="accent" label="Tip" icon="sparkles">
                 <p>The accent callout spends the page's one accent. Use it at most once.</p>
               </MkCallout>
-              <div class="mk-article-grid" style="grid-template-columns:1fr 1fr;margin-top:0">
+              <div class="ref__two">
                 <MkArticleCard title="An article card" excerpt="Category, date and reading time above the title." href="#mk-content" category="Design" date="12 Mar" readingTime="4 min" />
                 <MkArticleCard title="Another one" excerpt="Hover darkens the border to ink." href="#mk-content" category="Engineering" date="4 Mar" readingTime="6 min" />
               </div>
@@ -789,15 +791,15 @@ const radii = [
   .ref { display: flex; min-height: 100vh; background: var(--surface-app); }
   .ref__nav { display: none; flex-shrink: 0; width: 15rem; }
   @media (min-width: 1024px) { .ref__nav { display: block; } }
-  .ref__nav > * { position: sticky; top: 0; }
+  .ref__nav-inner { position: sticky; top: 0; display: flex; flex-direction: column;
+    max-height: 100vh; overflow-y: auto; padding: 12px 8px 16px; }
   .ref__nav nav { display: flex; flex-direction: column; gap: 1px; }
-  .ref__nav > div { max-height: 100vh; overflow-y: auto; padding: 12px 8px 16px; display: flex; flex-direction: column; }
   .ref__brand { display: flex; align-items: center; gap: 8px; padding: 0 8px 14px; }
   .ref__mark { width: 26px; height: 26px; border-radius: var(--radius-sm); background: var(--accent);
     color: var(--accent-content); display: grid; place-items: center; font-size: 11px; font-weight: 700; }
   .ref__title { display: block; font-size: 14px; font-weight: 600; }
   .ref__sub { display: block; font-size: 11px; color: var(--text-subtle); }
-  .ref__foot { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border-default); }
+  .ref__foot { margin-top: auto; padding-top: 16px; border-top: 1px solid var(--border-default); }
   .ref__note { margin: 12px 0 0; font-size: 11px; line-height: 1.4; color: var(--text-subtle); }
 
   .ref__main { flex: 1; min-width: 0; background: var(--surface-card); }
@@ -855,6 +857,18 @@ const radii = [
   .ref__icon { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 14px 6px;
     border: 1px solid var(--border-default); border-radius: var(--radius-field); color: var(--text-secondary); }
   .ref__icon span { font-size: 10px; color: var(--text-subtle); text-align: center; word-break: break-all; }
+
+  /* Two-column blocks that must collapse on a phone. Inline grid-template-columns
+     cannot carry a media query, which is exactly how they failed before. */
+  .ref__two { display: grid; gap: 20px; grid-template-columns: 1fr; }
+  @media (min-width: 640px) { .ref__two { grid-template-columns: 1fr 1fr; } }
+  .ref__prose-layout { display: grid; gap: 40px; }
+  .ref__prose-layout > * { min-width: 0; }
+  .ref__prose-layout :global(.mk-toc) { display: none; }
+  @media (min-width: 1000px) {
+    .ref__prose-layout { grid-template-columns: minmax(0, 1fr) 200px; align-items: start; }
+    .ref__prose-layout :global(.mk-toc) { display: block; }
+  }
 
   /* A marketing island: the .mk class carries its own tokens, ground and font,
      so the layer renders correctly inside an application page. */

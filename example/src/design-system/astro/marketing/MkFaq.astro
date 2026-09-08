@@ -18,7 +18,7 @@ const { items, openIndex = 0, class: cls = "" } = Astro.props;
     <details class="mk-faq__item" open={i === openIndex}>
       <summary class="mk-faq__q">
         {item.q}
-        <Icon name="plus" size="lg" class="mk-faq__icon" />
+        <Icon name="chev-down" size="lg" class="mk-faq__icon" />
       </summary>
       <p class="mk-faq__a">{item.a}</p>
     </details>

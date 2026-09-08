@@ -176,9 +176,15 @@
 .mk-faq__q{display:flex;align-items:center;justify-content:space-between;gap:24px;
   padding:20px 0;cursor:pointer;list-style:none;font-size:18px;font-weight:500;letter-spacing:-.01em}
 .mk-faq__q::-webkit-details-marker{display:none}
+/* `list-style:none` is not enough: the summary still generates a ::marker box
+   (4px), which shows up as a horizontal clip. Emptying its content removes it. */
+.mk-faq__q::marker{content:""}
 .mk-faq__q:focus-visible{outline:2px solid var(--m-ink);outline-offset:4px;border-radius:4px}
 .mk-faq__icon{flex-shrink:0;color:var(--m-ink-subtle);transition:transform .2s ease}
-.mk-faq__item[open] .mk-faq__icon{transform:rotate(45deg)}
+/* 180deg, not 45: rotating a square 45deg grows its bounding box to s*sqrt(2)
+   (~41% wider), which overflowed the summary by 4px. A half turn keeps the
+   same box, and a chevron is the expected accordion affordance anyway. */
+.mk-faq__item[open] .mk-faq__icon{transform:rotate(180deg)}
 .mk-faq__a{margin:0;padding:0 0 24px;max-width:68ch;font-size:16px;line-height:1.6;color:var(--m-ink-muted)}
 @media(prefers-reduced-motion:reduce){.mk-faq__icon{transition:none}}
 
@@ -320,6 +326,10 @@
 
 /* Article layout: prose beside a sticky contents column. */
 .mk-article-layout{display:grid;gap:40px}
+/* Grid items default to min-width:auto, so one unbreakable line inside the prose
+   (a shell command in a <pre>) would widen the whole column and scroll the page
+   sideways on a phone. This lets the track shrink; the <pre> scrolls instead. */
+.mk-article-layout > *{min-width:0}
 @media(min-width:1000px){
   .mk-article-layout{grid-template-columns:minmax(0,1fr) 220px;gap:64px;align-items:start}
   .mk-article-layout__aside{position:relative}
